@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create a New Account</title>
+    <link rel="stylesheet" href="frontpage-styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo-container">
+        <img
+          src="RoyalFlushAILogo.png"
+          alt="Royal Flush AI Logo"
+          class="logo"
+        />
+      </div>
+      <div class="form-container">
+        <h1>Create a New Account</h1>
+        <form action="create-account" method="POST">
+          <label for="username">Username:</label><br />
+          <input type="text" id="username" name="username" required /><br />
+
+          <label for="password">Password:</label><br />
+          <input type="password" id="password" name="password" required /><br />
+
+          <label for="confirm-password">Confirm Password:</label><br />
+          <input
+            type="password"
+            id="confirm-password"
+            name="confirm-password"
+            required
+          /><br />
+
+          <label for="email">Email:</label><br />
+          <input type="email" id="email" name="email" required /><br />
+
+          <button type="submit" class="submit-button">Let’s Go!</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

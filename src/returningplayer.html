@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign into Existing Account</title>
+    <link rel="stylesheet" href="frontpage-styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo-container">
+        <img
+          src="RoyalFlushAILogo.png"
+          alt="Royal Flush AI Logo"
+          class="logo"
+        />
+      </div>
+      <div class="form-container">
+        <h1>Log in to an existing account</h1>
+        <form action="login" method="POST">
+          <label for="username">Username:</label><br />
+          <input type="text" id="username" name="username" required /><br />
+
+          <label for="password">Password:</label><br />
+          <input type="password" id="password" name="password" required /><br />
+
+          <button type="submit" class="submit-button">Sign In</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
