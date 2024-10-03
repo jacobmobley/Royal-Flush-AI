@@ -7,10 +7,16 @@
     <link rel="stylesheet" href="plinko.css">
 </head>
 <body>
-    <div id="plinko-board">
+    <div id="plinko-game">
         <canvas id="plinko-canvas"></canvas>
+        <div id="controls">
+            <h3>Betting Panel</h3>
+            <label for="bet-amount">Set Bet Amount:</label>
+            <input type="number" id="bet-amount" value="500" min="0">
+            <button id="place-bet">Place Bet & Drop Ball</button>
+            <h3>Total Points: <span id="total-points">0</span></h3>
+        </div>
     </div>
-    <button id="drop-ball">Drop Ball</button>
     <script src="plinko.js"></script>
 </body>
 </html>
