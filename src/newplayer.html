@@ -57,13 +57,11 @@
           <button type="submit" class="submit-button">Let’s Go!</button>
         </form>
       </div>
-      <div id="error-message" style="color: red; display: none;">
-        Error: Could not sign in. Please try again.
-      </div>
+      <div id="message" style="display: none"></div>
     </div>
 
     <script>
-      document.getElementById("signUpForm").addEventListener("submit", function (e) {
+      document.getElementById("signup-form").addEventListener("submit", function (e) {
         e.preventDefault();
         
         const email = document.getElementById("email").value;
@@ -74,12 +72,14 @@
                 // Signed in 
                 const user = userCredential.user;
                 document.getElementById("message").textContent = "Sign-up successful!";
+                document.getElementById('message').style.display = "block";
                 console.log("User signed up:", user);
             })
             .catch((error) => {
               // Display error message
-              document.getElementById('error-message').textContent = error.message;
-              document.getElementById('error-message').style.display = "block";
+              document.getElementById('message').textContent = error.message;
+              document.getElementById('message').style.display = "block";
+              document.getElementById('message').style.color = "red";
           });
     });
     </script>

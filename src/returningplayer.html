@@ -46,9 +46,7 @@
           <button type="submit" class="submit-button">Sign In</button>
         </form>
       </div>
-      <div id="error-message" style="color: red; display: none;">
-        Error: Could not sign in. Please try again.
-      </div>
+      <div id="message" style="display: none"></div>
     </div>
     <script>
       document.getElementById('login-form').addEventListener('submit', function(event) {
@@ -61,11 +59,15 @@
           .then((userCredential) => {
               // Successful login, redirect to the game page
               window.location.href = "testlogic.html";
-          })
-          .catch((error) => {
+              document.getElementById("message").textContent = "Sign-in successful!";
+              document.getElementById('message').style.display = "block";
+                console.log("User signed up:", user);
+            })
+            .catch((error) => {
               // Display error message
-              document.getElementById('error-message').textContent = error.message;
-              document.getElementById('error-message').style.display = "block";
+              document.getElementById('message').textContent = error.message;
+              document.getElementById('message').style.display = "block";
+              document.getElementById('message').style.color = "red";
           });
       });
   </script>
