@@ -57,6 +57,9 @@
           <button type="submit" class="submit-button">Let’s Go!</button>
         </form>
       </div>
+      <div id="error-message" style="color: red; display: none;">
+        Error: Could not sign in. Please try again.
+      </div>
     </div>
 
     <script>
@@ -74,10 +77,10 @@
                 console.log("User signed up:", user);
             })
             .catch((error) => {
-                const errorMessage = error.message;
-                document.getElementById("message").textContent = `Error: ${errorMessage}`;
-                console.error("Error signing up:", errorMessage);
-            });
+              // Display error message
+              document.getElementById('error-message').textContent = error.message;
+              document.getElementById('error-message').style.display = "block";
+          });
     });
     </script>
   </body>

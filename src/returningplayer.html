@@ -46,6 +46,9 @@
           <button type="submit" class="submit-button">Sign In</button>
         </form>
       </div>
+      <div id="error-message" style="color: red; display: none;">
+        Error: Could not sign in. Please try again.
+      </div>
     </div>
     <script>
       document.getElementById('login-form').addEventListener('submit', function(event) {
@@ -62,6 +65,7 @@
           .catch((error) => {
               // Display error message
               document.getElementById('error-message').textContent = error.message;
+              document.getElementById('error-message').style.display = "block";
           });
       });
   </script>
