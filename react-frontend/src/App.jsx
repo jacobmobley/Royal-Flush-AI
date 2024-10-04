@@ -1,27 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
+import HomePage from './HomePage';
+import NewPlayerPage from './NewPlayerPage';
+import ReturningPlayerPage from './ReturningPlayerPage';
 
-const App = () => {
-  const [htmlContent, setHtmlContent] = useState('');
-
-  useEffect(() => {
-    const fetchHtmlContent = async () => {
-      try {
-        const response = await fetch('/api/home');
-        const htmlText = await response.text();
-        setHtmlContent(htmlText);
-      } catch (error) {
-        console.error('Error fetching HTML content:', error);
-      }
-    };
-
-    fetchHtmlContent();
-  }, []);
-
+function App() {
   return (
-    <div className="App">
-      <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<HomePage/>} />
+          <Route path="/newplayer" element={<NewPlayerPage/>} />
+          <Route path="/returningplayer" element={<ReturningPlayerPage/>} />
+        </Routes>
+      </div>
+    </Router>
   );
-};
+}
 
 export default App;
