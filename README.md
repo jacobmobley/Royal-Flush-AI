@@ -1,6 +1,6 @@
 # Poker-Vision
 ## Running the Project
-### Dependincies
+### Dependencies
 Make sure you have npm installed on your machine
 ### Start server
 Run the following commands:
