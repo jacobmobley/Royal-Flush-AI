@@ -4,7 +4,7 @@ import HomePage from "./HomePage";
 import NewPlayerPage from "./NewPlayerPage";
 import ReturningPlayerPage from "./ReturningPlayerPage";
 import TitleScreen from "./TitleScreen";
-// import Settings from "./Settings";
+import Settings from "./Settings";
 
 function App() {
   return (
