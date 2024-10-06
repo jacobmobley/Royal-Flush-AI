@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from './firebase';
-import './frontpage-styles.css';
-import { useNavigate } from 'react-router-dom';
-import logo from './assets/RoyalFlushAILogo.png';
+import React, { useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "./firebase";
+import "./frontpage-styles.css";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import logo from "./assets/RoyalFlushAILogo.png";
 
 const NewPlayerPage = () => {
   const navigate = useNavigate();
 
   // State for form data and messages
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    confirmPassword: '',
-    email: '',
+    username: "",
+    password: "",
+    confirmPassword: "",
+    email: "",
   });
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [messageStyle, setMessageStyle] = useState({});
 
   // Handle input changes
@@ -30,8 +31,8 @@ const NewPlayerPage = () => {
 
     // Basic validation
     if (formData.password !== formData.confirmPassword) {
-      setMessage('Passwords do not match.');
-      setMessageStyle({ color: 'red' });
+      setMessage("Passwords do not match.");
+      setMessageStyle({ color: "red" });
       return;
     }
     console.log(auth);
@@ -39,25 +40,29 @@ const NewPlayerPage = () => {
     createUserWithEmailAndPassword(auth, formData.email, formData.password)
       .then((userCredential) => {
         // Signed in
-        setMessage('Sign-up successful!');
-        setMessageStyle({ color: 'green' });
-        console.log('User signed up:', userCredential.user);
+        setMessage("Sign-up successful!");
+        setMessageStyle({ color: "green" });
+        console.log("User signed up:", userCredential.user);
 
         // Redirect to another page if needed
         // navigate('/dashboard');
       })
       .catch((error) => {
         setMessage(error.message);
-        setMessageStyle({ color: 'red' });
-        console.error('Error signing up:', error);
+        setMessageStyle({ color: "red" });
+        console.error("Error signing up:", error);
       });
   };
   return (
     <div className="container">
       <div className="logo-container">
-      <img src={logo} alt="Royal Flush AI Logo" className="logo" />
+        <img src={logo} alt="Royal Flush AI Logo" className="logo" />
       </div>
       <div className="form-container">
+        {/* <button type="back" className="back-button"></button> */}
+        <Link to="/" className="button back-button">
+          &#8592; Back
+        </Link>
         <h1>Create a New Account</h1>
         <form id="signup-form" onSubmit={handleSubmit}>
           <label htmlFor="username">Username:</label>
@@ -106,7 +111,7 @@ const NewPlayerPage = () => {
         </form>
       </div>
       {message && (
-        <div id="message" style={{ display: 'block', ...messageStyle }}>
+        <div id="message" style={{ display: "block", ...messageStyle }}>
           {message}
         </div>
       )}
