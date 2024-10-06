@@ -59,7 +59,7 @@ const ReturningPlayerPage = () => {
       </div>
       <div className="form-container">
         {/* <button type="back" className="back-button"></button> */}
-        <Link to="/frontpage" className="button back-button">
+        <Link to="/" className="button back-button">
           &#8592; Back
         </Link>
         <h1>Log in to an Existing Account</h1>

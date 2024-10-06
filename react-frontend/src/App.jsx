@@ -11,7 +11,7 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/frontpage" element={<HomePage />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/newplayer" element={<NewPlayerPage />} />
           <Route path="/returningplayer" element={<ReturningPlayerPage />} />
           <Route path="/titlescreen" element={<TitleScreen />} />

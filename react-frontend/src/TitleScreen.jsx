@@ -8,7 +8,12 @@ import gear from "./assets/Settings.png";
 
 const TitleScreen = () => {
   const navigate = useNavigate();
-  return <div>TITLE SCREEN</div>;
+  return (
+    <div className="Container">
+      <div>TITLE SCREEN</div>
+      <img src={gear} alt="Settings Icon" className="settings" />
+    </div>
+  );
 };
 
 export default TitleScreen;
