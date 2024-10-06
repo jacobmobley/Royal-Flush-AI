@@ -1,7 +1,7 @@
-import React from 'react';
-import './frontpage-styles.css';
-import logo from './assets/RoyalFlushAILogo.png';
-import { Link } from 'react-router-dom';
+import React from "react";
+import "./frontpage-styles.css";
+import logo from "./assets/RoyalFlushAILogo.png";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
   return (
@@ -20,6 +20,9 @@ const HomePage = () => {
         <Link to="/returningplayer" className="button returning-player">
           Returning Player? <br />
           Sign into Existing Account
+        </Link>
+        <Link to="/titlescreen" className="button title preview">
+          Preview Title Screen
         </Link>
       </div>
     </div>
