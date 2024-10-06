@@ -5,6 +5,7 @@ import "./frontpage-styles.css";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import logo from "./assets/RoyalFlushAILogo.png";
+import TitleScreen from "./TitleScreen";
 
 const NewPlayerPage = () => {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ const NewPlayerPage = () => {
         console.log("User signed up:", userCredential.user);
 
         // Redirect to another page if needed
-        // navigate('/dashboard');
+        navigate("/titlescreen");
       })
       .catch((error) => {
         setMessage(error.message);

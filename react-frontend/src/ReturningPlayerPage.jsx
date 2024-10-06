@@ -32,7 +32,7 @@ const ReturningPlayerPage = () => {
         console.log("User signed in:", userCredential.user);
 
         // Redirect to the game page
-        navigate("/game");
+        navigate("/titlescreen");
       })
       .catch((error) => {
         let errorMsg = "";
