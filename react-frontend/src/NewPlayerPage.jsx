@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./firebase";
+import { auth, firestore_db } from "./firebase";
 import "./frontpage-styles.css";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import logo from "./assets/RoyalFlushAILogo.png";
 import TitleScreen from "./TitleScreen";
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+
+const isUsernameTaken = async (username) => {
+  const docRef = doc(firestore_db, 'users', username); // Use username as document ID
+  const docSnap = await getDoc(docRef);
+
+  return docSnap.exists(); // Returns true if the document already exists
+};
 
 const NewPlayerPage = () => {
   const navigate = useNavigate();
@@ -27,8 +35,15 @@ const NewPlayerPage = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (await isUsernameTaken(formData.username)) {
+      setMessage('Username is already taken. Please choose another one.');
+      setMessageStyle({ color: "red" });
+      console.log(formData.username);
+      return;
+    }
 
     // Basic validation
     if (formData.password !== formData.confirmPassword) {
@@ -41,6 +56,11 @@ const NewPlayerPage = () => {
     createUserWithEmailAndPassword(auth, formData.email, formData.password)
       .then((userCredential) => {
         // Signed in
+        const userDocRef = doc(firestore_db, 'users', formData.username);
+        setDoc(userDocRef, {
+          currency: 5000,
+          bio: ""
+        })
         setMessage("Sign-up successful!");
         setMessageStyle({ color: "green" });
         console.log("User signed up:", userCredential.user);
