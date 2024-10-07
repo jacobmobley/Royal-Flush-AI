@@ -25,9 +25,7 @@ const TitleScreen = () => {
       />
       {showSettings && (
         <div className="modal-overlay">
-          <div className="modal">
-            <Settings toggleSettings={toggleSettings} />
-          </div>
+          <Settings toggleSettings={toggleSettings} />
         </div>
       )}
     </div>
