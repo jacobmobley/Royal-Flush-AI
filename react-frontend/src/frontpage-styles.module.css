@@ -153,6 +153,7 @@ input {
 }
 
 .modal {
+  position: relative;
   background: white;
   padding: 20px;
   border-radius: 8px;
@@ -165,4 +166,58 @@ input {
 .modal h1,
 p {
   color: black;
+}
+
+.close-button {
+  position: absolute;
+  color: black;
+  top: 0px; /* Position from the top */
+  right: 0px; /* Position from the right */
+  padding: 5px;
+  border-radius: 50%;
+  margin: 0px;
+  height: 40px;
+  width: 40px;
+  background: none;
+  border: none;
+  font-size: 24px; /* Make the X large enough */
+  cursor: pointer;
+}
+.close-button:hover {
+  font-weight: bold;
+}
+
+.close-button:focus {
+  outline: none; /* Removes the focus outline */
+}
+
+/* Style for the buttons on the side of the modal */
+.side-buttons {
+  display: flex;
+  flex-direction: column;
+}
+.settings-header {
+  position: relative;
+}
+
+.side-buttons button {
+  background-color: #555;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  margin: 0px;
+  border: 2px solid black;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.side-buttons button:hover {
+  background-color: #333;
+}
+
+.settings-container {
+  display: flex;
+  position: relative;
+  align-items: flex-start;
 }
