@@ -1,0 +1,61 @@
+/* styles.css */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0D1B2A; /* Dark navy blue background */
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #E0E0E0; /* Light gray for text */
+}
+
+#blackjack-game {
+    background-color: #1A2B3C;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    text-align: center;
+}
+
+#game-area {
+    margin-bottom: 20px;
+}
+
+#dealer-area, #player-area {
+    margin-bottom: 20px;
+}
+
+#controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+button {
+    background-color: #00FF00;
+    color: #000;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #00CC00;
+}
+
+#bet-amount {
+    background-color: #0D1B2A; /* Dark background to match the theme */
+    border: 1px solid #444;    /* Subtle border */
+    color: #E0E0E0;            /* Light text color */
+    padding: 10px;
+    border-radius: 5px;        /* Rounded corners */
+    width: 100%;               /* Full width */
+    box-sizing: border-box;    /* Include padding in the element's total width */
+}
+
+#message {
+    margin-top: 20px;
+    font-size: 18px;
+}
