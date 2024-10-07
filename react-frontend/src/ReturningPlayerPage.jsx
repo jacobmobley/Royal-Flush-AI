@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from "firebase/auth";
 import { auth } from "./firebase";
-import "./frontpage-styles.css";
+import styles from "./frontpage-styles.module.css";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import logo from "./assets/RoyalFlushAILogo.png";
@@ -24,7 +24,11 @@ const ReturningPlayerPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    signInWithEmailAndPassword(auth, formData.email, formData.password)
+    setPersistence(auth, browserLocalPersistence)
+      .then(() => {
+        // Proceed with sign in after setting persistence
+        return signInWithEmailAndPassword(auth, formData.email, formData.password);
+      })
       .then((userCredential) => {
         // Successful login
         setMessage("Sign-in successful!");
@@ -53,13 +57,12 @@ const ReturningPlayerPage = () => {
   };
 
   return (
-    <div className="container">
-      <div className="logo-container">
-        <img src={logo} alt="Royal Flush AI Logo" className="logo" />
+    <div className={styles.container}>
+      <div className={styles.logoContainer}>
+        <img src={logo} alt="Royal Flush AI Logo" className={styles.logo} />
       </div>
-      <div className="form-container">
-        {/* <button type="back" className="back-button"></button> */}
-        <Link to="/" className="button back-button">
+      <div className={styles.formContainer}>
+        <Link to="/" className={`${styles.button} ${styles.backButton}`}>
           &#8592; Back
         </Link>
         <h1>Log in to an Existing Account</h1>
@@ -72,6 +75,7 @@ const ReturningPlayerPage = () => {
             required
             value={formData.email}
             onChange={handleChange}
+            className={styles.inputField}
           />
 
           <label htmlFor="password">Password:</label>
@@ -82,9 +86,10 @@ const ReturningPlayerPage = () => {
             required
             value={formData.password}
             onChange={handleChange}
+            className={styles.inputField}
           />
 
-          <button type="submit" className="submit-button">
+          <button type="submit" className={styles.submitButton}>
             Sign In
           </button>
         </form>

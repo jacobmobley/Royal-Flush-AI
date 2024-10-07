@@ -1,18 +1,19 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, firestore_db } from "./firebase";
-import "./frontpage-styles.css";
+import styles from "./frontpage-styles.module.css"; // Import CSS module
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import logo from "./assets/RoyalFlushAILogo.png";
-import TitleScreen from "./TitleScreen";
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
+// Check if the username is already taken
 const isUsernameTaken = async (username) => {
-  const docRef = doc(firestore_db, 'users', username); // Use username as document ID
-  const docSnap = await getDoc(docRef);
+  const q = query(collection(firestore_db, "users"), where("username", "==", username));
 
-  return docSnap.exists(); // Returns true if the document already exists
+  const querySnapshot = await getDocs(q);
+
+  return !querySnapshot.empty;
 };
 
 const NewPlayerPage = () => {
@@ -39,7 +40,7 @@ const NewPlayerPage = () => {
     e.preventDefault();
 
     if (await isUsernameTaken(formData.username)) {
-      setMessage('Username is already taken. Please choose another one.');
+      setMessage("Username is already taken. Please choose another one.");
       setMessageStyle({ color: "red" });
       console.log(formData.username);
       return;
@@ -51,16 +52,16 @@ const NewPlayerPage = () => {
       setMessageStyle({ color: "red" });
       return;
     }
-    console.log(auth);
 
     createUserWithEmailAndPassword(auth, formData.email, formData.password)
       .then((userCredential) => {
         // Signed in
-        const userDocRef = doc(firestore_db, 'users', formData.username);
+        const userDocRef = doc(firestore_db, "users", formData.email);
         setDoc(userDocRef, {
+          username: formData.username,
           currency: 5000,
-          bio: ""
-        })
+          bio: "",
+        });
         setMessage("Sign-up successful!");
         setMessageStyle({ color: "green" });
         console.log("User signed up:", userCredential.user);
@@ -74,14 +75,14 @@ const NewPlayerPage = () => {
         console.error("Error signing up:", error);
       });
   };
+
   return (
-    <div className="container">
-      <div className="logo-container">
-        <img src={logo} alt="Royal Flush AI Logo" className="logo" />
+    <div className={styles.container}> {/* Apply CSS module styles */}
+      <div className={`${styles.logoContainer}`}>
+        <img src={logo} alt="Royal Flush AI Logo" className={styles.logo} />
       </div>
-      <div className="form-container">
-        {/* <button type="back" className="back-button"></button> */}
-        <Link to="/" className="button back-button">
+      <div className={`${styles.formContainer}`}>
+        <Link to="/" className={`${styles.button} ${styles.backButton}`}>
           &#8592; Back
         </Link>
         <h1>Create a New Account</h1>
@@ -126,7 +127,7 @@ const NewPlayerPage = () => {
             onChange={handleChange}
           />
 
-          <button type="submit" className="submit-button">
+          <button type="submit" className={`${styles.submitButton}`}>
             Let’s Go!
           </button>
         </form>
