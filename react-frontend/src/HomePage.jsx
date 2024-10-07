@@ -1,27 +1,27 @@
 import React from "react";
-import "./frontpage-styles.css";
+import styles from "./frontpage-styles.module.css"; // Import CSS module
 import logo from "./assets/RoyalFlushAILogo.png";
 import { Link } from "react-router-dom";
 
 const HomePage = () => {
   return (
-    <div className="container">
-      <div className="logo-container">
-        <img src={logo} alt="Royal Flush AI Logo" className="logo" />
+    <div className={styles.container}>
+      <div className={styles.logoContainer}>
+        <img src={logo} alt="Royal Flush AI Logo" className={`${styles.logo}`} />
       </div>
-      <div className="button-container">
+      <div className={styles.buttonContainer}>
         <h1>Royal Flush AI</h1>
         {/* Link for New Player page */}
-        <Link to="/newplayer" className="button new-player">
+        <Link to="/newplayer" className={`${styles.button} ${styles.newPlayer}`}>
           New Player? <br />
           Create a New Account
         </Link>
         {/* Link for Returning Player page */}
-        <Link to="/returningplayer" className="button returning-player">
+        <Link to="/returningplayer" className={`${styles.button} ${styles.returningPlayer}`}>
           Returning Player? <br />
           Sign into Existing Account
         </Link>
-        <Link to="/titlescreen" className="button title preview">
+        <Link to="/titlescreen" className={`${styles.button} ${styles.preview}`}>
           Preview Title Screen
         </Link>
       </div>
