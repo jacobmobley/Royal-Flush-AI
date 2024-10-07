@@ -1,3 +1,4 @@
+/* Reset and global styling */
 * {
   margin: 0;
   padding: 0;
@@ -13,12 +14,24 @@ body {
   height: 100vh;
 }
 
+.userInfo {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #333;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Container styles */
 .container {
   display: flex;
   align-items: center;
 }
 
-.logo-container {
+.logoContainer {
   flex: 1;
   text-align: center;
 }
@@ -28,7 +41,8 @@ body {
   height: auto;
 }
 
-.button-container {
+/* Button container styles */
+.buttonContainer {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -41,6 +55,7 @@ h1 {
   margin-bottom: 20px;
 }
 
+/* Button styles */
 .button {
   background-color: #555;
   color: #fff;
@@ -56,7 +71,9 @@ h1 {
 .button:hover {
   background-color: #333;
 }
-.form-container {
+
+/* Form and input styles */
+.formContainer {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -77,12 +94,12 @@ label {
 input {
   padding: 10px;
   font-size: 16px;
-
   border-radius: 5px;
   border: 1px solid #ccc;
 }
 
-.submit-button {
+/* Submit button */
+.submitButton {
   background-color: #555;
   color: white;
   border: none;
@@ -94,15 +111,17 @@ input {
   text-align: center;
 }
 
-.submit-button:hover {
+.submitButton:hover {
   background-color: #333;
 }
 
-.back-button {
+/* Back button */
+.backButton {
   width: 120px;
   margin-left: 0px;
 }
 
+/* Settings icon */
 .settings {
   width: 50px;
   height: auto;
@@ -119,7 +138,8 @@ input {
   transform: rotate(90deg);
 }
 
-.modal-overlay {
+/* Modal styles */
+.modalOverlay {
   position: fixed;
   top: 0;
   left: 0;
