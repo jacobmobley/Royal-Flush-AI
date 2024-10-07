@@ -1,13 +1,12 @@
-/* styles.css */
 body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #0D1B2A; /* Dark navy blue background */
+    background-color: #0D1B2A;
     height: 100vh;
     margin: 0;
     font-family: Arial, sans-serif;
-    color: #E0E0E0; /* Light gray for text */
+    color: #E0E0E0;
 }
 
 #blackjack-game {
@@ -46,13 +45,13 @@ button:hover {
 }
 
 #bet-amount {
-    background-color: #0D1B2A; /* Dark background to match the theme */
-    border: 1px solid #444;    /* Subtle border */
-    color: #E0E0E0;            /* Light text color */
+    background-color: #0D1B2A; 
+    border: 1px solid #444;
+    color: #E0E0E0;
     padding: 10px;
-    border-radius: 5px;        /* Rounded corners */
-    width: 100%;               /* Full width */
-    box-sizing: border-box;    /* Include padding in the element's total width */
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #message {
