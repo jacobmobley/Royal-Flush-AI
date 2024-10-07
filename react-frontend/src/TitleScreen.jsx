@@ -38,10 +38,10 @@ const TitleScreen = () => {
   }, []);
 
   return (
-    
     <div className="container">
       <div className={styles.userInfo}>
-        <span>{userData.username}</span> | <span>Currency: {userData.currency}</span>
+        <span>{userData.username}</span> |{" "}
+        <span>Currency: {userData.currency}</span>
       </div>
       <div>TITLE SCREEN</div>
       <img
@@ -51,12 +51,8 @@ const TitleScreen = () => {
         onClick={toggleSettings}
       />
       {showSettings && (
-
         <div className={`${styles.modalOverlay}`}>
-          <div className={`${styles.modal}`}>
-            <Settings toggleSettings={toggleSettings} />
-          </div>
-
+          <Settings toggleSettings={toggleSettings} />
         </div>
       )}
     </div>

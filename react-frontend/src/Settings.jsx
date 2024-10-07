@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./firebase";
 import styles from "./frontpage-styles.module.css";
-import { useNavigate } from "react-router-dom";
-import logo from "./assets/RoyalFlushAILogo.png";
 
 const Settings = ({ toggleSettings }) => {
   const [selectedTab, setSelectedTab] = useState("Account Security");
@@ -22,13 +18,18 @@ const Settings = ({ toggleSettings }) => {
         return <p>Select an option from the left.</p>;
     }
   };
+
   return (
-    <div className="big-settings">
-      <div className="settings-title">
+    <div className={styles.bigSettings}>
+      {/* Settings Title outside the white modal box */}
+      <div className={styles.settingsTitle}>
         <h1>SETTINGS</h1>
       </div>
-      <div className="settings-container">
-        <div className="side-buttons">
+
+      {/* Container holding the side buttons and modal */}
+      <div className={styles.settingsContainer}>
+        {/* Side buttons outside the white modal */}
+        <div className={styles.sideButtons}>
           <button onClick={() => setSelectedTab("Account Security")}>
             Account Security
           </button>
@@ -42,8 +43,10 @@ const Settings = ({ toggleSettings }) => {
             Sound
           </button>
         </div>
-        <div className="modal">
-          <button className="close-button" onClick={toggleSettings}>
+
+        {/* White modal content box */}
+        <div className={styles.modal}>
+          <button className={styles.closeButton} onClick={toggleSettings}>
             X
           </button>
           <h1>{selectedTab}</h1>
