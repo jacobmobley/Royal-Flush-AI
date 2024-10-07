@@ -51,15 +51,12 @@ const TitleScreen = () => {
         onClick={toggleSettings}
       />
       {showSettings && (
-<<<<<<< HEAD
-        <div className="modal-overlay">
-          <Settings toggleSettings={toggleSettings} />
-=======
+
         <div className={`${styles.modalOverlay}`}>
           <div className={`${styles.modal}`}>
             <Settings toggleSettings={toggleSettings} />
           </div>
->>>>>>> main
+
         </div>
       )}
     </div>
