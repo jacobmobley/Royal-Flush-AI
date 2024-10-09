@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth, firestore_db } from "./firebase";
 import { doc, getDoc } from "firebase/firestore";
 import styles from "./frontpage-styles.module.css";
 import { useNavigate } from "react-router-dom";
-import logo from "./assets/RoyalFlushAILogo.png";
 import gear from "./assets/Settings.png";
 import Settings from "./Settings";
 
 const TitleScreen = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [userData, setUserData] = useState({ username: "", currency: 0 });
+  const [loading, setLoading] = useState(true); // New loading state
+
   const toggleSettings = () => {
     setShowSettings(!showSettings);
   };
@@ -18,30 +19,55 @@ const TitleScreen = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      // Get the currently authenticated user
-      const user = auth.currentUser;
-      console.log(user);
+    const fetchUserData = async (user) => {
       if (user) {
-        // Reference to the user's document in Firestore
-        const userDocRef = doc(firestore_db, "users", user.email);
-        const docSnap = await getDoc(userDocRef);
-        if (docSnap.exists()) {
-          // Update user data state
-          setUserData(docSnap.data());
-          console.log(docSnap.data());
+        try {
+          // Reference to the user's document in Firestore
+          const userDocRef = doc(firestore_db, "users", user.email);
+          const docSnap = await getDoc(userDocRef);
+          if (docSnap.exists()) {
+            // Update user data state
+            setUserData(docSnap.data());
+            console.log(docSnap.data());
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        } finally {
+          setLoading(false); // Set loading to false after data is fetched
         }
+      } else {
+        setLoading(false); // No user, set loading to false
       }
     };
 
-    fetchUserData();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Fetch the user data once the user is authenticated
+        fetchUserData(user);
+      } else {
+        console.log("No user is signed in.");
+        // Handle the case where there is no user logged in
+        setUserData(null);
+        setLoading(false); // No user, set loading to false
+      }
+    });
+
+    // Cleanup the subscription on unmount
+    return () => unsubscribe();
   }, []);
+
+  // Show loading spinner or message while user data is being fetched
+  if (loading) {
+    return <div>Loading user data...</div>;
+  }
 
   return (
     <div className="container">
+      {/* Show user info only when data is available */}
       <div className={styles.userInfo}>
-        <span>{userData.username}</span> |{" "}
-        <span>Currency: {userData.currency}</span>
+
+        <span>{userData?.username}</span> | <span>Currency: {userData?.currency}</span>
+
       </div>
       <div>TITLE SCREEN</div>
       <img
