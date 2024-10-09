@@ -5,7 +5,7 @@ import styles from "./frontpage-styles.module.css"; // Import CSS module
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import logo from "./assets/RoyalFlushAILogo.png";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { query, doc, getDoc, setDoc, collection, where, getDocs } from "firebase/firestore";
 
 // Check if the username is already taken
 const isUsernameTaken = async (username) => {
