@@ -1,0 +1,48 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0D1B2A;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #E0E0E0;
+    height: 100vh;
+}
+
+#roulette-game {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+#controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input {
+    background-color: #0D1B2A;
+    border: 1px solid #444;
+    color: #E0E0E0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #00FF00;
+    color: #000;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #00CC00;
+}
+
+#message {
+    margin-top: 20px;
+    font-size: 18px;
+}

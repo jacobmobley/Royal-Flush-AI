@@ -153,6 +153,7 @@ input {
 }
 
 .modal {
+  position: relative;
   background: white;
   padding: 20px;
   border-radius: 8px;
@@ -165,4 +166,64 @@ input {
 .modal h1,
 p {
   color: black;
+}
+
+.closeButton {
+  position: absolute;
+  color: black;
+  top: 10px;
+  right: 10px;
+  padding: 5px;
+  border-radius: 50%;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  font-weight: bold;
+}
+.closeButton:focus {
+  outline: none; /* Removes the focus outline */
+}
+
+/* Style for the buttons on the side of the modal */
+
+.settings-header {
+  position: relative;
+}
+
+.sideButtons {
+  display: flex;
+  flex-direction: column;
+  margin-right: 0px;
+}
+
+.sideButtons button {
+  background-color: #555;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  margin: 5px 0;
+  border: 2px solid black;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.sideButtons button:hover {
+  background-color: #333;
+}
+
+.bigSettings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Container for side buttons and modal */
+.settingsContainer {
+  display: flex;
+  align-items: flex-start;
 }
