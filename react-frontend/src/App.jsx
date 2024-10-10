@@ -5,6 +5,7 @@ import NewPlayerPage from "./NewPlayerPage";
 import ReturningPlayerPage from "./ReturningPlayerPage";
 import TitleScreen from "./TitleScreen";
 import PlinkoGame from "./PlinkoGame";
+import Blackjack from "./Blackjack";
 import Settings from "./Settings";
 
 export const authData = {email: "", username: "", currency: 0};
@@ -20,6 +21,7 @@ function App() {
           <Route path="/returningplayer" element={<ReturningPlayerPage />} />
           <Route path="/titlescreen" element={<TitleScreen />} />
           <Route path="/plinkogame" element={<PlinkoGame />} />
+          <Route path="/blackjack" element={<Blackjack />} />
         </Routes>
       </div>
     </Router>

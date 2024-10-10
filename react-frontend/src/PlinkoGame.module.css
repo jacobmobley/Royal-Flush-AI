@@ -1,46 +1,42 @@
-.plinkoBody {
+.plinkoGame {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #0D1B2A;
+    background-color: #0D1B2A; /* Dark navy blue background to cover the whole screen */
+    height: 100vh; /* Full viewport height */
     margin: 0;
-    font-family: Arial, sans-serif;
-    color: #E0E0E0;
-}
-
-#plinkoGame {
-    display: flex;
-    gap: 20px;
-}
-
-.controls {
-    background-color: #1A2B3C;
+  }
+  
+  .controls {
+    background-color: #1A2B3C; /* Darker panel background */
     padding: 20px;
     border-radius: 10px;
     width: 250px;
     display: flex;
     flex-direction: column;
     gap: 15px;
-}
-
-.controls h3 {
+    color: #E0E0E0; /* Light gray text */
+  }
+  
+  .controls h3 {
     margin: 0;
-}
-
-.controls label {
+    color: #E0E0E0;
+  }
+  
+  .controls label {
     font-size: 14px;
     color: #E0E0E0;
-}
-
-#bet-amount {
+  }
+  
+  #bet-amount {
     background-color: #0D1B2A;
     border: 1px solid #444;
     color: #E0E0E0;
     padding: 10px;
     border-radius: 5px;
-}
-
-.placeBetButton {
+  }
+  
+  button {
     background-color: #00FF00;
     color: #000;
     padding: 10px;
@@ -48,14 +44,15 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
-
-button:hover {
+  }
+  
+  button:hover {
     background-color: #00CC00;
-}
-
-plinkoCanvas {
+  }
+  
+  .canvas {
     background-color: #0D1B2A;
     border: 2px solid #333;
     border-radius: 10px;
-}
+  }
+  

@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import styles from './PlinkoGame.module.css';
-
+import styles from "./PlinkoGame.module.css";
 const PlinkoGame = () => {
   const canvasRef = useRef(null);
   const [totalPoints, setTotalPoints] = useState(1000);
@@ -117,7 +116,7 @@ const PlinkoGame = () => {
             });
 
             if (ball.x < ballRadius || ball.x > boardWidth - ballRadius) ball.speedX *= -1;
-
+            console.log(ball.y)
             if (ball.y >= boardHeight - ballRadius) {
               multipliers.current.forEach(box => {
                 if (ball.x > box.x && ball.x < box.x + box.width) {
