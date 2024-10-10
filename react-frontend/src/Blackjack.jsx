@@ -9,10 +9,10 @@ function Blackjack() {
   const [playerHand, setPlayerHand] = useState([]);
   const [dealerHand, setDealerHand] = useState([]);
   const [isGameOver, setIsGameOver] = useState(false);
-  const [totalPoints, setTotalPoints] = useState(1000);
+  const [totalPoints, setTotalPoints] = useState(1000); //POINTS
   const [currentBet, setCurrentBet] = useState(100);
   const [message, setMessage] = useState('');
-  const [resultClass, setResultClass] = useState(''); // New state for dynamic class
+  const [resultClass, setResultClass] = useState('');
 
   useEffect(() => {
     initGame();
