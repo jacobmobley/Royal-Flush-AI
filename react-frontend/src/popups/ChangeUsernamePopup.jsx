@@ -4,55 +4,43 @@ import { EmailAuthProvider, reauthenticateWithCredential, updateEmail, sendEmail
 import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { firestore_db, auth } from "../firebase";
 
-const ChangeEmailPopup = ({ toggleEmailPopup }) => {
+const ChangeUsernamePopup = ({ toggleUsernamePopup }) => {
 
-  const changeEmail = async (newEmail, password) => {
+  const [message, setMessage] = useState("");
+  const [messageStyle, setMessageStyle] = useState({});
+
+  const changeUsername = async (newUsername, password) => {
     try {
       const user = auth.currentUser;
       if (!user) {
         throw new Error("No user is currently signed in.");
       }
-      const oldEmail = user.email;
-      const credential = EmailAuthProvider.credential(oldEmail, password);
+      const email = user.email;
+      const credential = EmailAuthProvider.credential(email, password);
+
+      await changeDocUsername(email, newUsername);
   
       await reauthenticateWithCredential(user, credential);
-
-      await sendEmailVerification(user);
   
-      await updateEmail(user, newEmail);
-  
-      await changeDocumentId(oldEmail, newEmail);
+      
     } catch (error) {
-      console.error("Error updating email: ", error);
+      setMessage("Error updating username: ", error);
+      setMessageStyle({ color: "red" });
     }
       
   } 
   
-  const changeDocumentId = async (oldEmail, newEmail) => {
+  const changeDocUsername = async (email, newUsername) => {
     try {
-      // Reference to the original document
-      const oldDocRef = doc(firestore_db, "users", oldEmail);
+      const q = doc(firestore_db, "users", email);
+
+      setDoc(q, {
+        username: newUsername,
+      }, { merge: true });
       
-      // Fetch the original document's data
-      const oldDocSnap = await getDoc(oldDocRef);
-  
-      if (oldDocSnap.exists()) {
-        // Get the data of the original document
-        const docData = oldDocSnap.data();
-  
-        // Create a new document with the new ID and the same data
-        const newDocRef = doc(firestore_db, "users", newEmail);
-        await setDoc(newDocRef, docData);
-  
-        // Optionally delete the original document after the new one is created
-        await deleteDoc(oldDocRef);
-  
-        console.log(`Document ID changed from ${oldEmail} to ${newEmail}`);
-      } else {
-        console.log("Original document does not exist.");
-      }
-    } catch (error) {
-      console.error("Error changing document ID:", error);
+    }
+    catch (error) {
+      console.log("Error: username not changed", error);
     }
   };
   const [formData, setFormData] = useState({
@@ -70,7 +58,7 @@ const ChangeEmailPopup = ({ toggleEmailPopup }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    changeEmail(formData.email, formData.password);
+    await changeUsername(formData.username, formData.password);
   }
 
 
@@ -79,16 +67,16 @@ const ChangeEmailPopup = ({ toggleEmailPopup }) => {
           <div>
             <div>
               <div className={styles.modal}>
-                <button className={styles.closeButton} onClick={toggleEmailPopup}>
+                <button className={styles.closeButton} onClick={toggleUsernamePopup}>
                     X
                 </button>
                 <br></br>
                 <form id="signup-form" onSubmit={handleSubmit}>
                 <input
-                    type="email"
-                    name="email"
-                    placeholder="Enter new email:"
-                    value={formData.email}
+                    type="username"
+                    name="username"
+                    placeholder="Enter new username:"
+                    value={formData.username}
                     required
                     onChange={handleChange}
                 />
@@ -104,6 +92,9 @@ const ChangeEmailPopup = ({ toggleEmailPopup }) => {
                 <button type="submit">
                   Submit
                 </button>
+                <div id="message" style={{ display: "block", ...messageStyle }}>
+                  {message}
+                </div>
                 </form>
                 </div>
             </div>
@@ -112,4 +103,4 @@ const ChangeEmailPopup = ({ toggleEmailPopup }) => {
     );
   };
 
-export default ChangeEmailPopup;
+export default ChangeUsernamePopup;
