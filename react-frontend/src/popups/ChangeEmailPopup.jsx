@@ -1,11 +1,33 @@
 import React, { useState } from "react";
 import styles from "../frontpage-styles.module.css";
+import { EmailAuthProvider, reauthenticateWithCredential, updateEmail, sendEmailVerification } from "firebase/auth";
+import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
+import { firestore_db, auth } from "../firebase";
 
-const changeEmail = async () => {
-    const user = auth.currentUser;
+const ChangeEmailPopup = ({ toggleEmailPopup }) => {
 
+  const changeEmail = async (newEmail, password) => {
+    try {
+      const user = auth.currentUser;
+      if (!user) {
+        throw new Error("No user is currently signed in.");
+      }
+      const oldEmail = user.email;
+      const credential = EmailAuthProvider.credential(oldEmail, password);
+  
+      await reauthenticateWithCredential(user, credential);
+
+      await sendEmailVerification(user);
+  
+      await updateEmail(user, newEmail);
+  
+      await changeDocumentId(oldEmail, newEmail);
+    } catch (error) {
+      console.error("Error updating email: ", error);
+    }
+      
   } 
-
+  
   const changeDocumentId = async (oldEmail, newEmail) => {
     try {
       // Reference to the original document
@@ -33,30 +55,56 @@ const changeEmail = async () => {
       console.error("Error changing document ID:", error);
     }
   };
-
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    confirmPassword: "",
+    email: "",
+  });
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-const ChangeEmailPopup = ({ toggleEmailPopup }) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    changeEmail(formData.email, formData.password);
+  }
+
+
     return (
       <div>
           <div>
             <div>
               <div className={styles.modal}>
-                <button className={styles.closeButon} onClick={toggleEmailPopup}>
+                <button className={styles.closeButton} onClick={toggleEmailPopup}>
                     X
                 </button>
                 <br></br>
+                <form id="signup-form" onSubmit={handleSubmit}>
                 <input
-                    type="text"
+                    type="email"
+                    name="email"
                     placeholder="Enter new email:"
+                    value={formData.email}
+                    required
+                    onChange={handleChange}
                 />
                 <input
-                    type="text"
+                    type="password"
+                    name="password"
                     placeholder="Enter password:"
+                    value={formData.password}
+                    required
+                    onChange={handleChange}
                 />
+                <br></br>
+                <button type="submit">
+                  Submit
+                </button>
+                </form>
                 </div>
             </div>
           </div>
