@@ -1,4 +1,4 @@
-body {
+.plinkoBody {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -8,12 +8,12 @@ body {
     color: #E0E0E0;
 }
 
-#plinko-game {
+#plinkoGame {
     display: flex;
     gap: 20px;
 }
 
-#controls {
+.controls {
     background-color: #1A2B3C;
     padding: 20px;
     border-radius: 10px;
@@ -23,11 +23,11 @@ body {
     gap: 15px;
 }
 
-#controls h3 {
+.controls h3 {
     margin: 0;
 }
 
-#controls label {
+.controls label {
     font-size: 14px;
     color: #E0E0E0;
 }
@@ -40,7 +40,7 @@ body {
     border-radius: 5px;
 }
 
-button {
+.placeBetButton {
     background-color: #00FF00;
     color: #000;
     padding: 10px;
@@ -54,7 +54,7 @@ button:hover {
     background-color: #00CC00;
 }
 
-canvas {
+plinkoCanvas {
     background-color: #0D1B2A;
     border: 2px solid #333;
     border-radius: 10px;
