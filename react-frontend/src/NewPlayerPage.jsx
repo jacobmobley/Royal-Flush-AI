@@ -21,7 +21,7 @@ const isEmailTaken = async (email) => {
 
   const querySnapshot = await getDoc(q);
 
-  return !querySnapshot.empty;
+  return querySnapshot.exists();
 };
 
 const NewPlayerPage = () => {
