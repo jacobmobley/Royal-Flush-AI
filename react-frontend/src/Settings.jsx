@@ -3,16 +3,16 @@ import { EmailAuthProvider, reauthenticateWithCredential, updateEmail } from "fi
 import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { firestore_db, auth } from "./firebase";
 import styles from "./frontpage-styles.module.css";
-import ChangeEmailPopup from "./popups/ChangeEmailPopup";
+import ChangeUsernamePopup from "./popups/ChangeUsernamePopup";
 
 
 const Settings = ({ toggleSettings }) => {
   const [selectedTab, setSelectedTab] = useState("Account Security");
   const [formData, setFormData] = useState({email: ""});
-  const [showEmailPopup, setShowEmailPopup] = useState(false);
+  const [showUsernamePopup, setShowUsernamePopup] = useState(false);
 
-  const toggleEmailPopup = () => {
-    setShowEmailPopup(!showEmailPopup);
+  const toggleUsernamePopup = () => {
+    setShowUsernamePopup(!showUsernamePopup);
   };
 
   const renderContent = () => {
@@ -22,12 +22,12 @@ const Settings = ({ toggleSettings }) => {
           <>
           <p>Here you can change your account security settings.</p>
           <br></br>
-          <button onClick={toggleEmailPopup}>
-            Change Email
+          <button onClick={toggleUsernamePopup}>
+            Change Username
           </button>
-          {showEmailPopup && (
+          {showUsernamePopup && (
         <div className={`${styles.modalOverlay}`}>
-          <ChangeEmailPopup toggleEmailPopup={toggleEmailPopup} />
+          <ChangeUsernamePopup toggleUsernamePopup={toggleUsernamePopup} />
         </div>
       )}
           </>
