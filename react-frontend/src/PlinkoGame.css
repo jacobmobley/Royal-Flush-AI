@@ -1,12 +1,11 @@
-/* styles.css */
 body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #0D1B2A; /* Dark navy blue background */
+    background-color: #0D1B2A;
     margin: 0;
     font-family: Arial, sans-serif;
-    color: #E0E0E0; /* Light gray for text */
+    color: #E0E0E0;
 }
 
 #plinko-game {
