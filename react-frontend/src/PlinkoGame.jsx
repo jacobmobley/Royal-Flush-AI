@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import styles from './PlinkoGame.module.css';
 import FireBaseAuth from './FireBaseAuth';
 
-const PlinkoGame = (curUser) => {
+const PlinkoGame = () => {
   const canvasRef = useRef(null);
   const [totalPoints, setTotalPoints] = useState(curUser.userData.currency);
   const [balls, setBalls] = useState([]);
