@@ -1,5 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
-import './PlinkoGame.css';const PlinkoGame = () => {
+import styles from './PlinkoGame.module.css';
+
+const PlinkoGame = () => {
   const canvasRef = useRef(null);
   const [totalPoints, setTotalPoints] = useState(1000);
   const [balls, setBalls] = useState([]);
@@ -168,9 +170,9 @@ import './PlinkoGame.css';const PlinkoGame = () => {
   };
 
   return (
-    <div id="plinko-game">
-      <canvas id="plinko-canvas" ref={canvasRef} width="1000" height="1000"></canvas>
-      <div id="controls">
+    <div className={styles.plinkoGame}>
+      <canvas ref={canvasRef} className={styles.plinkoCanvas} width="1000" height="1000"></canvas>
+      <div className={styles.controls}>
         <h3>Betting Panel</h3>
         <label htmlFor="bet-amount">Set Bet Amount:</label>
         <input
@@ -180,8 +182,8 @@ import './PlinkoGame.css';const PlinkoGame = () => {
           onChange={e => setBetAmount(Number(e.target.value))}
           min="0"
         />
-        <button id="place-bet" onClick={handleBet}>Place Bet & Drop Ball</button>
-        <h3>Total Points: <span id="total-points">{totalPoints}</span></h3>
+        <button className={styles.placeBetButton} onClick={handleBet}>Place Bet & Drop Ball</button>
+        <h3>Total Points: <span>{totalPoints}</span></h3>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import HomePage from "./HomePage";
 import NewPlayerPage from "./NewPlayerPage";
 import ReturningPlayerPage from "./ReturningPlayerPage";
 import TitleScreen from "./TitleScreen";
-import PlinkoGame from "./plinko";
+import PlinkoGame from "./PlinkoGame";
 import Settings from "./Settings";
 
 export const authData = {email: "", username: "", currency: 0};
