@@ -25,6 +25,10 @@ body {
   border-radius: 5px;
 }
 
+.settingsEmailLabel {
+  color: #333
+}
+
 /* Container styles */
 .container {
   display: flex;

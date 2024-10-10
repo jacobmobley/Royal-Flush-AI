@@ -3,20 +3,19 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, firestore_db } from "./firebase";
 import { doc, getDoc } from "firebase/firestore";
 import styles from "./frontpage-styles.module.css";
-import { useNavigate } from "react-router-dom";
 import gear from "./assets/Settings.png";
 import Settings from "./Settings";
 
 const TitleScreen = () => {
-  const [showSettings, setShowSettings] = useState(false);
+  
   const [userData, setUserData] = useState({ username: "", currency: 0 });
+  const [showSettings, setShowSettings] = useState(false);
   const [loading, setLoading] = useState(true); // New loading state
 
   const toggleSettings = () => {
     setShowSettings(!showSettings);
   };
 
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async (user) => {

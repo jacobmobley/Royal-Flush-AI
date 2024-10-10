@@ -6,6 +6,10 @@ import ReturningPlayerPage from "./ReturningPlayerPage";
 import TitleScreen from "./TitleScreen";
 import Settings from "./Settings";
 
+
+export const authData = {email: "", username: "", currency: 0};
+
+
 function App() {
   return (
     <Router>
