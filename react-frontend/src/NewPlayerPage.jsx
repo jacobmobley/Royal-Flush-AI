@@ -16,6 +16,14 @@ const isUsernameTaken = async (username) => {
   return !querySnapshot.empty;
 };
 
+const isEmailTaken = async (email) => {
+  const q = doc(firestore_db, "users", email);
+
+  const querySnapshot = await getDoc(q);
+
+  return !querySnapshot.empty;
+};
+
 const NewPlayerPage = () => {
   const navigate = useNavigate();
 
@@ -39,6 +47,12 @@ const NewPlayerPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (formData.password !== formData.confirmPassword) {
+      setMessage("Passwords do not match.");
+      setMessageStyle({ color: "red" });
+      return;
+    }
+
     if (await isUsernameTaken(formData.username)) {
       setMessage("Username is already taken. Please choose another one.");
       setMessageStyle({ color: "red" });
@@ -46,9 +60,8 @@ const NewPlayerPage = () => {
       return;
     }
 
-    // Basic validation
-    if (formData.password !== formData.confirmPassword) {
-      setMessage("Passwords do not match.");
+    if (await isEmailTaken(formData.email)) {
+      setMessage("There already is an account associated with that email address.");
       setMessageStyle({ color: "red" });
       return;
     }
