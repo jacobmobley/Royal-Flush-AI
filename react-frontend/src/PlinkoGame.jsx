@@ -1,9 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import styles from './PlinkoGame.module.css';
+import FireBaseAuth from './FireBaseAuth';
 
-const PlinkoGame = () => {
+const PlinkoGame = (curUser) => {
   const canvasRef = useRef(null);
-  const [totalPoints, setTotalPoints] = useState(1000);
+  const [totalPoints, setTotalPoints] = useState(curUser.userData.currency);
   const [balls, setBalls] = useState([]);
   const [betAmount, setBetAmount] = useState(500);
   const pegs = useRef([]);
@@ -168,6 +169,10 @@ const PlinkoGame = () => {
       }
     ]);
   };
+
+  if (curUser.loading) {
+    return <div>Loading user data...</div>;
+  }
 
   return (
     <div className={styles.plinkoGame}>
