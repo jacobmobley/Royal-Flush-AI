@@ -4,6 +4,7 @@ import HomePage from "./HomePage";
 import NewPlayerPage from "./NewPlayerPage";
 import ReturningPlayerPage from "./ReturningPlayerPage";
 import TitleScreen from "./TitleScreen";
+import PlinkoGame from "./plinko";
 import Settings from "./Settings";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path="/newplayer" element={<NewPlayerPage />} />
           <Route path="/returningplayer" element={<ReturningPlayerPage />} />
           <Route path="/titlescreen" element={<TitleScreen />} />
+          <Route path="/plinkogame" element={<PlinkoGame />} />
 
           {/* <Route path="/settings" element={<Settings />} /> */}
         </Routes>
