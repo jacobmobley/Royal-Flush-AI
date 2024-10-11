@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import FireBaseAuth from './FireBaseAuth';
+import FireBaseAuth from "./FireBaseAuth";
 import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { firestore_db, auth } from "./firebase";
 import styles from "./frontpage-styles.module.css";
@@ -18,7 +18,7 @@ const Settings = ({ toggleSettings }) => {
   const onSubmit = async () => {
     await sleep(500);
     window.location.reload();
-  }
+  };
 
   const sleep = (milliseconds) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -71,10 +71,15 @@ const Settings = ({ toggleSettings }) => {
           <>
             <p>Here you can change your account security settings.</p>
             <br></br>
-            <button onClick={toggleUsernamePopup}>Change Username</button>
+            <button className={styles.change} onClick={toggleUsernamePopup}>
+              Change Username
+            </button>
             {showUsernamePopup && (
               <div className={`${styles.modalOverlay}`}>
-                <ChangeUsernamePopup toggleUsernamePopup={toggleUsernamePopup} onSubmit={onSubmit}/>
+                <ChangeUsernamePopup
+                  toggleUsernamePopup={toggleUsernamePopup}
+                  onSubmit={onSubmit}
+                />
               </div>
             )}
           </>
@@ -86,24 +91,36 @@ const Settings = ({ toggleSettings }) => {
             <br />
             {showBioMessage && bio && (
               <>
-              <div>
-                <p><strong>Current Bio:</strong> {bio}</p>
-              </div>
-              <br></br>
+                <div>
+                  <p>
+                    <strong>Current Bio:</strong> {bio}
+                  </p>
+                </div>
+                <br></br>
               </>
             )}
-            <button onClick={toggleBioPopup}>Add or Change Bio</button>
+            <button className={styles.change} onClick={toggleBioPopup}>
+              Add or Change Bio
+            </button>
             <br></br> <br></br>
             {showBioPopup && (
               <div className={`${styles.modalOverlay}`}>
-                <AddBioPopup toggleBioPopup={toggleBioPopup} onSubmit={onSubmit} />
+                <AddBioPopup
+                  toggleBioPopup={toggleBioPopup}
+                  onSubmit={onSubmit}
+                />
               </div>
             )}
-            <button onClick={toggleAvatarPopup}>Add or Change Avatar</button>
+            <button className={styles.change} onClick={toggleAvatarPopup}>
+              Add or Change Avatar
+            </button>
             <br></br> <br></br>
             {showAvatarPopup && (
               <div className={`${styles.modalOverlay}`}>
-                <ChangeAvatarPopup toggleAvatarPopup={toggleAvatarPopup} onSubmit={onSubmit} />
+                <ChangeAvatarPopup
+                  toggleAvatarPopup={toggleAvatarPopup}
+                  onSubmit={onSubmit}
+                />
               </div>
             )}
             {/* Add a popup? or not needed? */}
@@ -123,31 +140,43 @@ const Settings = ({ toggleSettings }) => {
       {/* Settings Title outside the white modal box */}
       <div className={styles.settingsTitle}>
         <h1>SETTINGS</h1>
+        <button className={styles.closeButton} onClick={toggleSettings}>
+          X
+        </button>
       </div>
 
       {/* Container holding the side buttons and modal */}
       <div className={styles.settingsContainer}>
         {/* Side buttons outside the white modal */}
         <div className={styles.sideButtons}>
-          <button onClick={() => setSelectedTab("Account Security")}>
+          <button
+            className={styles.accountSecurity}
+            onClick={() => setSelectedTab("Account Security")}
+          >
             Account Security
           </button>
-          <button onClick={() => setSelectedTab("Profile Appearance")}>
+          <button
+            className={styles.profileAppearance}
+            onClick={() => setSelectedTab("Profile Appearance")}
+          >
             Profile Appearance
           </button>
-          <button onClick={() => setSelectedTab("Game Appearance")}>
+          <button
+            className={styles.gameAppearance}
+            onClick={() => setSelectedTab("Game Appearance")}
+          >
             Game Appearance
           </button>
-          <button onClick={() => setSelectedTab("Sound Settings")}>
+          <button
+            className={styles.soundSettings}
+            onClick={() => setSelectedTab("Sound Settings")}
+          >
             Sound
           </button>
         </div>
 
         {/* White modal content box */}
         <div className={styles.modal}>
-          <button className={styles.closeButton} onClick={toggleSettings}>
-            X
-          </button>
           <h1>{selectedTab}</h1>
           {renderContent()}
         </div>

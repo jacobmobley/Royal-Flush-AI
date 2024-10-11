@@ -41,13 +41,18 @@ button {
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #0d2365;
+  color: #fff;
+  font-size: 18px;
+  margin: 10px;
+  border-radius: 8px;
+  border: 4px solid black;
   cursor: pointer;
   transition: border-color 0.25s;
 }
 button:hover {
   border-color: #000000;
+  background-color: #1b5193;
 }
 button:focus,
 button:focus-visible {
@@ -65,4 +70,10 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.customBio {
+  background-color: white;
+  border: black, 2px, solid;
+  border-radius: 2px;
 }

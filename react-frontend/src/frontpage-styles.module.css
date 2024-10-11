@@ -143,6 +143,7 @@ input {
   border: 4px solid black;
   cursor: pointer;
   width: 300px;
+  margin-left: 0px;
 }
 
 .submitButton:hover {
@@ -194,9 +195,11 @@ input {
   position: relative;
   background: white;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 25px;
+  margin-right: 10px;
+
   width: 400px;
+  height: 100%;
   max-width: 100%;
   z-index: 1001; /* Ensure the modal content is above the overlay */
 }
@@ -212,7 +215,7 @@ p {
   top: 10px;
   right: 10px;
   padding: 5px;
-  border-radius: 50%;
+
   background: none;
   border: none;
   font-size: 24px;
@@ -221,6 +224,7 @@ p {
 
 .closeButton:hover {
   font-weight: bold;
+  background-color: transparent;
 }
 .closeButton:focus {
   outline: none; /* Removes the focus outline */
@@ -228,8 +232,16 @@ p {
 
 /* Style for the buttons on the side of the modal */
 
-.settings-header {
+.settingsTitle {
   position: relative;
+  align-items: left;
+  width: 100%;
+  display: flex;
+}
+.settingsTitle h1 {
+  margin-top: 20px;
+  margin-left: 30px;
+  color: black;
 }
 
 .sideButtons {
@@ -239,31 +251,45 @@ p {
 }
 
 .sideButtons button {
-  background-color: #555;
-  color: white;
+  background-color: #0d2365;
+  color: #fff;
   border: none;
-  padding: 10px;
   font-size: 16px;
-  margin: 5px 0;
-  border: 2px solid black;
+  margin: 10px;
+  border: solid black;
   border-radius: 8px;
+  border: 4px solid black;
   cursor: pointer;
 }
 
 .sideButtons button:hover {
-  background-color: #333;
+  background-color: #85a3ff;
+  border: 4px solid rgb(133, 133, 133);
 }
 
 .bigSettings {
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-radius: 25px;
+  background-color: white;
 }
 
 /* Container for side buttons and modal */
 .settingsContainer {
   display: flex;
   align-items: flex-start;
+  height: 450px;
+}
+.bigSettings {
+  border: 4px black solid;
+}
+.change:hover {
+  border-color: gray;
+  background-color: #394d88;
+}
+.popupClose {
+  color: black;
 }
 
 .gallery-grid {
@@ -344,4 +370,11 @@ p {
   background-color: white;
   border-radius: 25px;
   border: 4px black solid;
+}
+
+.customBio {
+  background-color: white;
+  border: black, 4px, solid;
+  border-radius: 2px;
+  color: black;
 }
