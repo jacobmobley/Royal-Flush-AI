@@ -1,4 +1,3 @@
-// script.js
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('roulette-wheel');
     const ctx = canvas.getContext('2d');

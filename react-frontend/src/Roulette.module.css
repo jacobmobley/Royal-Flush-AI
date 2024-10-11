@@ -1,0 +1,116 @@
+.page-body {
+    background-color: #0D1B2A;
+    color: #E0E0E0;
+    min-height: 100vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  /* Betting table styling */
+  .betting-table {
+    background-color: #1A2B3C;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center; /* Center-align content inside */
+  }
+  
+  /* Number rows styling */
+  .number-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center; /* Center-align the number rows */
+    margin-bottom: 10px;
+    flex-wrap: wrap; /* Allow the buttons to wrap if needed */
+  }
+  
+  /* Number button general styling */
+  .number-button {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid #333;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease; /* Smooth hover transition */
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  /* Button Colors */
+  .red {
+    background-color: #D22F2F; /* Red for red numbers */
+  }
+  
+  .black {
+    background-color: #2A2A2A; /* Black for black numbers */
+  }
+  
+  .green {
+    background-color: #29A54F; /* Green for zero (0 or 00) */
+  }
+  
+  /* Hover effect for all number buttons */
+  .number-button:hover {
+    background-color: yellow; /* Yellow hover effect */
+  }
+  
+  /* Bet options container styling */
+  .bet-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%; /* Full width for options */
+    align-items: center; /* Center-align options */
+  }
+  
+  /* Bet row styling */
+  .bet-row {
+    display: flex;
+    justify-content: center; /* Center-align the bet rows */
+    gap: 10px;
+    flex-wrap: wrap; /* Allow rows to wrap for smaller screens */
+  }
+  
+  /* Bet button styling */
+  .bet-button {
+    background-color: #1A2B3C;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 120px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Hover effect for bet buttons */
+  .bet-button:hover {
+    background-color: yellow; /* Yellow hover for bet buttons */
+  }
+  
+  /* Summary of selected bet */
+  .bet-summary {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 20px;
+  }
+  
+  /* Center align the roulette wheel */
+  canvas {
+    display: block;
+    margin: 0 auto; /* Center-align the roulette wheel */
+  }
