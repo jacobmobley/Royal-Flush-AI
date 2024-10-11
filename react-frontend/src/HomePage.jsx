@@ -4,10 +4,10 @@ import { auth, firestore_db } from "./firebase";
 import { doc, getDoc } from "firebase/firestore";
 import styles from "./frontpage-styles.module.css";
 import gear from "./assets/Settings.png";
+import { Link } from "react-router-dom";
 import Settings from "./Settings";
 
 const HomePage = () => {
-  
   const [userData, setUserData] = useState({ username: "", currency: 0 });
   const [showSettings, setShowSettings] = useState(false);
   const [loading, setLoading] = useState(true); // New loading state
@@ -15,7 +15,6 @@ const HomePage = () => {
   const toggleSettings = () => {
     setShowSettings(!showSettings);
   };
-
 
   useEffect(() => {
     const fetchUserData = async (user) => {
@@ -64,11 +63,29 @@ const HomePage = () => {
     <div className="container">
       {/* Show user info only when data is available */}
       <div className={styles.userInfo}>
-
-        <span>{userData?.username}</span> | <span>Currency: {userData?.currency}</span>
-
+        <span>{userData?.username}</span> |{" "}
+        <span>Currency: {userData?.currency}</span>
       </div>
       <div>TITLE SCREEN</div>
+      <div className={styles.pokerButtons}>
+        <button type="poker" className={styles.Poker}>
+          Texas Hold'em
+        </button>
+      </div>
+      <div className={styles.gameButtons}>
+        <Link
+          to="/Blackjack"
+          className={`${styles.button} ${styles.blackjack}`}
+        >
+          Blackjack
+        </Link>
+        <Link to="/Roulette" className={`${styles.button} ${styles.roulette}`}>
+          Roulette
+        </Link>
+        {/*<Link to="/PlinkoGame" className={`${styles.button} ${styles.plinko}`}>
+          Plinko
+        </Link>*/}
+      </div>
       <img
         src={gear}
         alt="Settings Icon"

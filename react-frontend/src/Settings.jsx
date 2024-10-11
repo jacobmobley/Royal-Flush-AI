@@ -1,18 +1,27 @@
 import React, { useState } from "react";
-import { EmailAuthProvider, reauthenticateWithCredential, updateEmail } from "firebase/auth";
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updateEmail,
+} from "firebase/auth";
 import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { firestore_db, auth } from "./firebase";
 import styles from "./frontpage-styles.module.css";
 import ChangeUsernamePopup from "./popups/ChangeUsernamePopup";
-
+import AddBioPopup from "./popups/AddBioPopup";
 
 const Settings = ({ toggleSettings }) => {
   const [selectedTab, setSelectedTab] = useState("Account Security");
-  const [formData, setFormData] = useState({email: ""});
+  const [formData, setFormData] = useState({ email: "" });
   const [showUsernamePopup, setShowUsernamePopup] = useState(false);
+  const [showBioPopup, setShowBioPopup] = useState(false);
 
   const toggleUsernamePopup = () => {
     setShowUsernamePopup(!showUsernamePopup);
+  };
+
+  const toggleBioPopup = () => {
+    setShowBioPopup(!showBioPopup);
   };
 
   const renderContent = () => {
@@ -20,20 +29,32 @@ const Settings = ({ toggleSettings }) => {
       case "Account Security":
         return (
           <>
-          <p>Here you can change your account security settings.</p>
-          <br></br>
-          <button onClick={toggleUsernamePopup}>
-            Change Username
-          </button>
-          {showUsernamePopup && (
-        <div className={`${styles.modalOverlay}`}>
-          <ChangeUsernamePopup toggleUsernamePopup={toggleUsernamePopup} />
-        </div>
-      )}
+            <p>Here you can change your account security settings.</p>
+            <br></br>
+            <button onClick={toggleUsernamePopup}>Change Username</button>
+            {showUsernamePopup && (
+              <div className={`${styles.modalOverlay}`}>
+                <ChangeUsernamePopup
+                  toggleUsernamePopup={toggleUsernamePopup}
+                />
+              </div>
+            )}
           </>
         );
       case "Profile Appearance":
-        return <p>Here you can change how your profile looks.</p>;
+        return (
+          <>
+            <p>Here you can change how your profile looks.</p>;<br></br>
+            <button onClick={toggleBioPopup}>Add or Change Bio</button>
+            {showBioPopup && (
+              <div className={`${styles.modalOverlay}`}>
+                <AddBioPopup toggleBioPopup={toggleBioPopup} />
+              </div>
+            )}
+            <button>Add or Change Avatar</button>{" "}
+            {/* Add a popup? or not needed? */}
+          </>
+        );
       case "Game Appearance":
         return <p>Customize the game's appearance here.</p>;
       case "Sound Settings":
