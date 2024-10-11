@@ -243,3 +243,9 @@ p {
   width: 100%;
   height: auto; /* Adjust the height based on the image's aspect ratio */
 }
+
+.profileImgTitlePage {
+  width: 30px; /* Adjust this value to make the image smaller */
+  height: auto; /* Maintains the aspect ratio */
+  border-radius: 50%; /* Optional: makes the image round */
+}

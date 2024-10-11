@@ -6,56 +6,68 @@ import { firestore_db, auth } from "../firebase";
 
 const ChangeAvatarPopup = ({ toggleAvatarPopup, onSubmit }) => {
 
-const images = [
-    './src/assets/avatars/bear.png', 
-    './src/assets/avatars/cat.png', 
-    './src/assets/avatars/chicken.png',
-    './src/assets/avatars/dog.png',
-    './src/assets/avatars/fox.png',
-    './src/assets/avatars/koala.png',
-    './src/assets/avatars/meerkat.png',
-    './src/assets/avatars/panda.png',
-    './src/assets/avatars/rabbit.png',
-    './src/assets/avatars/sea-lion.png',        
+    const images = [
+        './src/assets/avatars/bear.png', 
+        './src/assets/avatars/cat.png', 
+        './src/assets/avatars/chicken.png',
+        './src/assets/avatars/dog.png',
+        './src/assets/avatars/fox.png',
+        './src/assets/avatars/koala.png',
+        './src/assets/avatars/meerkat.png',
+        './src/assets/avatars/panda.png',
+        './src/assets/avatars/rabbit.png',
+        './src/assets/avatars/sea-lion.png',        
     ];
 
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+    const [showSubmitButton, setShowSubmitButton] = useState(false);
 
-    const handleClick = (image) => {
-      
+    // Handle image click
+    const handleClick = (index) => {
+      setSelectedImageIndex(index); // Set the clicked image index
+      setShowSubmitButton(true);
     };
-  
-    const closeModal = () => {
-      setSelectedImage(null); // Close the enlarged image modal
-    };
+
+    const setAvatarImage = async () => {
+        const user = auth.currentUser;
+        if (!user) {
+            console.log("No user signed in");
+            return;
+        }
+        const d = doc(firestore_db, 'users', user.email);
+        
+            setDoc(d, { avatar: selectedImageIndex }, { merge: true });
+
+        onSubmit();
+    }
   
     return (
     <div className={styles.modal}>
-            <button className={styles.closeButton} onClick={toggleAvatarPopup
-            }>
-                X
-            </button>
-            <br></br>
+    <div>
+        <button className={styles.closeButton} onClick={toggleAvatarPopup}>
+            X
+          </button>
+      <div className={styles["gallery-grid"]}>
+        {images.map((image, index) => (
+          <img
+            key={index}
+            src={image}
+            alt={`Gallery image ${index + 1}`}
+            className={styles["gallery-image"]}
+            onClick={() => handleClick(index)} // Click event handler
+            style={{
+              outline: selectedImageIndex === index ? '5px solid green' : 'none', // Green outline if selected
+            }}
+          />
+        ))}
+      </div>
+      </div>
       <div>
-        <div className={styles['gallery-grid']}>
-          {images.map((image, index) => (
-            <img
-              key={index}
-              src={image}
-              alt={`Gallery image ${index + 1}`}
-              className={styles['gallery-image']}
-              onClick={() => handleClick(image)}
-            />
-          ))}
+      {showSubmitButton && (
+        <div>
+          <button onClick={setAvatarImage}>Set</button>
         </div>
-  
-        {/* Modal for showing the clicked image */}
-        {selectedImage && (
-          <div className="modal" onClick={closeModal}>
-            <span className="close">&times;</span>
-            <img className="modal-content" src={selectedImage} alt="Enlarged" />
-          </div>
-        )}
+      )}
       </div>
       </div>
     );
