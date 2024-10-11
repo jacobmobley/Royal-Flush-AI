@@ -1,22 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Blackjack.module.css';
+import FireBaseAuth from './FireBaseAuth';
 
 const suits = ['♠', '♣', '♦', '♥'];
 const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
 function Blackjack() {
+  const [curUser] = useState(new FireBaseAuth());
+  const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState(null);
   const [deck, setDeck] = useState([]);
   const [playerHand, setPlayerHand] = useState([]);
   const [dealerHand, setDealerHand] = useState([]);
   const [isGameOver, setIsGameOver] = useState(false);
-  const [totalPoints, setTotalPoints] = useState(1000); //POINTS
   const [currentBet, setCurrentBet] = useState(100);
   const [message, setMessage] = useState('');
   const [resultClass, setResultClass] = useState('');
+  const [totalPoints, setTotalPoints] = useState(0); //POINTS
+
+  const setTotalPointsWithUpdate = (newPoints) => {
+    setTotalPoints(newPoints); // Set the local state
+    curUser.updateCurrency(newPoints); // Call the function to update Firebase
+  };
 
   useEffect(() => {
-    initGame();
-  }, []);
+    
+    const unsubscribe = curUser.getUnsubscribe();
+    if (loading) {
+      const checkLoadingStatus = setInterval(() => {
+        if (!curUser.loading) {
+          setLoading(false);
+          setUserData(curUser.userData);  // Sync userData from FireBaseAuth
+          const initialPoints = curUser.userData?.currency || 0;
+          clearInterval(checkLoadingStatus);   // Stop checking once data is available
+          setTotalPoints(initialPoints)
+          initGame();
+        }
+      }, 100);
+    }
+    
+
+
+    return () => {
+      unsubscribe();
+    }
+  }, [curUser]);
+
+  if (loading) {
+    return <div>Loading user data...</div>;
+  }
 
   function createDeck() {
     const newDeck = [];
@@ -85,7 +117,15 @@ function Blackjack() {
     setIsGameOver(false);
     setMessage('');
     setResultClass(''); // Reset to default
-    setTotalPoints(prev => prev - currentBet);
+    console.log(totalPoints);
+    setTotalPoints(prev => {
+      const newTotal = prev - currentBet;
+      console.log("Updated totalPoints:", newTotal);
+  
+      // After calculating, update both local state and Firebase
+      setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
+      return newTotal;  // Update local state with the new total
+    });
   }
 
   function handleHit() {
@@ -122,15 +162,15 @@ function Blackjack() {
   
     if (dealerScore > 21) {
       setMessage('Dealer busts! You win!');
-      setTotalPoints(totalPoints + currentBet * 2);
+      setTotalPointsWithUpdate(totalPoints + currentBet * 2);
       setResultClass(styles.greenText); // Player wins
     } else if (playerScore > dealerScore) {
       setMessage('You win!');
-      setTotalPoints(totalPoints + currentBet * 2);
+      setTotalPointsWithUpdate(totalPoints + currentBet * 2);
       setResultClass(styles.greenText); // Player wins
     } else if (playerScore === dealerScore) {
       setMessage('It\'s a tie!');
-      setTotalPoints(totalPoints + currentBet); // Return bet amount to player
+      setTotalPointsWithUpdate(totalPoints + currentBet); // Return bet amount to player
       setResultClass(''); // Neutral, no color
     } else {
       setMessage('Dealer wins!');
