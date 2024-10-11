@@ -9,9 +9,6 @@ import Blackjack from "./Blackjack";
 import Roulette from "./Roulette";
 import Settings from "./Settings";
 
-export const authData = {email: "", username: "", currency: 0};
-
-
 function App() {
   return (
     <Router>
