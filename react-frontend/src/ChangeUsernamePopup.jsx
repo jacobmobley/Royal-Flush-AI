@@ -21,8 +21,8 @@ const ChangeUsernamePopup = ({ toggleUsernamePopup, onSubmit }) => {
       const email = user.email;
       await changeDocUsername(email, newUsername);
     } catch (error) {
-      setMessage("Error updating username: ", error);
-      setMessageStyle({ color: "red" });
+        console.log("Error:", error);
+        return;
     }
   };
 
@@ -54,12 +54,19 @@ const ChangeUsernamePopup = ({ toggleUsernamePopup, onSubmit }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    try {
+        e.preventDefault();
 
-    await changeUsername(formData.username, formData.password);
+        await changeUsername(formData.username, formData.password);
 
-    onSubmit();
-  };
+        onSubmit();
+    }
+    catch (error) {
+        setMessage("Error updating username");
+        setMessageStyle({ color: "red" });
+    }
+  }
+
 
   return (
     <div>
