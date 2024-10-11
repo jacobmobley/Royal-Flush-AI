@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "../frontpage-styles.module.css";
-import { EmailAuthProvider, reauthenticateWithCredential, updateEmail, sendEmailVerification } from "firebase/auth";
+import { EmailAuthProvider, updateEmail, sendEmailVerification } from "firebase/auth";
 import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { firestore_db, auth } from "../firebase";
 

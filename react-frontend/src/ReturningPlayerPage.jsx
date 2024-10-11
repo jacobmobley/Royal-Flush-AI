@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence,
+} from "firebase/auth";
 import { auth } from "./firebase";
 import styles from "./frontpage-styles.module.css";
 import { Link } from "react-router-dom";
@@ -27,7 +31,11 @@ const ReturningPlayerPage = () => {
     setPersistence(auth, browserLocalPersistence)
       .then(() => {
         // Proceed with sign in after setting persistence
-        return signInWithEmailAndPassword(auth, formData.email, formData.password);
+        return signInWithEmailAndPassword(
+          auth,
+          formData.email,
+          formData.password
+        );
       })
       .then((userCredential) => {
         // Successful login
@@ -36,7 +44,7 @@ const ReturningPlayerPage = () => {
         console.log("User signed in:", userCredential.user);
 
         // Redirect to the game page
-        navigate("/titlescreen");
+        navigate("/homepage");
       })
       .catch((error) => {
         let errorMsg = "";
@@ -57,7 +65,7 @@ const ReturningPlayerPage = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${styles.secondContainer}`}>
       <div className={styles.logoContainer}>
         <img src={logo} alt="Royal Flush AI Logo" className={styles.logo} />
       </div>
@@ -67,7 +75,7 @@ const ReturningPlayerPage = () => {
         </Link>
         <h1>Log in to an Existing Account</h1>
         <form id="login-form" onSubmit={handleSubmit}>
-          <label htmlFor="email">Username:</label>
+          <label htmlFor="email">Email:</label>
           <input
             type="text"
             id="email"
@@ -89,9 +97,7 @@ const ReturningPlayerPage = () => {
             className={styles.inputField}
           />
 
-          <button type="submit" className={styles.submitButton}>
-            Sign In
-          </button>
+          <button className={styles.submitButton}>Sign In</button>
         </form>
       </div>
       {message && (
