@@ -4,31 +4,10 @@ import { EmailAuthProvider, reauthenticateWithCredential, updateEmail, sendEmail
 import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { firestore_db, auth } from "../firebase";
 
-const AddBioPopup = ({ toggleBioPopup }) => {
+const AddBioPopup = ({ toggleBioPopup, onSubmit }) => {
 
   const [message, setMessage] = useState("");
   const [messageStyle, setMessageStyle] = useState({});
-
-//   const changeUsername = async (newBio, password) => {
-//     try {
-//       const user = auth.currentUser;
-//       if (!user) {
-//         throw new Error("No user is currently signed in.");
-//       }
-//       const email = user.email;
-//       const credential = EmailAuthProvider.credential(email, password);
-
-//       await changeDocUsername(email, newBio);
-  
-//       await reauthenticateWithCredential(user, credential);
-  
-      
-//     } catch (error) {
-//       setMessage("Error updating username: ", error);
-//       setMessageStyle({ color: "red" });
-//     }
-      
-//   } 
   
   const changeDocBio = async (email, newBio) => {
     try {
@@ -37,10 +16,10 @@ const AddBioPopup = ({ toggleBioPopup }) => {
       setDoc(q, {
         bio: newBio,
       }, { merge: true });
-      
+        console.log(newBio); 
     }
     catch (error) {
-      console.log("Error: username not changed", error);
+      console.log("Error: bio not changed", error);
     }
   };
   const [formData, setFormData] = useState({
@@ -65,6 +44,8 @@ const AddBioPopup = ({ toggleBioPopup }) => {
     await changeDocBio(user.email, formData.bio);
 
     toggleBioPopup();
+
+    onSubmit();
   }
 
 

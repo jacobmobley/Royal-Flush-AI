@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-  updateEmail,
-} from "firebase/auth";
+import FireBaseAuth from './FireBaseAuth';
 import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { firestore_db, auth } from "./firebase";
 import styles from "./frontpage-styles.module.css";
@@ -17,11 +13,20 @@ const Settings = ({ toggleSettings }) => {
   const [showBioPopup, setShowBioPopup] = useState(false);
   const [showBioMessage, setShowBioMessage] = useState(false);
 
+  const onSubmit = async () => {
+    await sleep(500);
+    window.location.reload();
+  }
+
+  const sleep = (milliseconds) => {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+  };
+
   const toggleUsernamePopup = () => {
     setShowUsernamePopup(!showUsernamePopup);
   };
 
-  const toggleBioPopup = () => {
+  const toggleBioPopup = async () => {
     setShowBioPopup(!showBioPopup);
   };
 
@@ -63,7 +68,7 @@ const Settings = ({ toggleSettings }) => {
             <button onClick={toggleUsernamePopup}>Change Username</button>
             {showUsernamePopup && (
               <div className={`${styles.modalOverlay}`}>
-                <ChangeUsernamePopup toggleUsernamePopup={toggleUsernamePopup} />
+                <ChangeUsernamePopup toggleUsernamePopup={toggleUsernamePopup} onSubmit={onSubmit}/>
               </div>
             )}
           </>
@@ -85,7 +90,7 @@ const Settings = ({ toggleSettings }) => {
             <br></br> <br></br>
             {showBioPopup && (
               <div className={`${styles.modalOverlay}`}>
-                <AddBioPopup toggleBioPopup={toggleBioPopup} />
+                <AddBioPopup toggleBioPopup={toggleBioPopup} onSubmit={onSubmit} />
               </div>
             )}
             <button>Add or Change Avatar</button>{" "}
