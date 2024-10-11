@@ -204,6 +204,19 @@ input {
   z-index: 1001; /* Ensure the modal content is above the overlay */
 }
 
+.modalGrid {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 25px;
+  margin-right: 10px;
+
+  width: 400px;
+  height: auto;
+  max-width: 100%;
+  z-index: 1001;
+}
+
 .modal h1,
 p {
   color: black;
