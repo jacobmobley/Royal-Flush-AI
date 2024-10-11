@@ -79,12 +79,12 @@ const HomePage = () => {
         >
           Blackjack
         </Link>
-        <button type="minigame" className={styles.Roulette}>
+        <Link to="/Roulette" className={`${styles.button} ${styles.roulette}`}>
           Roulette
-        </button>
-        <Link to="/PlinkoGame" className={`${styles.button} ${styles.plinko}`}>
-          Plinko
         </Link>
+        {/*<Link to="/PlinkoGame" className={`${styles.button} ${styles.plinko}`}>
+          Plinko
+        </Link>*/}
       </div>
       <img
         src={gear}
