@@ -44,7 +44,7 @@ const ReturningPlayerPage = () => {
         console.log("User signed in:", userCredential.user);
 
         // Redirect to the game page
-        navigate("/titlescreen");
+        navigate("/homepage");
       })
       .catch((error) => {
         let errorMsg = "";
@@ -75,7 +75,7 @@ const ReturningPlayerPage = () => {
         </Link>
         <h1>Log in to an Existing Account</h1>
         <form id="login-form" onSubmit={handleSubmit}>
-          <label htmlFor="email">Username:</label>
+          <label htmlFor="email">Email:</label>
           <input
             type="text"
             id="email"
