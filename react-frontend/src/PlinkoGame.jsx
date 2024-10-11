@@ -1,9 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
-import styles from './PlinkoGame.module.css';
-
+import styles from "./PlinkoGame.module.css";
 const PlinkoGame = () => {
   const canvasRef = useRef(null);
-  const [totalPoints, setTotalPoints] = useState(1000);
+  const [totalPoints, setTotalPoints] = useState(curUser.userData.currency);
   const [balls, setBalls] = useState([]);
   const [betAmount, setBetAmount] = useState(500);
   const pegs = useRef([]);
@@ -15,7 +14,7 @@ const PlinkoGame = () => {
   const pegRows = 20;
   const gravity = 0.1;
   const damping = 0.4;
-
+  
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -117,7 +116,7 @@ const PlinkoGame = () => {
             });
 
             if (ball.x < ballRadius || ball.x > boardWidth - ballRadius) ball.speedX *= -1;
-
+            console.log(ball.y)
             if (ball.y >= boardHeight - ballRadius) {
               multipliers.current.forEach(box => {
                 if (ball.x > box.x && ball.x < box.x + box.width) {
@@ -168,6 +167,10 @@ const PlinkoGame = () => {
       }
     ]);
   };
+
+  if (curUser.loading) {
+    return <div>Loading user data...</div>;
+  }
 
   return (
     <div className={styles.plinkoGame}>
