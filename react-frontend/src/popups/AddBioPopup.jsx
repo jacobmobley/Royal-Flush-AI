@@ -6,60 +6,45 @@ import { firestore_db, auth } from "../firebase";
 
 const AddBioPopup = ({ toggleBioPopup }) => {
 
-  const changeEmail = async (newEmail, password) => {
-    try {
-      const user = auth.currentUser;
-      if (!user) {
-        throw new Error("No user is currently signed in.");
-      }
-      const oldEmail = user.email;
-      const credential = EmailAuthProvider.credential(oldEmail, password);
-  
-      await reauthenticateWithCredential(user, credential);
+  const [message, setMessage] = useState("");
+  const [messageStyle, setMessageStyle] = useState({});
 
-      await sendEmailVerification(user);
+//   const changeUsername = async (newBio, password) => {
+//     try {
+//       const user = auth.currentUser;
+//       if (!user) {
+//         throw new Error("No user is currently signed in.");
+//       }
+//       const email = user.email;
+//       const credential = EmailAuthProvider.credential(email, password);
+
+//       await changeDocUsername(email, newBio);
   
-      await updateEmail(user, newEmail);
+//       await reauthenticateWithCredential(user, credential);
   
-      await changeDocumentId(oldEmail, newEmail);
-    } catch (error) {
-      console.error("Error updating email: ", error);
-    }
       
-  } 
+//     } catch (error) {
+//       setMessage("Error updating username: ", error);
+//       setMessageStyle({ color: "red" });
+//     }
+      
+//   } 
   
-  const changeDocumentId = async (oldEmail, newEmail) => {
+  const changeDocBio = async (email, newBio) => {
     try {
-      // Reference to the original document
-      const oldDocRef = doc(firestore_db, "users", oldEmail);
+      const q = doc(firestore_db, "users", email);
+
+      setDoc(q, {
+        bio: newBio,
+      }, { merge: true });
       
-      // Fetch the original document's data
-      const oldDocSnap = await getDoc(oldDocRef);
-  
-      if (oldDocSnap.exists()) {
-        // Get the data of the original document
-        const docData = oldDocSnap.data();
-  
-        // Create a new document with the new ID and the same data
-        const newDocRef = doc(firestore_db, "users", newEmail);
-        await setDoc(newDocRef, docData);
-  
-        // Optionally delete the original document after the new one is created
-        await deleteDoc(oldDocRef);
-  
-        console.log(`Document ID changed from ${oldEmail} to ${newEmail}`);
-      } else {
-        console.log("Original document does not exist.");
-      }
-    } catch (error) {
-      console.error("Error changing document ID:", error);
+    }
+    catch (error) {
+      console.log("Error: username not changed", error);
     }
   };
   const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    confirmPassword: "",
-    email: "",
+    bio: "",
   });
   
   const handleChange = (e) => {
@@ -70,7 +55,16 @@ const AddBioPopup = ({ toggleBioPopup }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    changeEmail(formData.email, formData.password);
+    const user = auth.currentUser;
+    if (!user) {
+        setMessage("User not authenticated.\n");
+        setMessageStyle({ color: "red" });
+        return;
+    }
+
+    await changeDocBio(user.email, formData.bio);
+
+    toggleBioPopup();
   }
 
 
@@ -79,24 +73,16 @@ const AddBioPopup = ({ toggleBioPopup }) => {
           <div>
             <div>
               <div className={styles.modal}>
-                <button className={styles.closeButton} onClick={toggleEmailPopup}>
+                <button className={styles.closeButton} onClick={toggleBioPopup}>
                     X
                 </button>
                 <br></br>
                 <form id="signup-form" onSubmit={handleSubmit}>
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Enter new email:"
-                    value={formData.email}
-                    required
-                    onChange={handleChange}
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Enter password:"
-                    value={formData.password}
+                <textarea style = {{ height : 100 }}
+                    type="bio"
+                    name="bio"
+                    placeholder="Enter bio:"
+                    value={formData.bio}
                     required
                     onChange={handleChange}
                 />
@@ -104,6 +90,9 @@ const AddBioPopup = ({ toggleBioPopup }) => {
                 <button type="submit">
                   Submit
                 </button>
+                <div id="message" style={{ display: "block", ...messageStyle }}>
+                  {message}
+                </div>
                 </form>
                 </div>
             </div>

@@ -8,7 +8,7 @@ import Settings from "./Settings";
 
 const TitleScreen = () => {
   
-  const [userData, setUserData] = useState({ username: "", currency: 0 });
+  const [userData, setUserData] = useState({ username: "", currency: 0, bio: "" });
   const [showSettings, setShowSettings] = useState(false);
   const [loading, setLoading] = useState(true); // New loading state
 

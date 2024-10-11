@@ -4,15 +4,21 @@ import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { firestore_db, auth } from "./firebase";
 import styles from "./frontpage-styles.module.css";
 import ChangeUsernamePopup from "./popups/ChangeUsernamePopup";
+import AddBioPopup from "./popups/AddBioPopup";
 
 
 const Settings = ({ toggleSettings }) => {
   const [selectedTab, setSelectedTab] = useState("Account Security");
   const [formData, setFormData] = useState({email: ""});
   const [showUsernamePopup, setShowUsernamePopup] = useState(false);
+  const [showBioPopup, setShowBioPopup] = useState(false);
 
   const toggleUsernamePopup = () => {
     setShowUsernamePopup(!showUsernamePopup);
+  };
+
+  const toggleBioPopup = () => {
+    setShowBioPopup(!showBioPopup);
   };
 
   const renderContent = () => {
@@ -33,7 +39,20 @@ const Settings = ({ toggleSettings }) => {
           </>
         );
       case "Profile Appearance":
-        return <p>Here you can change how your profile looks.</p>;
+        return (
+        <>
+          <p>Here you can change how your profile looks.</p>;
+          <br></br>
+          <button onClick={toggleBioPopup}>
+            Add or Change Bio
+          </button>
+          {showBioPopup && (
+            <div className={`${styles.modalOverlay}`}>
+              <AddBioPopup toggleBioPopup={toggleBioPopup} />
+            </div>
+          )}
+        </>
+        );
       case "Game Appearance":
         return <p>Customize the game's appearance here.</p>;
       case "Sound Settings":
