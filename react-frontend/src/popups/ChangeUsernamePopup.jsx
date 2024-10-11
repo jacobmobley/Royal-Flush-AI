@@ -4,7 +4,7 @@ import { EmailAuthProvider, reauthenticateWithCredential, updateEmail, sendEmail
 import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { firestore_db, auth } from "../firebase";
 
-const ChangeUsernamePopup = ({ toggleUsernamePopup }) => {
+const ChangeUsernamePopup = ({ toggleUsernamePopup, onSubmit }) => {
 
   const [message, setMessage] = useState("");
   const [messageStyle, setMessageStyle] = useState({});
@@ -59,6 +59,8 @@ const ChangeUsernamePopup = ({ toggleUsernamePopup }) => {
     e.preventDefault();
 
     await changeUsername(formData.username, formData.password);
+
+    onSubmit();
   }
 
 

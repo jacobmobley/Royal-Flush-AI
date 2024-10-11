@@ -33,7 +33,7 @@ function Blackjack() {
           setUserData(curUser.userData);  // Sync userData from FireBaseAuth
           const initialPoints = curUser.userData?.currency || 0;
           clearInterval(checkLoadingStatus);   // Stop checking once data is available
-          setTotalPoints(initialPoints)
+          setTotalPoints(initialPoints);
           initGame();
         }
       }, 100);
