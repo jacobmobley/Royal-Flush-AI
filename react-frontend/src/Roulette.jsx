@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './Roulette.module.css'; // Use a module for styling
 import RouletteTable from './RouletteTable'; // Import the betting table component
+import FireBaseAuth from './FireBaseAuth';
 
 const numbers = [
   { number: 0, color: 'green' },
@@ -25,6 +26,9 @@ const numbers = [
 ];
 
 const Roulette = () => {
+  const [curUser] = useState(new FireBaseAuth());
+  const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState(null);
   const canvasRef = useRef(null);
   const [totalPoints, setTotalPoints] = useState(1000);
   const [betAmount, setBetAmount] = useState(100);
@@ -38,28 +42,36 @@ const Roulette = () => {
   const centerY = 200;
   const wheelRadius = 150;
 
-  // Effect to re-draw the wheel whenever there's a change in the winning number or the spinning index
-  useEffect(() => {
-    drawWheel();
-  }, [winningIndex, currentHighlightIndex]);
+  const setTotalPointsWithUpdate = (newPoints) => {
+    setTotalPoints(newPoints); // Set the local state
+    curUser.updateCurrency(newPoints); // Call the function to update Firebase
+  };
 
-  // Function to draw the wheel
-  const drawWheel = () => {
+
+
+  const drawWheel = useCallback(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;  // Ensure the canvas is available
     const ctx = canvas.getContext('2d');
     const segmentAngle = (2 * Math.PI) / numbers.length;
-
+  
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+  
     numbers.forEach((segment, index) => {
       ctx.beginPath();
       ctx.moveTo(centerX, centerY);
-      ctx.arc(centerX, centerY, wheelRadius, index * segmentAngle, (index + 1) * segmentAngle);
+      ctx.arc(
+        centerX,
+        centerY,
+        wheelRadius,
+        index * segmentAngle,
+        (index + 1) * segmentAngle
+      );
       ctx.closePath();
       ctx.fillStyle = segment.color;
       ctx.fill();
       ctx.stroke();
-
+  
       const angle = index * segmentAngle + segmentAngle / 2;
       const textX = centerX + (wheelRadius - 30) * Math.cos(angle);
       const textY = centerY + (wheelRadius - 30) * Math.sin(angle);
@@ -67,31 +79,36 @@ const Roulette = () => {
       ctx.font = '16px Arial';
       ctx.fillText(segment.number, textX - 10, textY + 5);
     });
-
-    // Highlight the current segment being spun
+  
+    // Highlight current or winning segment
     if (currentHighlightIndex !== null) {
       highlightSegment(currentHighlightIndex, 'yellow', 'black');
-    }
-
-    // Highlight the winning segment after the spin is complete
-    if (winningIndex !== null && currentHighlightIndex === null) {
+    } else if (winningIndex !== null) {
       highlightSegment(winningIndex, 'yellow', 'black');
     }
-  };
+  }, [currentHighlightIndex, winningIndex]);
+
 
   const highlightSegment = (index, highlightColor, textColor) => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const segmentAngle = (2 * Math.PI) / numbers.length;
-
+  
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
-    ctx.arc(centerX, centerY, wheelRadius, index * segmentAngle, (index + 1) * segmentAngle);
+    ctx.arc(
+      centerX,
+      centerY,
+      wheelRadius,
+      index * segmentAngle,
+      (index + 1) * segmentAngle
+    );
     ctx.closePath();
     ctx.fillStyle = highlightColor;
     ctx.fill();
     ctx.stroke();
-
+  
     const angle = index * segmentAngle + segmentAngle / 2;
     const textX = centerX + (wheelRadius - 30) * Math.cos(angle);
     const textY = centerY + (wheelRadius - 30) * Math.sin(angle);
@@ -99,6 +116,40 @@ const Roulette = () => {
     ctx.font = '16px Arial';
     ctx.fillText(numbers[index].number, textX - 10, textY + 5);
   };
+
+
+
+  // Effect to re-draw the wheel whenever there's a change in the winning number or the spinning index
+  useEffect(() => {
+    const unsubscribe = curUser.getUnsubscribe();
+    const checkLoadingStatus = setInterval(() => {
+      if (!curUser.loading) {
+        setLoading(false);
+        setUserData(curUser.userData);  // Sync userData from FireBaseAuth
+        const initialPoints = curUser.userData?.currency || 0;
+        clearInterval(checkLoadingStatus);   // Stop checking once data is available
+        setTotalPoints(initialPoints)
+      }
+    }, 100);
+    return () => {
+      unsubscribe();
+      clearInterval(checkLoadingStatus);
+    }
+    
+  }, [curUser]);
+
+  useEffect(() => {
+    drawWheel();
+  }, [loading, drawWheel]);
+
+
+  useEffect(() => {
+    drawWheel();
+  }, [currentHighlightIndex, winningIndex, drawWheel]);
+
+  if (loading) {
+    return <div>Loading user data...</div>;
+  }
 
   const placeBet = (type, value) => {
     setPlacedBet({ type, value });
@@ -113,7 +164,14 @@ const Roulette = () => {
       return;
     }
 
-    setTotalPoints(prev => prev - betAmt); // Deduct bet amount
+    setTotalPoints(prev => {
+      const newTotal = prev - betAmt;
+      console.log("Updated totalPoints:", newTotal);
+  
+      // After calculating, update both local state and Firebase
+      setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
+      return newTotal;  // Update local state with the new total
+    });
     setMessage('Spinning...');
     setWinningIndex(null); // Reset previous winning highlight
     setCurrentHighlightIndex(null); // Reset spinning highlight
@@ -171,7 +229,14 @@ const Roulette = () => {
 
     if (win) {
       setMessage(`You win! The winning number is ${winningNumber}.`);
-      setTotalPoints(prev => prev + betAmount * 2);
+      setTotalPoints(prev => {
+        const newTotal = prev + betAmount*2;
+        console.log("Updated totalPoints:", newTotal);
+    
+        // After calculating, update both local state and Firebase
+        setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
+        return newTotal;  // Update local state with the new total
+      });
     } else {
       setMessage(`You lose! The winning number is ${winningNumber}.`);
     }
