@@ -42,7 +42,7 @@ const ChangeAvatarPopup = ({ toggleAvatarPopup, onSubmit }) => {
     }
   
     return (
-    <div className={styles.modal}>
+    <div className={styles.modalGrid}>
     <div>
         <button className={styles.closeButton} onClick={toggleAvatarPopup}>
             X
