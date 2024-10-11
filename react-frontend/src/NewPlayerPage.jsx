@@ -5,11 +5,22 @@ import styles from "./frontpage-styles.module.css"; // Import CSS module
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import logo from "./assets/RoyalFlushAILogo.png";
-import { query, doc, getDoc, setDoc, collection, where, getDocs } from "firebase/firestore";
+import {
+  query,
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  where,
+  getDocs,
+} from "firebase/firestore";
 
 // Check if the username is already taken
 const isUsernameTaken = async (username) => {
-  const q = query(collection(firestore_db, "users"), where("username", "==", username));
+  const q = query(
+    collection(firestore_db, "users"),
+    where("username", "==", username)
+  );
 
   const querySnapshot = await getDocs(q);
 
@@ -61,7 +72,9 @@ const NewPlayerPage = () => {
     }
 
     if (await isEmailTaken(formData.email)) {
-      setMessage("There already is an account associated with that email address.");
+      setMessage(
+        "There already is an account associated with that email address."
+      );
       setMessageStyle({ color: "red" });
       return;
     }
@@ -90,7 +103,9 @@ const NewPlayerPage = () => {
   };
 
   return (
-    <div className={styles.container}> {/* Apply CSS module styles */}
+    <div className={`${styles.container} ${styles.secondContainer}`}>
+      {" "}
+      {/* Apply CSS module styles */}
       <div className={`${styles.logoContainer}`}>
         <img src={logo} alt="Royal Flush AI Logo" className={styles.logo} />
       </div>

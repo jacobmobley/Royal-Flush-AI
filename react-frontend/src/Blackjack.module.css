@@ -1,64 +1,64 @@
 .blackjackGame {
-    background-color: #1A2B3C;
-    padding: 20px;
-    border-radius: 10px;
-    width: 400px;
-    text-align: center;
-    color: #E0E0E0;
-    font-family: Arial, sans-serif;
-  }
-  
-  .gameArea {
-    margin-bottom: 20px;
-  }
-  
-  .dealerArea, .playerArea {
-    margin-bottom: 20px;
-  }
-  
-  .controls {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  button {
-    background-color: #00FF00;
-    color: #000;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #00CC00;
-  }
-  
-  input {
-    background-color: #0D1B2A; 
-    border: 1px solid #444;
-    color: #E0E0E0;
-    padding: 10px;
-    border-radius: 5px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  p {
-    margin-top: 20px;
-    font-size: 18px;
-  }
-  
-  .greenText {
-    color: #00FF00; /* Bright green */
-  }
-  
-  .redText {
-    color: #FF0000; /* Bright red */
-  }
-  
-  .yellowText {
-    color: #FFFF00; /* Bright yellow */
-  }
-  
+  background-color: #1a2b3c;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  text-align: center;
+  color: #e0e0e0;
+  font-family: Arial, sans-serif;
+}
+
+.gameArea {
+  margin-bottom: 20px;
+}
+
+.dealerArea,
+.playerArea {
+  margin-bottom: 20px;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+button {
+  background-color: #00ff00;
+  color: #000;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #00cc00;
+}
+
+input {
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  color: black;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+p {
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+.greenText {
+  color: #00ff00; /* Bright green */
+}
+
+.redText {
+  color: #ff0000; /* Bright red */
+}
+
+.yellowText {
+  color: #ffff00; /* Bright yellow */
+}
