@@ -8,9 +8,22 @@ import { Link } from "react-router-dom";
 import Settings from "./Settings";
 
 const HomePage = () => {
-  const [userData, setUserData] = useState({ username: "", currency: 0 });
+  const images = [
+    './src/assets/avatars/bear.png', 
+    './src/assets/avatars/cat.png', 
+    './src/assets/avatars/chicken.png',
+    './src/assets/avatars/dog.png',
+    './src/assets/avatars/fox.png',
+    './src/assets/avatars/koala.png',
+    './src/assets/avatars/meerkat.png',
+    './src/assets/avatars/panda.png',
+    './src/assets/avatars/rabbit.png',
+    './src/assets/avatars/sea-lion.png',        
+  ];
+  const [userData, setUserData] = useState({ username: "", currency: 0, avatar: 0 });
   const [showSettings, setShowSettings] = useState(false);
   const [loading, setLoading] = useState(true); // New loading state
+  const [image, setImage] = useState("");
 
   const toggleSettings = () => {
     setShowSettings(!showSettings);
@@ -27,6 +40,8 @@ const HomePage = () => {
             // Update user data state
             setUserData(docSnap.data());
             console.log(docSnap.data());
+
+            setImage(images[docSnap.data().avatar]);
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -63,6 +78,7 @@ const HomePage = () => {
     <div className="container">
       {/* Show user info only when data is available */}
       <div className={styles.userInfo}>
+        <span><img src={image} className = {styles.profileImgTitlePage}/></span>
         <span>{userData?.username}</span> |{" "}
         <span>Currency: {userData?.currency}</span>
       </div>

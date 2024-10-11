@@ -276,3 +276,21 @@ p {
   display: flex;
   align-items: flex-start;
 }
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  grid-gap: 10px; /* Space between images */
+  padding: 10px;
+}
+
+.gallery-image {
+  width: 100%;
+  height: auto; /* Adjust the height based on the image's aspect ratio */
+}
+
+.profileImgTitlePage {
+  width: 30px; /* Adjust this value to make the image smaller */
+  height: auto; /* Maintains the aspect ratio */
+  border-radius: 50%; /* Optional: makes the image round */
+}

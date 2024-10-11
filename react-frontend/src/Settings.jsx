@@ -5,6 +5,7 @@ import { firestore_db, auth } from "./firebase";
 import styles from "./frontpage-styles.module.css";
 import ChangeUsernamePopup from "./popups/ChangeUsernamePopup";
 import AddBioPopup from "./popups/AddBioPopup";
+import ChangeAvatarPopup from "./popups/ChangeAvatarPopup";
 
 const Settings = ({ toggleSettings }) => {
   const [selectedTab, setSelectedTab] = useState("Account Security");
@@ -12,6 +13,7 @@ const Settings = ({ toggleSettings }) => {
   const [showUsernamePopup, setShowUsernamePopup] = useState(false);
   const [showBioPopup, setShowBioPopup] = useState(false);
   const [showBioMessage, setShowBioMessage] = useState(false);
+  const [showAvatarPopup, setShowAvatarPopup] = useState(false);
 
   const onSubmit = async () => {
     await sleep(500);
@@ -28,6 +30,10 @@ const Settings = ({ toggleSettings }) => {
 
   const toggleBioPopup = async () => {
     setShowBioPopup(!showBioPopup);
+  };
+
+  const toggleAvatarPopup = async () => {
+    setShowAvatarPopup(!showAvatarPopup);
   };
 
   const getBio = async () => {
@@ -93,7 +99,13 @@ const Settings = ({ toggleSettings }) => {
                 <AddBioPopup toggleBioPopup={toggleBioPopup} onSubmit={onSubmit} />
               </div>
             )}
-            <button>Add or Change Avatar</button>{" "}
+            <button onClick={toggleAvatarPopup}>Add or Change Avatar</button>
+            <br></br> <br></br>
+            {showAvatarPopup && (
+              <div className={`${styles.modalOverlay}`}>
+                <ChangeAvatarPopup toggleAvatarPopup={toggleAvatarPopup} onSubmit={onSubmit} />
+              </div>
+            )}
             {/* Add a popup? or not needed? */}
           </>
         );

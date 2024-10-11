@@ -87,6 +87,7 @@ const NewPlayerPage = () => {
           username: formData.username,
           currency: 5000,
           bio: "",
+          avatar: 0,
         });
         setMessage("Sign-up successful!");
         setMessageStyle({ color: "green" });
