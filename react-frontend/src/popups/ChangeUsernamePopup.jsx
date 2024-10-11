@@ -25,9 +25,22 @@ const ChangeUsernamePopup = ({ toggleUsernamePopup, onSubmit }) => {
       
   } 
   
+  const isUsernameTaken = async (username) => {
+    const q = query(
+      collection(firestore_db, "users"),
+      where("username", "==", username)
+    );
+  
+    const querySnapshot = await getDocs(q);
+  
+    return !querySnapshot.empty;
+  };
+
   const changeDocUsername = async (email, newUsername) => {
     try {
       const q = doc(firestore_db, "users", email);
+
+      
 
       setDoc(q, {
         username: newUsername,

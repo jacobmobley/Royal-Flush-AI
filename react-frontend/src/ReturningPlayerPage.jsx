@@ -48,7 +48,7 @@ const ReturningPlayerPage = () => {
       })
       .catch((error) => {
         let errorMsg = "";
-        switch (error.code) {
+        switch (error.message) {
           case "auth/user-not-found":
             errorMsg = "No user found with this email.";
             break;
