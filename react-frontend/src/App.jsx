@@ -16,10 +16,10 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<TitleScreen />} />
           <Route path="/newplayer" element={<NewPlayerPage />} />
           <Route path="/returningplayer" element={<ReturningPlayerPage />} />
-          <Route path="/titlescreen" element={<TitleScreen />} />
+          <Route path="/homepage" element={<HomePage />} />
           <Route path="/plinkogame" element={<PlinkoGame />} />
           <Route path="/blackjack" element={<Blackjack />} />
         </Routes>
