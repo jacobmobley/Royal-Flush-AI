@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "../frontpage-styles.module.css";
 import { EmailAuthProvider, reauthenticateWithCredential, updateEmail, sendEmailVerification } from "firebase/auth";
-import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, deleteDoc, query, collection, where, getDocs } from "firebase/firestore";
 import { firestore_db, auth } from "../firebase";
 
 const ChangeUsernamePopup = ({ toggleUsernamePopup, onSubmit }) => {
@@ -25,6 +25,17 @@ const ChangeUsernamePopup = ({ toggleUsernamePopup, onSubmit }) => {
       
   } 
   
+  const isUsernameTaken = async (username) => {
+    const q = query(
+      collection(firestore_db, "users"),
+      where("username", "==", username)
+    );
+  
+    const querySnapshot = await getDocs(q);
+  
+    return !querySnapshot.empty;
+  };
+
   const changeDocUsername = async (email, newUsername) => {
     try {
       const q = doc(firestore_db, "users", email);
@@ -52,6 +63,12 @@ const ChangeUsernamePopup = ({ toggleUsernamePopup, onSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (await isUsernameTaken(formData.username)) {
+      setMessage("Username is already taken");
+      setMessageStyle({ color: 'red' });
+      return;
+    }
 
     await changeUsername(formData.username, formData.password);
 
