@@ -6,11 +6,29 @@ import styles from "./frontpage-styles.module.css";
 import gear from "./assets/Settings.png";
 import { Link } from "react-router-dom";
 import Settings from "./Settings";
+import logo from "./assets/RoyalFlushAILogo.png";
 
 const HomePage = () => {
-  const [userData, setUserData] = useState({ username: "", currency: 0 });
+  const images = [
+    "./src/assets/avatars/bear.png",
+    "./src/assets/avatars/cat.png",
+    "./src/assets/avatars/chicken.png",
+    "./src/assets/avatars/dog.png",
+    "./src/assets/avatars/fox.png",
+    "./src/assets/avatars/koala.png",
+    "./src/assets/avatars/meerkat.png",
+    "./src/assets/avatars/panda.png",
+    "./src/assets/avatars/rabbit.png",
+    "./src/assets/avatars/sea-lion.png",
+  ];
+  const [userData, setUserData] = useState({
+    username: "",
+    currency: 0,
+    avatar: 0,
+  });
   const [showSettings, setShowSettings] = useState(false);
   const [loading, setLoading] = useState(true); // New loading state
+  const [image, setImage] = useState("");
 
   const toggleSettings = () => {
     setShowSettings(!showSettings);
@@ -27,6 +45,8 @@ const HomePage = () => {
             // Update user data state
             setUserData(docSnap.data());
             console.log(docSnap.data());
+
+            setImage(images[docSnap.data().avatar]);
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -63,28 +83,37 @@ const HomePage = () => {
     <div className="container">
       {/* Show user info only when data is available */}
       <div className={styles.userInfo}>
-        <span>{userData?.username}</span> |{" "}
+        <span>
+          <img src={image} className={styles.profileImgTitlePage} />
+        </span>
+        <span>{userData?.username}</span> <span>|</span>
         <span>Currency: {userData?.currency}</span>
       </div>
-      <div>TITLE SCREEN</div>
-      <div className={styles.pokerButtons}>
-        <button type="poker" className={styles.Poker}>
-          Texas Hold'em
-        </button>
-      </div>
-      <div className={styles.gameButtons}>
-        <Link
-          to="/Blackjack"
-          className={`${styles.button} ${styles.blackjack}`}
-        >
-          Blackjack
-        </Link>
-        <Link to="/Roulette" className={`${styles.button} ${styles.roulette}`}>
-          Roulette
-        </Link>
-        {/*<Link to="/PlinkoGame" className={`${styles.button} ${styles.plinko}`}>
+
+      <div className={styles.menu}>
+        <img src={logo} alt="Royal Flush AI Logo" className={styles.homeLogo} />
+        <div className={styles.pokerButtons}>
+          <button type="poker" className={styles.poker}>
+            Texas Hold'em
+          </button>
+        </div>
+        <div className={styles.gameButtons}>
+          <Link
+            to="/Blackjack"
+            className={`${styles.button} ${styles.blackjack}`}
+          >
+            Blackjack
+          </Link>
+          <Link
+            to="/Roulette"
+            className={`${styles.button} ${styles.roulette}`}
+          >
+            Roulette
+          </Link>
+          {/*<Link to="/PlinkoGame" className={`${styles.button} ${styles.plinko}`}>
           Plinko
         </Link>*/}
+        </div>
       </div>
       <img
         src={gear}
