@@ -14,7 +14,7 @@ const PlinkoGame = () => {
   const pegRows = 20;
   const gravity = 0.1;
   const damping = 0.4;
-
+  
 
   useEffect(() => {
     const canvas = canvasRef.current;
