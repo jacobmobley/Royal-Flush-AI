@@ -100,3 +100,5 @@ const TitleScreen = () => {
     </div>
   );
 };
+
+export default TitleScreen;
