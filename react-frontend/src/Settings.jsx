@@ -4,12 +4,14 @@ import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { firestore_db, auth } from "./firebase";
 import styles from "./frontpage-styles.module.css";
 import ChangeUsernamePopup from "./popups/ChangeUsernamePopup";
+import ChangePasswordPopup from "./popups/ChangePasswordPopup";
 import AddBioPopup from "./popups/AddBioPopup";
 
 const Settings = ({ toggleSettings }) => {
   const [selectedTab, setSelectedTab] = useState("Account Security");
   const [bio, setBio] = useState(null);
   const [showUsernamePopup, setShowUsernamePopup] = useState(false);
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false);
   const [showBioPopup, setShowBioPopup] = useState(false);
   const [showBioMessage, setShowBioMessage] = useState(false);
 
@@ -24,6 +26,10 @@ const Settings = ({ toggleSettings }) => {
 
   const toggleUsernamePopup = () => {
     setShowUsernamePopup(!showUsernamePopup);
+  };
+
+  const togglePasswordPopup = () => {
+    setShowPasswordPopup(!showPasswordPopup);
   };
 
   const toggleBioPopup = async () => {
@@ -65,10 +71,16 @@ const Settings = ({ toggleSettings }) => {
           <>
             <p>Here you can change your account security settings.</p>
             <br></br>
-            <button onClick={toggleUsernamePopup}>Change Username</button>
+            <button onClick={toggleUsernamePopup}style={{ marginRight: '10px' }}>Change Username</button>
             {showUsernamePopup && (
               <div className={`${styles.modalOverlay}`}>
                 <ChangeUsernamePopup toggleUsernamePopup={toggleUsernamePopup} onSubmit={onSubmit}/>
+              </div>
+            )}
+            <button onClick={togglePasswordPopup}>Change Password</button>
+            {showPasswordPopup && (
+              <div className={`${styles.modalOverlay}`}>
+                <ChangePasswordPopup togglePasswordPopup={togglePasswordPopup} onSubmit={onSubmit}/>
               </div>
             )}
           </>

@@ -80,7 +80,7 @@ const NewPlayerPage = () => {
         console.log("User signed up:", userCredential.user);
 
         // Redirect to another page if needed
-        navigate("/titlescreen");
+        navigate("/homepage");
       })
       .catch((error) => {
         setMessage(error.message);
