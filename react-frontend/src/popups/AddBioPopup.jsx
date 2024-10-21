@@ -47,6 +47,12 @@ const AddBioPopup = ({ toggleBioPopup, onSubmit }) => {
       setMessageStyle({ color: "red" });
       return;
     }
+    
+    if (formData.bio.length > 400) {
+      setMessage("Bio cannot exceed 400 characters.\n");
+      setMessageStyle({ color: "red" });
+      return;
+    }
 
     await changeDocBio(user.email, formData.bio);
 
