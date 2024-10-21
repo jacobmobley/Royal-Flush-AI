@@ -54,6 +54,16 @@ const AddBioPopup = ({ toggleBioPopup, onSubmit }) => {
       return;
     }
 
+    profanity_arr = ['fuck', 'shit', 'dick', 'pussy', 'anus', 'nigga', 'nigger', 'faggot', 'bitch', 'anal', 'kill', 'die']
+
+    for (let i = 0; i < profanity_arr.length; i++) {
+      if (formData.bio.includes(profanity_arr[i])) {
+        setMessage("Bio cannot contain profanity.\n");
+        setMessageStyle({ color: "red" });
+        return;
+      }
+    }
+
     await changeDocBio(user.email, formData.bio);
 
     toggleBioPopup();
