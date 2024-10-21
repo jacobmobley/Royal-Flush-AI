@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './RouletteTable.module.css'; // Updated CSS module
+import styles from './RouletteTable.module.css'; // Import CSS module as 'styles'
 
 const RouletteTable = ({ onPlaceBet }) => {
   const [selectedBet, setSelectedBet] = useState(null);
@@ -9,90 +9,88 @@ const RouletteTable = ({ onPlaceBet }) => {
     onPlaceBet(betType, betValue);
   };
 
-  const getButtonColor = (number) => {
-    if (number === 0) return 'green';
-    const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
-    return redNumbers.includes(number) ? 'red' : 'black';
-  };
-
-  // Function to format single-digit numbers with leading zeros
-  const formatNumber = (number) => {
-    return number < 10 ? `0${number}` : number; // Format single digits as '01', '02', etc.
-  };
-
   return (
-    <div className="betting-table">
+    <div className={styles.bettingTable}>
       <h3>Betting Table</h3>
 
       {/* Row for 00 */}
-      <div className="zero-row" style={{ display: 'flex', justifyContent: 'center' }}>
+      <div className={styles.zeroRow} style={{ display: 'flex', justifyContent: 'center' }}>
         <button
-          className={`number-button long-button ${getButtonColor(0)}`}
+          className={`${styles.numberButton} ${styles.green}`}
           onClick={() => placeBet('number', 0)}
         >
           00
         </button>
       </div>
 
-      {/* Row 1: numbers 1-12 */}
-      <div className="number-row" style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-        {Array.from({ length: 12 }, (_, i) => (
-          <button
-            key={i + 1}
-            className={`number-button ${getButtonColor(i + 1)}`}
-            onClick={() => placeBet('number', i + 1)}
-          >
-            {formatNumber(i + 1)}
-          </button>
-        ))}
+      {/* Row 1: 1-12 */}
+      <div className={styles.numberRow} style={{ display: 'flex', justifyContent: 'center' }}>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 1)}>01</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 2)}>02</button>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 3)}>03</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 4)}>04</button>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 5)}>05</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 6)}>06</button>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 7)}>07</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 8)}>08</button>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 9)}>09</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 10)}>10</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 11)}>11</button>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 12)}>12</button>
       </div>
 
-      {/* Row 2: numbers 13-24 */}
-      <div className="number-row" style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-        {Array.from({ length: 12 }, (_, i) => (
-          <button
-            key={i + 13}
-            className={`number-button ${getButtonColor(i + 13)}`}
-            onClick={() => placeBet('number', i + 13)}
-          >
-            {formatNumber(i + 13)}
-          </button>
-        ))}
+      {/* Row 2: 13-24 */}
+      <div className={styles.numberRow} style={{ display: 'flex', justifyContent: 'center' }}>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 13)}>13</button>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 14)}>14</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 15)}>15</button>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 16)}>16</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 17)}>17</button>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 18)}>18</button>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 19)}>19</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 20)}>20</button>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 21)}>21</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 22)}>22</button>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 23)}>23</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 24)}>24</button>
       </div>
 
-      {/* Row 3: numbers 25-36 */}
-      <div className="number-row" style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-        {Array.from({ length: 12 }, (_, i) => (
-          <button
-            key={i + 25}
-            className={`number-button ${getButtonColor(i + 25)}`}
-            onClick={() => placeBet('number', i + 25)}
-          >
-            {formatNumber(i + 25)}
-          </button>
-        ))}
+      {/* Row 3: 25-36 */}
+      <div className={styles.numberRow} style={{ display: 'flex', justifyContent: 'center' }}>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 25)}>25</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 26)}>26</button>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 27)}>27</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 28)}>28</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 29)}>29</button>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 30)}>30</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 31)}>31</button>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 32)}>32</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 33)}>33</button>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 34)}>34</button>
+        <button className={`${styles.numberButton} ${styles.black}`} onClick={() => placeBet('number', 35)}>35</button>
+        <button className={`${styles.numberButton} ${styles.red}`} onClick={() => placeBet('number', 36)}>36</button>
       </div>
 
       {/* Bet options */}
-      <div className="bet-options" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div className="bet-row" style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <button onClick={() => placeBet('color', 'red')} className="red-option bet-button">Red</button>
-          <button onClick={() => placeBet('color', 'black')} className="black-option bet-button">Black</button>
-          <button onClick={() => placeBet('parity', 'even')} className="bet-button">Even</button>
-          <button onClick={() => placeBet('parity', 'odd')} className="bet-button">Odd</button>
+      <div className={styles.betOptions}>
+        <div className={styles.betRow}>
+          <button onClick={() => placeBet('color', 'red')} className={`${styles.redOption} ${styles.betButton}`}>Red</button>
+          <button onClick={() => placeBet('color', 'black')} className={`${styles.blackOption} ${styles.betButton}`}>Black</button>
+          <button onClick={() => placeBet('parity', 'even')} className={styles.betButton}>Even</button>
+          <button onClick={() => placeBet('parity', 'odd')} className={styles.betButton}>Odd</button>
         </div>
-        <div className="bet-row" style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <button onClick={() => placeBet('range', '1-18')} className="bet-button">1 to 18</button>
-          <button onClick={() => placeBet('range', '19-36')} className="bet-button">19 to 36</button>
+        <div className={styles.betRow}>
+          <button onClick={() => placeBet('range', '1-18')} className={styles.betButton}>1 to 18</button>
+          <button onClick={() => placeBet('range', '19-36')} className={styles.betButton}>19 to 36</button>
         </div>
-        <div className="bet-row" style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <button onClick={() => placeBet('dozen', '1st12')} className="bet-button">1st 12</button>
-          <button onClick={() => placeBet('dozen', '2nd12')} className="bet-button">2nd 12</button>
-          <button onClick={() => placeBet('dozen', '3rd12')} className="bet-button">3rd 12</button>
+        <div className={styles.betRow}>
+          <button onClick={() => placeBet('dozen', '1st12')} className={styles.betButton}>1st 12</button>
+          <button onClick={() => placeBet('dozen', '2nd12')} className={styles.betButton}>2nd 12</button>
+          <button onClick={() => placeBet('dozen', '3rd12')} className={styles.betButton}>3rd 12</button>
         </div>
       </div>
 
-      <p className="bet-summary">Selected Bet: {selectedBet ? `${selectedBet.type} on ${selectedBet.value}` : 'No bet yet'}</p>
+      <p className={styles.betSummary}>Selected Bet: {selectedBet ? `${selectedBet.type} on ${selectedBet.value}` : 'No bet yet'}</p>
     </div>
   );
 };
