@@ -47,6 +47,22 @@ const AddBioPopup = ({ toggleBioPopup, onSubmit }) => {
       setMessageStyle({ color: "red" });
       return;
     }
+    
+    if (formData.bio.length > 400) {
+      setMessage("Bio cannot exceed 400 characters.\n");
+      setMessageStyle({ color: "red" });
+      return;
+    }
+
+    profanity_arr = ['fuck', 'shit', 'dick', 'pussy', 'anus', 'nigga', 'nigger', 'faggot', 'bitch', 'anal', 'kill', 'die']
+
+    for (let i = 0; i < profanity_arr.length; i++) {
+      if (formData.bio.includes(profanity_arr[i])) {
+        setMessage("Bio cannot contain profanity.\n");
+        setMessageStyle({ color: "red" });
+        return;
+      }
+    }
 
     await changeDocBio(user.email, formData.bio);
 
