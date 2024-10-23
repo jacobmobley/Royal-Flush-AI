@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styles from './Roulette.module.css'; // Use a module for styling
+import FireBaseAuth from './FireBaseAuth';
 
 const numbers = [
   { number: 0, color: 'green' },
@@ -24,6 +25,9 @@ const numbers = [
 ];
 
 const Roulette = () => {
+  const [curUser] = useState(new FireBaseAuth());
+  const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState(null);
   const [totalPoints, setTotalPoints] = useState(1000);
   const [betAmount, setBetAmount] = useState(100);
   const [placedBet, setPlacedBet] = useState(null); // Tracks the user's bet
@@ -36,6 +40,12 @@ const Roulette = () => {
   const centerX = 200;
   const centerY = 200;
   const wheelRadius = 150;
+
+
+  const setTotalPointsWithUpdate = (newPoints) => {
+    setTotalPoints(newPoints); // Set the local state
+    curUser.updateCurrency(newPoints); // Call the function to update Firebase
+  };
 
   const drawWheel = useCallback(() => {
     const canvas = canvasRef.current;
@@ -103,9 +113,37 @@ const Roulette = () => {
     ctx.fillText(numbers[index].number, textX - 10, textY + 5);
   };
 
+
+    // Effect to re-draw the wheel whenever there's a change in the winning number or the spinning index
+  useEffect(() => {
+    const unsubscribe = curUser.getUnsubscribe();
+    const checkLoadingStatus = setInterval(() => {
+      if (!curUser.loading) {
+        setLoading(false);
+        setUserData(curUser.userData);  // Sync userData from FireBaseAuth
+        const initialPoints = curUser.userData?.currency || 0;
+        clearInterval(checkLoadingStatus);   // Stop checking once data is available
+        setTotalPoints(initialPoints)
+      }
+    }, 100);
+    return () => {
+      unsubscribe();
+      clearInterval(checkLoadingStatus);
+    }
+      
+  }, [curUser]);
+
+  useEffect(() => {
+    drawWheel();
+  }, [loading, drawWheel]);
+
   useEffect(() => {
     drawWheel();
   }, [currentHighlightIndex, winningIndex, drawWheel]);
+
+  if (loading) {
+    return <div>Loading user data...</div>;
+  }
 
   const placeBet = (type, value) => {
     setPlacedBet({ type, value });
@@ -120,7 +158,14 @@ const Roulette = () => {
       return;
     }
 
-    setTotalPoints(prev => prev - betAmt);
+    setTotalPoints(prev => {
+      const newTotal = prev - betAmt;
+      console.log("Updated totalPoints:", newTotal);
+  
+      // After calculating, update both local state and Firebase
+      setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
+      return newTotal;  // Update local state with the new total
+    });
     setMessage('Spinning...');
     setWinningIndex(null);
     setCurrentHighlightIndex(null);
@@ -178,7 +223,14 @@ const Roulette = () => {
 
     if (win) {
       setMessage(`You win! The winning number is ${winningNumber}.`);
-      setTotalPoints(prev => prev + betAmount * 2);
+      setTotalPoints(prev => {
+        const newTotal = prev + betAmount*2;
+        console.log("Updated totalPoints:", newTotal);
+    
+        // After calculating, update both local state and Firebase
+        setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
+        return newTotal;  // Update local state with the new total
+      });
     } else {
       setMessage(`You lose! The winning number is ${winningNumber}.`);
     }
