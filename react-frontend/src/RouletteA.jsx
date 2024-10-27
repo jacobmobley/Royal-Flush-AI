@@ -3,28 +3,29 @@ import styles from './Roulette.module.css'; // Use a module for styling
 import FireBaseAuth from './FireBaseAuth';
 
 const numbers = [
-  { number: 0, color: 'green' },
-  { number: 32, color: 'red' }, { number: 15, color: 'black' },
-  { number: 19, color: 'red' }, { number: 4, color: 'black' },
-  { number: 21, color: 'red' }, { number: 2, color: 'black' },
-  { number: 25, color: 'red' }, { number: 17, color: 'black' },
-  { number: 34, color: 'red' }, { number: 6, color: 'black' },
-  { number: 27, color: 'red' }, { number: 13, color: 'black' },
-  { number: 36, color: 'red' }, { number: 11, color: 'black' },
-  { number: 30, color: 'red' }, { number: 8, color: 'black' },
-  { number: 23, color: 'red' }, { number: 10, color: 'black' },
-  { number: 5, color: 'red' }, { number: 24, color: 'black' },
-  { number: 16, color: 'red' }, { number: 33, color: 'black' },
-  { number: 1, color: 'red' }, { number: 20, color: 'black' },
-  { number: 14, color: 'red' }, { number: 31, color: 'black' },
-  { number: 9, color: 'red' }, { number: 22, color: 'black' },
-  { number: 18, color: 'red' }, { number: 29, color: 'black' },
-  { number: 7, color: 'red' }, { number: 28, color: 'black' },
-  { number: 12, color: 'red' }, { number: 35, color: 'black' },
-  { number: 3, color: 'red' }, { number: 26, color: 'black' }
+  { number: '0', color: 'green' },
+  { number: '28', color: 'black' }, { number: '9', color: 'red' },
+  { number: '26', color: 'black' }, { number: '30', color: 'red' },
+  { number: '11', color: 'black' }, { number: '7', color: 'red' },
+  { number: '20', color: 'black' }, { number: '32', color: 'red' },
+  { number: '17', color: 'black' }, { number: '5', color: 'red' },
+  { number: '22', color: 'black' }, { number: '34', color: 'red' },
+  { number: '15', color: 'black' }, { number: '3', color: 'red' },
+  { number: '24', color: 'black' }, { number: '36', color: 'red' },
+  { number: '13', color: 'black' }, { number: '1', color: 'red' },
+  { number: '00', color: 'green' }, { number: '27', color: 'red' },
+  { number: '10', color: 'black' }, { number: '25', color: 'red' },
+  { number: '29', color: 'black' }, { number: '12', color: 'red' },
+  { number: '8', color: 'black' }, { number: '19', color: 'red' },
+  { number: '31', color: 'black' }, { number: '18', color: 'red' },
+  { number: '6', color: 'black' }, { number: '21', color: 'red' },
+  { number: '33', color: 'black' }, { number: '16', color: 'red' },
+  { number: '4', color: 'black' }, { number: '23', color: 'red' },
+  { number: '35', color: 'black' }, { number: '14', color: 'red' },
+  { number: '2', color: 'black' }
 ];
 
-const Roulette = () => {
+const RouletteA = () => {
   const [curUser] = useState(new FireBaseAuth());
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
@@ -206,17 +207,17 @@ const Roulette = () => {
       win = true;
     } else if (placedBet.type === 'color' && numbers[winningIndex].color === placedBet.value) {
       win = true;
-    } else if (placedBet.type === 'parity' && (placedBet.value === 'even' ? winningNumber % 2 === 0 : winningNumber % 2 !== 0)) {
+    } else if (placedBet.type === 'parity' && (placedBet.value === 'even' ? parseInt(winningNumber, 10) % 2 === 0 : parseInt(winningNumber, 10) % 2 !== 0)) {
       win = true;
     } else if (placedBet.type === 'range' && (
-      (placedBet.value === '1-18' && winningNumber >= 1 && winningNumber <= 18) ||
-      (placedBet.value === '19-36' && winningNumber >= 19 && winningNumber <= 36)
+      (placedBet.value === '1-18' && parseInt(winningNumber, 10) >= 1 && parseInt(winningNumber, 10) <= 18) ||
+      (placedBet.value === '19-36' && parseInt(winningNumber, 10) >= 19 && parseInt(winningNumber, 10) <= 36)
     )) {
       win = true;
     } else if (placedBet.type === 'dozen' && (
-      (placedBet.value === '1st12' && winningNumber >= 1 && winningNumber <= 12) ||
-      (placedBet.value === '2nd12' && winningNumber >= 13 && winningNumber <= 24) ||
-      (placedBet.value === '3rd12' && winningNumber >= 25 && winningNumber <= 36)
+      (placedBet.value === '1st12' && parseInt(winningNumber, 10) >= 1 && parseInt(winningNumber, 10) <= 12) ||
+      (placedBet.value === '2nd12' && parseInt(winningNumber, 10) >= 13 && parseInt(winningNumber, 10) <= 24) ||
+      (placedBet.value === '3rd12' && parseInt(winningNumber, 10) >= 25 && parseInt(winningNumber, 10) <= 36)
     )) {
       win = true;
     }
@@ -272,7 +273,8 @@ const RouletteTable = ({ onPlaceBet }) => {
     <div className={styles.bettingTable}>
       <h3>Betting Table</h3>
       <div className={styles.zeroRow}>
-        <button className={styles.greenButton} onClick={() => placeBet('number', 0)}>00</button>
+        <button className={styles.greenButton} onClick={() => placeBet('number', '0')}>0</button>
+        <button className={styles.greenButton} onClick={() => placeBet('number', '00')}>00</button>
       </div>
 
       {/* Row 1: Numbers 1-12 */}
@@ -340,4 +342,4 @@ const RouletteTable = ({ onPlaceBet }) => {
   );
 };
 
-export default Roulette;
+export default RouletteA;
