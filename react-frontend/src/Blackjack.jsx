@@ -1,9 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import styles from './Blackjack.module.css';
-import FireBaseAuth from './FireBaseAuth';
+import React, { useState, useEffect } from "react";
+import styles from "./Blackjack.module.css";
+import FireBaseAuth from "./FireBaseAuth";
 
-const suits = ['♠', '♣', '♦', '♥'];
-const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+const suits = ["♠", "♣", "♦", "♥"];
+const values = [
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "J",
+  "Q",
+  "K",
+  "A",
+];
 
 function Blackjack() {
   const [curUser] = useState(new FireBaseAuth());
@@ -14,8 +28,8 @@ function Blackjack() {
   const [dealerHand, setDealerHand] = useState([]);
   const [isGameOver, setIsGameOver] = useState(false);
   const [currentBet, setCurrentBet] = useState(100);
-  const [message, setMessage] = useState('');
-  const [resultClass, setResultClass] = useState('');
+  const [message, setMessage] = useState("");
+  const [resultClass, setResultClass] = useState("");
   const [totalPoints, setTotalPoints] = useState(0);
 
   const setTotalPointsWithUpdate = (newPoints) => {
@@ -29,7 +43,7 @@ function Blackjack() {
       const checkLoadingStatus = setInterval(() => {
         if (!curUser.loading) {
           setLoading(false);
-          setUserData(curUser.userData);  // Sync with Firebase
+          setUserData(curUser.userData); // Sync with Firebase
           const initialPoints = curUser.userData?.currency || 0;
           clearInterval(checkLoadingStatus);
           setTotalPoints(initialPoints);
@@ -40,7 +54,7 @@ function Blackjack() {
 
     return () => {
       unsubscribe();
-    }
+    };
   }, [curUser]);
 
   if (loading) {
@@ -76,10 +90,10 @@ function Blackjack() {
     let score = 0;
     let aceCount = 0;
 
-    hand.forEach(card => {
-      if (['J', 'Q', 'K'].includes(card.value)) {
+    hand.forEach((card) => {
+      if (["J", "Q", "K"].includes(card.value)) {
         score += 10;
-      } else if (card.value === 'A') {
+      } else if (card.value === "A") {
         score += 11;
         aceCount++;
       } else {
@@ -104,15 +118,15 @@ function Blackjack() {
     setPlayerHand(playerStartingHand);
     setDealerHand(dealerStartingHand);
     setIsGameOver(false);
-    setMessage('');
-    setResultClass(''); // Reset result class
-    setTotalPoints(prev => {
+    setMessage("");
+    setResultClass(""); // Reset result class
+    setTotalPoints((prev) => {
       const newTotal = prev - currentBet;
       console.log("Updated totalPoints:", newTotal);
-  
+
       // After calculating, update both local state and Firebase
-      setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
-      return newTotal;  // Update local state with the new total
+      setTotalPointsWithUpdate(newTotal); // Call the custom setter with the new total points
+      return newTotal; // Update local state with the new total
     });
   }
 
@@ -123,7 +137,7 @@ function Blackjack() {
     setPlayerHand(newPlayerHand);
 
     if (calculateScore(newPlayerHand) > 21) {
-      setMessage('Bust! You lose.');
+      setMessage("Bust! You lose.");
       setResultClass(styles.redText);
       setIsGameOver(true);
     }
@@ -142,14 +156,14 @@ function Blackjack() {
     const playerScore = calculateScore(playerHand);
 
     if (dealerScore > 21 || playerScore > dealerScore) {
-      setMessage('You win!');
+      setMessage("You win!");
       setTotalPointsWithUpdate(totalPoints + currentBet * 2);
       setResultClass(styles.greenText);
     } else if (playerScore === dealerScore) {
-      setMessage('It\'s a tie!');
+      setMessage("It's a tie!");
       setTotalPointsWithUpdate(totalPoints + currentBet);
     } else {
-      setMessage('Dealer wins!');
+      setMessage("Dealer wins!");
       setResultClass(styles.redText);
     }
 
@@ -170,26 +184,50 @@ function Blackjack() {
         <div className={styles.dealerArea}>
           <h2>Dealer's Hand</h2>
           <div className={styles.cardArea}>
-            {dealerHand.map((card, i) => <span key={i}>{card.value}{card.suit}</span>)}
+            {dealerHand.map((card, i) => (
+              <span key={i}>
+                {card.value}
+                {card.suit}
+              </span>
+            ))}
           </div>
           <p className={styles.score}>Score: {calculateScore(dealerHand)}</p>
         </div>
         <div className={styles.playerArea}>
           <h2>Your Hand</h2>
           <div className={styles.cardArea}>
-            {playerHand.map((card, i) => <span key={i}>{card.value}{card.suit}</span>)}
+            {playerHand.map((card, i) => (
+              <span key={i}>
+                {card.value}
+                {card.suit}
+              </span>
+            ))}
           </div>
           <p className={styles.score}>Score: {calculateScore(playerHand)}</p>
         </div>
       </div>
       <div className={styles.controls}>
-        <h3>Total Points: <span>{totalPoints}</span></h3>
+        <h3>
+          Total Points: <span>{totalPoints}</span>
+        </h3>
         <label htmlFor="bet-amount">Bet Amount:</label>
-        <input type="number" id="bet-amount" value={currentBet} onChange={handleBetChange} />
+        <input
+          className={styles.betInput}
+          type="number"
+          id="bet-amount"
+          value={currentBet}
+          onChange={handleBetChange}
+        />
         <div className={styles.buttonArea}>
-          <button className={styles.hitButton} onClick={handleHit}>Hit</button>
-          <button className={styles.standButton} onClick={handleStand}>Stand</button>
-          <button className={styles.restartButton} onClick={handleRestart}>Restart</button>
+          <button className={styles.hitButton} onClick={handleHit}>
+            Hit
+          </button>
+          <button className={styles.standButton} onClick={handleStand}>
+            Stand
+          </button>
+          <button className={styles.restartButton} onClick={handleRestart}>
+            Restart
+          </button>
         </div>
         <p className={resultClass}>{message}</p>
       </div>
