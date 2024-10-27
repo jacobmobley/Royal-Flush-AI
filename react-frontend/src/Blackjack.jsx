@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './Blackjack.module.css';
 import FireBaseAuth from './FireBaseAuth';
 
-const suits = ['♠', '♣', '♦', '♥'];
+const suits = ['♠  ', '♣  ', '♦  ', '♥  '];
 const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
 function Blackjack() {
@@ -16,35 +16,56 @@ function Blackjack() {
   const [currentBet, setCurrentBet] = useState(100);
   const [message, setMessage] = useState('');
   const [resultClass, setResultClass] = useState('');
-  const [totalPoints, setTotalPoints] = useState(0);
+  const [totalPoints, setTotalPoints] = useState(999999999999);
 
   const setTotalPointsWithUpdate = (newPoints) => {
-    setTotalPoints(newPoints); // Set local state
+    setTotalPoints(newPoints); // Update local state
     curUser.updateCurrency(newPoints); // Update Firebase
   };
 
   useEffect(() => {
     const unsubscribe = curUser.getUnsubscribe();
-    if (loading) {
-      const checkLoadingStatus = setInterval(() => {
-        if (!curUser.loading) {
-          setLoading(false);
-          setUserData(curUser.userData);  // Sync with Firebase
-          const initialPoints = curUser.userData?.currency || 0;
-          clearInterval(checkLoadingStatus);
-          setTotalPoints(initialPoints);
-          initGame();
-        }
-      }, 100);
-    }
+
+    // Check for loading completion
+    const checkLoadingStatus = setInterval(() => {
+      if (!curUser.loading) {
+        setLoading(false);
+        setUserData(curUser.userData); // Sync with Firebase data
+        const initialPoints = curUser.userData?.currency || 0;
+        setTotalPoints(initialPoints);
+        clearInterval(checkLoadingStatus);
+        initGame(); // Start the game after loading
+      }
+    }, 100);
 
     return () => {
       unsubscribe();
-    }
+      clearInterval(checkLoadingStatus);
+    };
   }, [curUser]);
 
   if (loading) {
     return <div className={styles.loading}>Loading user data...</div>;
+  }
+
+  function initGame() {
+    if (currentBet > totalPoints) {
+      setMessage('Not enough points to place this bet.');
+      setIsGameOver(true);
+      return;
+    }
+
+    const newDeck = shuffleDeck(createDeck());
+    setDeck(newDeck);
+    setPlayerHand([newDeck.pop(), newDeck.pop()]);
+    setDealerHand([newDeck.pop(), newDeck.pop()]);
+    setIsGameOver(false);
+    setMessage('');
+    setTotalPoints((prevPoints) => {
+      const newTotal = prevPoints - currentBet;
+      setTotalPointsWithUpdate(newTotal);
+      return newTotal;
+    });
   }
 
   function createDeck() {
@@ -83,7 +104,7 @@ function Blackjack() {
         score += 11;
         aceCount++;
       } else {
-        score += parseInt(card.value);
+        score += parseInt(card.value, 10);
       }
     });
 
@@ -95,27 +116,6 @@ function Blackjack() {
     return score;
   }
 
-  function initGame() {
-    const newDeck = shuffleDeck(createDeck());
-    const playerStartingHand = [newDeck.pop(), newDeck.pop()];
-    const dealerStartingHand = [newDeck.pop(), newDeck.pop()];
-
-    setDeck(newDeck);
-    setPlayerHand(playerStartingHand);
-    setDealerHand(dealerStartingHand);
-    setIsGameOver(false);
-    setMessage('');
-    setResultClass(''); // Reset result class
-    setTotalPoints(prev => {
-      const newTotal = prev - currentBet;
-      console.log("Updated totalPoints:", newTotal);
-  
-      // After calculating, update both local state and Firebase
-      setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
-      return newTotal;  // Update local state with the new total
-    });
-  }
-
   function handleHit() {
     if (isGameOver) return;
 
@@ -124,7 +124,6 @@ function Blackjack() {
 
     if (calculateScore(newPlayerHand) > 21) {
       setMessage('Bust! You lose.');
-      setResultClass(styles.redText);
       setIsGameOver(true);
     }
   }
@@ -132,32 +131,40 @@ function Blackjack() {
   function handleStand() {
     if (isGameOver) return;
 
-    let newDealerHand = [...dealerHand];
+    const newDealerHand = [...dealerHand];
     while (calculateScore(newDealerHand) < 17) {
       newDealerHand.push(drawCard());
     }
     setDealerHand(newDealerHand);
-
-    const dealerScore = calculateScore(newDealerHand);
-    const playerScore = calculateScore(playerHand);
-
-    if (dealerScore > 21 || playerScore > dealerScore) {
-      setMessage('You win!');
-      setTotalPointsWithUpdate(totalPoints + currentBet * 2);
-      setResultClass(styles.greenText);
-    } else if (playerScore === dealerScore) {
-      setMessage('It\'s a tie!');
-      setTotalPointsWithUpdate(totalPoints + currentBet);
-    } else {
-      setMessage('Dealer wins!');
-      setResultClass(styles.redText);
-    }
-
+    determineWinner(newDealerHand);
     setIsGameOver(true);
   }
 
+  function determineWinner(dealerHand) {
+    const playerScore = calculateScore(playerHand);
+    const dealerScore = calculateScore(dealerHand);
+
+    if (dealerScore > 21 || playerScore > dealerScore) {
+      setMessage('You win!');
+      setTotalPoints((prevPoints) => {
+        const newTotal = prevPoints + currentBet * 2;
+        setTotalPointsWithUpdate(newTotal);
+        return newTotal;
+      });
+    } else if (dealerScore === playerScore) {
+      setMessage("It's a tie!");
+      setTotalPoints((prevPoints) => {
+        const newTotal = prevPoints + currentBet;
+        setTotalPointsWithUpdate(newTotal);
+        return newTotal;
+      });
+    } else {
+      setMessage('Dealer wins!');
+    }
+  }
+
   function handleBetChange(e) {
-    setCurrentBet(parseInt(e.target.value));
+    setCurrentBet(parseInt(e.target.value, 10));
   }
 
   function handleRestart() {
@@ -170,14 +177,18 @@ function Blackjack() {
         <div className={styles.dealerArea}>
           <h2>Dealer's Hand</h2>
           <div className={styles.cardArea}>
-            {dealerHand.map((card, i) => <span key={i}>{card.value}{card.suit}</span>)}
+            {dealerHand.map((card, i) => (
+              <span key={i}>{card.value}{card.suit}</span>
+            ))}
           </div>
-          <p className={styles.score}>Score: {calculateScore(dealerHand)}</p>
+          <p className={styles.score}>Score: {isGameOver ? calculateScore(dealerHand) : '?'}</p>
         </div>
         <div className={styles.playerArea}>
           <h2>Your Hand</h2>
           <div className={styles.cardArea}>
-            {playerHand.map((card, i) => <span key={i}>{card.value}{card.suit}</span>)}
+            {playerHand.map((card, i) => (
+              <span key={i}>{card.value}{card.suit}</span>
+            ))}
           </div>
           <p className={styles.score}>Score: {calculateScore(playerHand)}</p>
         </div>
@@ -185,13 +196,18 @@ function Blackjack() {
       <div className={styles.controls}>
         <h3>Total Points: <span>{totalPoints}</span></h3>
         <label htmlFor="bet-amount">Bet Amount:</label>
-        <input type="number" id="bet-amount" value={currentBet} onChange={handleBetChange} />
+        <input
+          type="number"
+          id="bet-amount"
+          value={currentBet}
+          onChange={handleBetChange}
+        />
         <div className={styles.buttonArea}>
-          <button className={styles.hitButton} onClick={handleHit}>Hit</button>
-          <button className={styles.standButton} onClick={handleStand}>Stand</button>
+          <button className={styles.hitButton} onClick={handleHit} disabled={isGameOver}>Hit</button>
+          <button className={styles.standButton} onClick={handleStand} disabled={isGameOver}>Stand</button>
           <button className={styles.restartButton} onClick={handleRestart}>Restart</button>
         </div>
-        <p className={resultClass}>{message}</p>
+        <p>{message}</p>
       </div>
     </div>
   );
