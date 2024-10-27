@@ -42,7 +42,7 @@ const numbers = [
   { number: 26, color: "black" },
 ];
 
-const Roulette = () => {
+const RouletteE = () => {
   const [curUser] = useState(new FireBaseAuth());
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
@@ -616,4 +616,4 @@ const RouletteTable = ({ onPlaceBet }) => {
   );
 };
 
-export default Roulette;
+export default RouletteE;

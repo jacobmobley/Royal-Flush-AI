@@ -105,10 +105,16 @@ const HomePage = () => {
             Blackjack
           </Link>
           <Link
-            to="/Roulette"
+            to="/RouletteE"
             className={`${styles.button} ${styles.roulette}`}
           >
-            Roulette
+            European Roulette
+          </Link>
+          <Link
+            to="/RouletteA"
+            className={`${styles.button} ${styles.roulette}`}
+          >
+            American Roulette
           </Link>
           {/*<Link to="/PlinkoGame" className={`${styles.button} ${styles.plinko}`}>
           Plinko
