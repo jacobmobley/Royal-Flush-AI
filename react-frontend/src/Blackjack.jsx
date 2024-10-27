@@ -33,32 +33,53 @@ function Blackjack() {
   const [totalPoints, setTotalPoints] = useState(0);
 
   const setTotalPointsWithUpdate = (newPoints) => {
-    setTotalPoints(newPoints); // Set local state
+    setTotalPoints(newPoints); // Update local state
     curUser.updateCurrency(newPoints); // Update Firebase
   };
 
   useEffect(() => {
     const unsubscribe = curUser.getUnsubscribe();
-    if (loading) {
-      const checkLoadingStatus = setInterval(() => {
-        if (!curUser.loading) {
-          setLoading(false);
-          setUserData(curUser.userData); // Sync with Firebase
-          const initialPoints = curUser.userData?.currency || 0;
-          clearInterval(checkLoadingStatus);
-          setTotalPoints(initialPoints);
-          initGame();
-        }
-      }, 100);
-    }
+
+    // Check for loading completion
+    const checkLoadingStatus = setInterval(() => {
+      if (!curUser.loading) {
+        setLoading(false);
+        setUserData(curUser.userData); // Sync with Firebase data
+        const initialPoints = curUser.userData?.currency || 0;
+        setTotalPoints(initialPoints);
+        clearInterval(checkLoadingStatus);
+        initGame(); // Start the game after loading
+      }
+    }, 100);
 
     return () => {
       unsubscribe();
+      clearInterval(checkLoadingStatus);
     };
   }, [curUser]);
 
   if (loading) {
     return <div className={styles.loading}>Loading user data...</div>;
+  }
+
+  function initGame() {
+    if (currentBet > totalPoints) {
+      setMessage('Not enough points to place this bet.');
+      setIsGameOver(true);
+      return;
+    }
+
+    const newDeck = shuffleDeck(createDeck());
+    setDeck(newDeck);
+    setPlayerHand([newDeck.pop(), newDeck.pop()]);
+    setDealerHand([newDeck.pop(), newDeck.pop()]);
+    setIsGameOver(false);
+    setMessage('');
+    setTotalPoints((prevPoints) => {
+      const newTotal = prevPoints - currentBet;
+      setTotalPointsWithUpdate(newTotal);
+      return newTotal;
+    });
   }
 
   function createDeck() {
@@ -97,7 +118,7 @@ function Blackjack() {
         score += 11;
         aceCount++;
       } else {
-        score += parseInt(card.value);
+        score += parseInt(card.value, 10);
       }
     });
 
@@ -146,32 +167,40 @@ function Blackjack() {
   function handleStand() {
     if (isGameOver) return;
 
-    let newDealerHand = [...dealerHand];
+    const newDealerHand = [...dealerHand];
     while (calculateScore(newDealerHand) < 17) {
       newDealerHand.push(drawCard());
     }
     setDealerHand(newDealerHand);
-
-    const dealerScore = calculateScore(newDealerHand);
-    const playerScore = calculateScore(playerHand);
-
-    if (dealerScore > 21 || playerScore > dealerScore) {
-      setMessage("You win!");
-      setTotalPointsWithUpdate(totalPoints + currentBet * 2);
-      setResultClass(styles.greenText);
-    } else if (playerScore === dealerScore) {
-      setMessage("It's a tie!");
-      setTotalPointsWithUpdate(totalPoints + currentBet);
-    } else {
-      setMessage("Dealer wins!");
-      setResultClass(styles.redText);
-    }
-
+    determineWinner(newDealerHand);
     setIsGameOver(true);
   }
 
+  function determineWinner(dealerHand) {
+    const playerScore = calculateScore(playerHand);
+    const dealerScore = calculateScore(dealerHand);
+
+    if (dealerScore > 21 || playerScore > dealerScore) {
+      setMessage('You win!');
+      setTotalPoints((prevPoints) => {
+        const newTotal = prevPoints + currentBet * 2;
+        setTotalPointsWithUpdate(newTotal);
+        return newTotal;
+      });
+    } else if (dealerScore === playerScore) {
+      setMessage("It's a tie!");
+      setTotalPoints((prevPoints) => {
+        const newTotal = prevPoints + currentBet;
+        setTotalPointsWithUpdate(newTotal);
+        return newTotal;
+      });
+    } else {
+      setMessage('Dealer wins!');
+    }
+  }
+
   function handleBetChange(e) {
-    setCurrentBet(parseInt(e.target.value));
+    setCurrentBet(parseInt(e.target.value, 10));
   }
 
   function handleRestart() {
@@ -191,7 +220,7 @@ function Blackjack() {
               </span>
             ))}
           </div>
-          <p className={styles.score}>Score: {calculateScore(dealerHand)}</p>
+          <p className={styles.score}>Score: {isGameOver ? calculateScore(dealerHand) : '?'}</p>
         </div>
         <div className={styles.playerArea}>
           <h2>Your Hand</h2>
@@ -229,7 +258,7 @@ function Blackjack() {
             Restart
           </button>
         </div>
-        <p className={resultClass}>{message}</p>
+        <p>{message}</p>
       </div>
     </div>
   );
