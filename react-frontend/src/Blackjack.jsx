@@ -136,6 +136,27 @@ function Blackjack() {
     return score;
   }
 
+  function initGame() {
+    const newDeck = shuffleDeck(createDeck());
+    const playerStartingHand = [newDeck.pop(), newDeck.pop()];
+    const dealerStartingHand = [newDeck.pop(), newDeck.pop()];
+
+    setDeck(newDeck);
+    setPlayerHand(playerStartingHand);
+    setDealerHand(dealerStartingHand);
+    setIsGameOver(false);
+    setMessage("");
+    setResultClass(""); // Reset result class
+    setTotalPoints((prev) => {
+      const newTotal = prev - currentBet;
+      console.log("Updated totalPoints:", newTotal);
+
+      // After calculating, update both local state and Firebase
+      setTotalPointsWithUpdate(newTotal); // Call the custom setter with the new total points
+      return newTotal; // Update local state with the new total
+    });
+  }
+
   function handleHit() {
     if (isGameOver) return;
 

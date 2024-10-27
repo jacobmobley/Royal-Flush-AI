@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import styles from './Roulette.module.css'; // Use a module for styling
-import FireBaseAuth from './FireBaseAuth';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import styles from "./Roulette.module.css"; // Use a module for styling
+import FireBaseAuth from "./FireBaseAuth";
 
 const numbers = [
   { number: '0', color: 'green' },
@@ -32,7 +32,7 @@ const RouletteA = () => {
   const [totalPoints, setTotalPoints] = useState(1000);
   const [betAmount, setBetAmount] = useState(100);
   const [placedBet, setPlacedBet] = useState(null); // Tracks the user's bet
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [winningIndex, setWinningIndex] = useState(null); // Winning number index
   const [isSpinning, setIsSpinning] = useState(false);
   const [currentHighlightIndex, setCurrentHighlightIndex] = useState(null); // Track the current highlighted number during the spin
@@ -42,7 +42,6 @@ const RouletteA = () => {
   const centerY = 200;
   const wheelRadius = 150;
 
-
   const setTotalPointsWithUpdate = (newPoints) => {
     setTotalPoints(newPoints); // Set the local state
     curUser.updateCurrency(newPoints); // Call the function to update Firebase
@@ -51,7 +50,7 @@ const RouletteA = () => {
   const drawWheel = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     const segmentAngle = (2 * Math.PI) / numbers.length;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -74,22 +73,22 @@ const RouletteA = () => {
       const angle = index * segmentAngle + segmentAngle / 2;
       const textX = centerX + (wheelRadius - 30) * Math.cos(angle);
       const textY = centerY + (wheelRadius - 30) * Math.sin(angle);
-      ctx.fillStyle = 'white';
-      ctx.font = '16px Arial';
+      ctx.fillStyle = "white";
+      ctx.font = "16px Arial";
       ctx.fillText(segment.number, textX - 10, textY + 5);
     });
 
     if (currentHighlightIndex !== null) {
-      highlightSegment(currentHighlightIndex, 'yellow', 'black');
+      highlightSegment(currentHighlightIndex, "yellow", "black");
     } else if (winningIndex !== null) {
-      highlightSegment(winningIndex, 'yellow', 'black');
+      highlightSegment(winningIndex, "yellow", "black");
     }
   }, [currentHighlightIndex, winningIndex]);
 
   const highlightSegment = (index, highlightColor, textColor) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     const segmentAngle = (2 * Math.PI) / numbers.length;
 
     ctx.beginPath();
@@ -110,28 +109,26 @@ const RouletteA = () => {
     const textX = centerX + (wheelRadius - 30) * Math.cos(angle);
     const textY = centerY + (wheelRadius - 30) * Math.sin(angle);
     ctx.fillStyle = textColor;
-    ctx.font = '16px Arial';
+    ctx.font = "16px Arial";
     ctx.fillText(numbers[index].number, textX - 10, textY + 5);
   };
 
-
-    // Effect to re-draw the wheel whenever there's a change in the winning number or the spinning index
+  // Effect to re-draw the wheel whenever there's a change in the winning number or the spinning index
   useEffect(() => {
     const unsubscribe = curUser.getUnsubscribe();
     const checkLoadingStatus = setInterval(() => {
       if (!curUser.loading) {
         setLoading(false);
-        setUserData(curUser.userData);  // Sync userData from FireBaseAuth
+        setUserData(curUser.userData); // Sync userData from FireBaseAuth
         const initialPoints = curUser.userData?.currency || 0;
-        clearInterval(checkLoadingStatus);   // Stop checking once data is available
-        setTotalPoints(initialPoints)
+        clearInterval(checkLoadingStatus); // Stop checking once data is available
+        setTotalPoints(initialPoints);
       }
     }, 100);
     return () => {
       unsubscribe();
       clearInterval(checkLoadingStatus);
-    }
-      
+    };
   }, [curUser]);
 
   useEffect(() => {
@@ -155,19 +152,19 @@ const RouletteA = () => {
 
     const betAmt = parseInt(betAmount, 10) || 0;
     if (betAmt > totalPoints) {
-      setMessage('Not enough points to place this bet.');
+      setMessage("Not enough points to place this bet.");
       return;
     }
 
-    setTotalPoints(prev => {
+    setTotalPoints((prev) => {
       const newTotal = prev - betAmt;
       console.log("Updated totalPoints:", newTotal);
-  
+
       // After calculating, update both local state and Firebase
-      setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
-      return newTotal;  // Update local state with the new total
+      setTotalPointsWithUpdate(newTotal); // Call the custom setter with the new total points
+      return newTotal; // Update local state with the new total
     });
-    setMessage('Spinning...');
+    setMessage("Spinning...");
     setWinningIndex(null);
     setCurrentHighlightIndex(null);
     setIsSpinning(true);
@@ -183,7 +180,7 @@ const RouletteA = () => {
       currentIndex = (currentIndex + 1) % numbers.length;
 
       if (totalSpins < 20) {
-        spinSpeed += 10; 
+        spinSpeed += 10;
       }
 
       totalSpins--;
@@ -255,10 +252,10 @@ const RouletteA = () => {
       setTotalPoints(prev => {
         const newTotal = prev + betAmount*3;
         console.log("Updated totalPoints:", newTotal);
-    
+
         // After calculating, update both local state and Firebase
-        setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
-        return newTotal;  // Update local state with the new total
+        setTotalPointsWithUpdate(newTotal); // Call the custom setter with the new total points
+        return newTotal; // Update local state with the new total
       });
     } else {
       setMessage(`You lose! The winning number is ${winningNumber}.`);
@@ -271,13 +268,19 @@ const RouletteA = () => {
         <canvas ref={canvasRef} width="400" height="400"></canvas>
         <div className={styles.controls}>
           <h3>Total Points: {totalPoints}</h3>
-          <label>Bet Amount:</label> {/* Now styled in yellow */}
+          <label className={styles.betLabel}>Bet Amount:</label>{" "}
+          {/* Now styled in yellow */}
           <input
             type="number"
             value={betAmount}
+            className={styles.betInput}
             onChange={(e) => setBetAmount(parseInt(e.target.value))}
           />
-          <button className={styles.spinButton} onClick={spinWheel} disabled={isSpinning || !placedBet}>
+          <button
+            className={styles.spinButton}
+            onClick={spinWheel}
+            disabled={isSpinning || !placedBet}
+          >
             Spin
           </button>
           <p>{message}</p>
@@ -307,65 +310,295 @@ const RouletteTable = ({ onPlaceBet }) => {
 
       {/* Row 1: Numbers 1-12 */}
       <div className={styles.numberRow}>
-        <button className={styles.redButton} onClick={() => placeBet('number', 1)}>01</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 2)}>02</button>
-        <button className={styles.redButton} onClick={() => placeBet('number', 3)}>03</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 4)}>04</button>
-        <button className={styles.redButton} onClick={() => placeBet('number', 5)}>05</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 6)}>06</button>
-        <button className={styles.redButton} onClick={() => placeBet('number', 7)}>07</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 8)}>08</button>
-        <button className={styles.redButton} onClick={() => placeBet('number', 9)}>09</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 10)}>10</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 11)}>11</button>
-        <button className={styles.redButton} onClick={() => placeBet('number', 12)}>12</button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 1)}
+        >
+          01
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 2)}
+        >
+          02
+        </button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 3)}
+        >
+          03
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 4)}
+        >
+          04
+        </button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 5)}
+        >
+          05
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 6)}
+        >
+          06
+        </button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 7)}
+        >
+          07
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 8)}
+        >
+          08
+        </button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 9)}
+        >
+          09
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 10)}
+        >
+          10
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 11)}
+        >
+          11
+        </button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 12)}
+        >
+          12
+        </button>
       </div>
 
       {/* Row 2: Numbers 13-24 */}
       <div className={styles.numberRow}>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 13)}>13</button>
-        <button className={styles.redButton} onClick={() => placeBet('number', 14)}>14</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 15)}>15</button>
-        <button className={styles.redButton} onClick={() => placeBet('number', 16)}>16</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 17)}>17</button>
-        <button className={styles.redButton} onClick={() => placeBet('number', 18)}>18</button>
-        <button className={styles.redButton} onClick={() => placeBet('number', 19)}>19</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 20)}>20</button>
-        <button className={styles.redButton} onClick={() => placeBet('number', 21)}>21</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 22)}>22</button>
-        <button className={styles.redButton} onClick={() => placeBet('number', 23)}>23</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 24)}>24</button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 13)}
+        >
+          13
+        </button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 14)}
+        >
+          14
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 15)}
+        >
+          15
+        </button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 16)}
+        >
+          16
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 17)}
+        >
+          17
+        </button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 18)}
+        >
+          18
+        </button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 19)}
+        >
+          19
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 20)}
+        >
+          20
+        </button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 21)}
+        >
+          21
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 22)}
+        >
+          22
+        </button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 23)}
+        >
+          23
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 24)}
+        >
+          24
+        </button>
       </div>
 
       {/* Row 3: Numbers 25-36 */}
       <div className={styles.numberRow}>
-        <button className={styles.redButton} onClick={() => placeBet('number', 25)}>25</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 26)}>26</button>
-        <button className={styles.redButton} onClick={() => placeBet('number', 27)}>27</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 28)}>28</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 29)}>29</button>
-        <button className={styles.redButton} onClick={() => placeBet('number', 30)}>30</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 31)}>31</button>
-        <button className={styles.redButton} onClick={() => placeBet('number', 32)}>32</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 33)}>33</button>
-        <button className={styles.redButton} onClick={() => placeBet('number', 34)}>34</button>
-        <button className={styles.blackButton} onClick={() => placeBet('number', 35)}>35</button>
-        <button className={styles.redButton} onClick={() => placeBet('number', 36)}>36</button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 25)}
+        >
+          25
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 26)}
+        >
+          26
+        </button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 27)}
+        >
+          27
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 28)}
+        >
+          28
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 29)}
+        >
+          29
+        </button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 30)}
+        >
+          30
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 31)}
+        >
+          31
+        </button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 32)}
+        >
+          32
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 33)}
+        >
+          33
+        </button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 34)}
+        >
+          34
+        </button>
+        <button
+          className={styles.blackButton}
+          onClick={() => placeBet("number", 35)}
+        >
+          35
+        </button>
+        <button
+          className={styles.redButton}
+          onClick={() => placeBet("number", 36)}
+        >
+          36
+        </button>
       </div>
 
       {/* Bet options */}
       <div className={styles.betOptions}>
-        <button onClick={() => placeBet('color', 'red')} className={styles.betButton}>Red</button>
-        <button onClick={() => placeBet('color', 'black')} className={styles.betButton}>Black</button>
-        <button onClick={() => placeBet('parity', 'even')} className={styles.betButton}>Even</button>
-        <button onClick={() => placeBet('parity', 'odd')} className={styles.betButton}>Odd</button>
-        <button onClick={() => placeBet('range', '1-18')} className={styles.betButton}>1 to 18</button>
-        <button onClick={() => placeBet('range', '19-36')} className={styles.betButton}>19 to 36</button>
-        <button onClick={() => placeBet('dozen', '1st12')} className={styles.betButton}>1st 12</button>
-        <button onClick={() => placeBet('dozen', '2nd12')} className={styles.betButton}>2nd 12</button>
-        <button onClick={() => placeBet('dozen', '3rd12')} className={styles.betButton}>3rd 12</button>
+        <button
+          onClick={() => placeBet("color", "red")}
+          className={styles.betButton}
+        >
+          Red
+        </button>
+        <button
+          onClick={() => placeBet("color", "black")}
+          className={styles.betButton}
+        >
+          Black
+        </button>
+        <button
+          onClick={() => placeBet("parity", "even")}
+          className={styles.betButton}
+        >
+          Even
+        </button>
+        <button
+          onClick={() => placeBet("parity", "odd")}
+          className={styles.betButton}
+        >
+          Odd
+        </button>
+        <button
+          onClick={() => placeBet("range", "1-18")}
+          className={styles.betButton}
+        >
+          1 to 18
+        </button>
+        <button
+          onClick={() => placeBet("range", "19-36")}
+          className={styles.betButton}
+        >
+          19 to 36
+        </button>
+        <button
+          onClick={() => placeBet("dozen", "1st12")}
+          className={styles.betButton}
+        >
+          1st 12
+        </button>
+        <button
+          onClick={() => placeBet("dozen", "2nd12")}
+          className={styles.betButton}
+        >
+          2nd 12
+        </button>
+        <button
+          onClick={() => placeBet("dozen", "3rd12")}
+          className={styles.betButton}
+        >
+          3rd 12
+        </button>
       </div>
-      <p>Selected Bet: {selectedBet ? `${selectedBet.type} on ${selectedBet.value}` : 'No bet yet'}</p>
+      <p>
+        Selected Bet:{" "}
+        {selectedBet
+          ? `${selectedBet.type} on ${selectedBet.value}`
+          : "No bet yet"}
+      </p>
     </div>
   );
 };
