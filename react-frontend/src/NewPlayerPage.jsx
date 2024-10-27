@@ -116,7 +116,9 @@ const NewPlayerPage = () => {
         </Link>
         <h1>Create a New Account</h1>
         <form id="signup-form" onSubmit={handleSubmit}>
-          <label htmlFor="username">Username:</label>
+          <label htmlFor="username" className={styles.formLabel}>
+            Username:
+          </label>
           <input
             type="text"
             id="username"
@@ -124,9 +126,12 @@ const NewPlayerPage = () => {
             required
             value={formData.username}
             onChange={handleChange}
+            className={styles.inputField}
           />
 
-          <label htmlFor="password">Password:</label>
+          <label htmlFor="password" className={styles.formLabel}>
+            Password:
+          </label>
           <input
             type="password"
             id="password"
@@ -134,9 +139,12 @@ const NewPlayerPage = () => {
             required
             value={formData.password}
             onChange={handleChange}
+            className={styles.inputField}
           />
 
-          <label htmlFor="confirmPassword">Confirm Password:</label>
+          <label htmlFor="confirmPassword" className={styles.formLabel}>
+            Confirm Password:
+          </label>
           <input
             type="password"
             id="confirmPassword"
@@ -144,9 +152,12 @@ const NewPlayerPage = () => {
             required
             value={formData.confirmPassword}
             onChange={handleChange}
+            className={styles.inputField}
           />
 
-          <label htmlFor="email">Email:</label>
+          <label htmlFor="email" className={styles.formLabel}>
+            Email:
+          </label>
           <input
             type="email"
             id="email"
@@ -154,6 +165,7 @@ const NewPlayerPage = () => {
             required
             value={formData.email}
             onChange={handleChange}
+            className={styles.inputField}
           />
 
           <button type="submit" className={`${styles.submitButton}`}>

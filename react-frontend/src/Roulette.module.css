@@ -1,13 +1,13 @@
 .pageBody {
-  background-color: #0D1B2A;
-  color: #E0E0E0;
+  background-color: #0d1b2a;
+  color: #e0e0e0;
   min-height: 100vh;
   padding: 20px;
   text-align: center;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
-label {
+betLabel {
   color: yellow;
   font-weight: bold;
 }
@@ -20,7 +20,8 @@ label {
   display: inline-block;
 }
 
-.zeroRow, .numberRow {
+.zeroRow,
+.numberRow {
   margin-bottom: 10px;
   display: flex;
   justify-content: center;
@@ -150,4 +151,10 @@ p {
 
 .spinButton:active {
   transform: scale(0.98); /* Slight shrink effect on click */
+}
+
+.betInput {
+  width: 100;
+  background-color: white;
+  color: black;
 }

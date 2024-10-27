@@ -75,7 +75,9 @@ const ReturningPlayerPage = () => {
         </Link>
         <h1>Log in to an Existing Account</h1>
         <form id="login-form" onSubmit={handleSubmit}>
-          <label htmlFor="email">Email:</label>
+          <label htmlFor="email" className={styles.formLabel}>
+            Email:
+          </label>
           <input
             type="text"
             id="email"
@@ -86,7 +88,9 @@ const ReturningPlayerPage = () => {
             className={styles.inputField}
           />
 
-          <label htmlFor="password">Password:</label>
+          <label htmlFor="password" className={styles.formLabel}>
+            Password:
+          </label>
           <input
             type="password"
             id="password"
