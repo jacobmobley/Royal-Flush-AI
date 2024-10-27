@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import FireBaseAuth from "./FireBaseAuth";
 import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { firestore_db, auth } from "./firebase";
-import styles from "./frontpage-styles.module.css";
 import ChangeUsernamePopup from "./popups/ChangeUsernamePopup";
 import ChangePasswordPopup from "./popups/ChangePasswordPopup";
 import AddBioPopup from "./popups/AddBioPopup";
 import ChangeAvatarPopup from "./popups/ChangeAvatarPopup";
+import styles from "./frontpage-styles.module.css";
 
 const Settings = ({ toggleSettings }) => {
   const [selectedTab, setSelectedTab] = useState("Account Security");
@@ -93,7 +93,10 @@ const Settings = ({ toggleSettings }) => {
             <button onClick={togglePasswordPopup}>Change Password</button>
             {showPasswordPopup && (
               <div className={`${styles.modalOverlay}`}>
-                <ChangePasswordPopup togglePasswordPopup={togglePasswordPopup} onSubmit={onSubmit}/>
+                <ChangePasswordPopup
+                  togglePasswordPopup={togglePasswordPopup}
+                  onSubmit={onSubmit}
+                />
               </div>
             )}
           </>

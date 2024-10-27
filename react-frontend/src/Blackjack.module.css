@@ -1,5 +1,5 @@
 .blackjackGame {
-  background-color: #1A242F;
+  background-color: #1a242f;
   color: white;
   padding: 200px;
   border-radius: 15px;
@@ -9,7 +9,7 @@
 }
 
 .gameArea {
-  background-color: #2C3E50;
+  background-color: #2c3e50;
   border-radius: 10px;
   padding: 50px;
   display: flex;
@@ -17,8 +17,9 @@
   margin-bottom: 20px;
 }
 
-.dealerArea, .playerArea {
-  background-color: #34495E;
+.dealerArea,
+.playerArea {
+  background-color: #34495e;
   padding: 90px;
   border-radius: 10px;
   width: 45%;
@@ -45,13 +46,15 @@ label {
   font-weight: bold;
 }
 
-input {
+.betInput {
   padding: 10px;
   margin: 10px 0;
   border: 1px solid #ccc;
   border-radius: 5px;
   width: 100px;
   font-size: 18px;
+  background-color: white;
+  color: black;
 }
 
 .buttonArea {
@@ -67,7 +70,7 @@ input {
   font-size: 18px;
   padding: 10px 20px;
   cursor: pointer;
-  background-color: #27AE60;
+  background-color: #27ae60;
   color: white;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
@@ -81,7 +84,7 @@ input {
   font-size: 18px;
   padding: 10px 20px;
   cursor: pointer;
-  background-color: #2980B9;
+  background-color: #2980b9;
   color: white;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
@@ -95,7 +98,7 @@ input {
   font-size: 18px;
   padding: 10px 20px;
   cursor: pointer;
-  background-color: #E74C3C;
+  background-color: #e74c3c;
   color: white;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
@@ -116,11 +119,11 @@ input {
 }
 
 .greenText {
-  color: #2ECC71;
+  color: #2ecc71;
 }
 
 .redText {
-  color: #E74C3C;
+  color: #e74c3c;
 }
 
 .loading {
