@@ -400,3 +400,8 @@ p {
 .settingsContainer p {
   color: black;
 }
+.accountButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}

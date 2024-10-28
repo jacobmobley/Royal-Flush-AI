@@ -7,6 +7,8 @@ import ChangePasswordPopup from "./popups/ChangePasswordPopup";
 import AddBioPopup from "./popups/AddBioPopup";
 import ChangeAvatarPopup from "./popups/ChangeAvatarPopup";
 import styles from "./frontpage-styles.module.css";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Settings = ({ toggleSettings }) => {
   const [selectedTab, setSelectedTab] = useState("Account Security");
@@ -77,28 +79,32 @@ const Settings = ({ toggleSettings }) => {
           <>
             <p>Here you can change your account security settings.</p>
             <br></br>
+            <div className={styles.accountButtons}>
+              <button className={styles.change} onClick={toggleUsernamePopup}>
+                Change Username
+              </button>
 
-            <button className={styles.change} onClick={toggleUsernamePopup}>
-              Change Username
-            </button>
-
-            {showUsernamePopup && (
-              <div className={`${styles.modalOverlay}`}>
-                <ChangeUsernamePopup
-                  toggleUsernamePopup={toggleUsernamePopup}
-                  onSubmit={onSubmit}
-                />
-              </div>
-            )}
-            <button onClick={togglePasswordPopup}>Change Password</button>
-            {showPasswordPopup && (
-              <div className={`${styles.modalOverlay}`}>
-                <ChangePasswordPopup
-                  togglePasswordPopup={togglePasswordPopup}
-                  onSubmit={onSubmit}
-                />
-              </div>
-            )}
+              {showUsernamePopup && (
+                <div className={`${styles.modalOverlay}`}>
+                  <ChangeUsernamePopup
+                    toggleUsernamePopup={toggleUsernamePopup}
+                    onSubmit={onSubmit}
+                  />
+                </div>
+              )}
+              <button onClick={togglePasswordPopup}>Change Password</button>
+              {showPasswordPopup && (
+                <div className={`${styles.modalOverlay}`}>
+                  <ChangePasswordPopup
+                    togglePasswordPopup={togglePasswordPopup}
+                    onSubmit={onSubmit}
+                  />
+                </div>
+              )}
+              <Link to="/" className={`${styles.button} ${styles.change} `}>
+                &#8592; Logout
+              </Link>
+            </div>
           </>
         );
       case "Profile Appearance":

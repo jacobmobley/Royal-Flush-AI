@@ -37,6 +37,7 @@ public class PokerHandEvaluator {
                 loop = false;
             }
         }
+        scanner.close();
     }
 
     // Function to evaluate the hand strength
