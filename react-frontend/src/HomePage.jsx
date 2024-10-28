@@ -115,13 +115,13 @@ const HomePage = () => {
         </div>
         <label htmlFor="deck-count">Number of Decks: </label>
         <input
-            type="number"
-            id="deck-count"
-            value={deckCount}
-            min="1"
-            onChange={(e) => setDeckCount(e.target.value)}
-            className={styles.deckInput}
-          />
+          type="number"
+          id="deck-count"
+          value={deckCount}
+          min="1"
+          onChange={(e) => setDeckCount(e.target.value)}
+          className={styles.deckInput}
+        />
       </div>
       <img
         src={gear}
