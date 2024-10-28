@@ -20,7 +20,7 @@ function App() {
           <Route path="/returningplayer" element={<ReturningPlayerPage />} />
           <Route path="/homepage" element={<HomePage />} />
           <Route path="/plinkogame" element={<PlinkoGame />} />
-          <Route path="/blackjack" element={<Blackjack />} />
+          <Route path="/blackjack/:deckCount" element={<Blackjack />} />
           <Route path="/roulettee" element={<RouletteE />} />
           <Route path="/roulettea" element={<RouletteA />} />
         </Routes>

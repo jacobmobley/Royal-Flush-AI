@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
-import styles from "./Blackjack.module.css";
-import FireBaseAuth from "./FireBaseAuth";
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import styles from './Blackjack.module.css';
+import FireBaseAuth from './FireBaseAuth';
 
 const suits = ["♠", "♣", "♦", "♥"];
 const values = [
@@ -20,6 +21,9 @@ const values = [
 ];
 
 function Blackjack() {
+  const { deckCount } = useParams(); // Get deck count from URL params
+  const numDecks = parseInt(deckCount, 10) || 1; // Default to 1 deck if not specified
+
   const [curUser] = useState(new FireBaseAuth());
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
@@ -69,7 +73,7 @@ function Blackjack() {
       return;
     }
 
-    const newDeck = shuffleDeck(createDeck());
+    const newDeck = shuffleDeck(createDeck(numDecks));
     setDeck(newDeck);
     setPlayerHand([newDeck.pop(), newDeck.pop()]);
     setDealerHand([newDeck.pop(), newDeck.pop()]);
@@ -82,11 +86,13 @@ function Blackjack() {
     });
   }
 
-  function createDeck() {
+  function createDeck(numDecks) {
     const newDeck = [];
-    for (let suit of suits) {
-      for (let value of values) {
-        newDeck.push({ value, suit });
+    for (let i = 0; i < numDecks; i++) {
+      for (let suit of suits) {
+        for (let value of values) {
+          newDeck.push({ value, suit });
+        }
       }
     }
     return newDeck;
