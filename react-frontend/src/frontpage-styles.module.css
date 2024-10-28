@@ -376,9 +376,9 @@ p {
 .homeLogo {
   display: block;
   margin: 0 auto; /* Center the logo horizontally */
-  width: 400px; /* Adjust the size as needed */
-  height: auto; /* Maintain aspect ratio */
-  margin-bottom: 20px; /* Add space below the logo */
+  width: 400px;
+  height: auto;
+  margin-bottom: 20px;
 }
 
 .menu {
