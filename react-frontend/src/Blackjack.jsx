@@ -190,8 +190,8 @@ function Blackjack() {
       </div>
       <div className={styles.controls}>
         <h3>Total Points: <span>{totalPoints}</span></h3>
-        <label htmlFor="bet-amount">Bet Amount:</label>
-        <input
+        <label htmlFor="bet-amount">Bet Amount: </label>
+        <input className={styles.betInput}
           type="number"
           id="bet-amount"
           value={currentBet}

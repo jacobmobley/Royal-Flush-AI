@@ -26,7 +26,7 @@ const HomePage = () => {
     currency: 0,
     avatar: 0,
   });
-  const [deckCount, setDeckCount] = useState(1); // Default to 1 deck
+  const [deckCount, setDeckCount] = useState(3); // Default to 1 deck
   const [showSettings, setShowSettings] = useState(false);
   const [loading, setLoading] = useState(true); // New loading state
   const [image, setImage] = useState("");
@@ -121,7 +121,7 @@ const HomePage = () => {
           Plinko
         </Link>*/}
         </div>
-        <label htmlFor="deck-count">Number of Decks:</label>
+        <label htmlFor="deck-count">Number of Decks: </label>
         <input
             type="number"
             id="deck-count"
