@@ -7,6 +7,8 @@ import ChangePasswordPopup from "./popups/ChangePasswordPopup";
 import AddBioPopup from "./popups/AddBioPopup";
 import ChangeAvatarPopup from "./popups/ChangeAvatarPopup";
 import styles from "./frontpage-styles.module.css";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Settings = ({ toggleSettings }) => {
   const [selectedTab, setSelectedTab] = useState("Account Security");
@@ -77,28 +79,32 @@ const Settings = ({ toggleSettings }) => {
           <>
             <p>Here you can change your account security settings.</p>
             <br></br>
+            <div className={styles.accountButtons}>
+              <button className={styles.change} onClick={toggleUsernamePopup}>
+                Change Username
+              </button>
 
-            <button className={styles.change} onClick={toggleUsernamePopup}>
-              Change Username
-            </button>
-
-            {showUsernamePopup && (
-              <div className={`${styles.modalOverlay}`}>
-                <ChangeUsernamePopup
-                  toggleUsernamePopup={toggleUsernamePopup}
-                  onSubmit={onSubmit}
-                />
-              </div>
-            )}
-            <button onClick={togglePasswordPopup}>Change Password</button>
-            {showPasswordPopup && (
-              <div className={`${styles.modalOverlay}`}>
-                <ChangePasswordPopup
-                  togglePasswordPopup={togglePasswordPopup}
-                  onSubmit={onSubmit}
-                />
-              </div>
-            )}
+              {showUsernamePopup && (
+                <div className={`${styles.modalOverlay}`}>
+                  <ChangeUsernamePopup
+                    toggleUsernamePopup={toggleUsernamePopup}
+                    onSubmit={onSubmit}
+                  />
+                </div>
+              )}
+              <button onClick={togglePasswordPopup}>Change Password</button>
+              {showPasswordPopup && (
+                <div className={`${styles.modalOverlay}`}>
+                  <ChangePasswordPopup
+                    togglePasswordPopup={togglePasswordPopup}
+                    onSubmit={onSubmit}
+                  />
+                </div>
+              )}
+              <Link to="/" className={`${styles.button} ${styles.change} `}>
+                &#8592; Logout
+              </Link>
+            </div>
           </>
         );
       case "Profile Appearance":
@@ -146,7 +152,21 @@ const Settings = ({ toggleSettings }) => {
       case "Game Appearance":
         return <p>Customize the game's appearance here.</p>;
       case "Sound Settings":
-        return <p>Adjust sound settings for the game.</p>;
+        return (
+          <div className={styles.volumeControl}>
+            <p>Adjust sound settings for the game.</p>
+            {/* <label htmlFor="volume-slider">Volume: {volume}%</label> */}
+            <input
+              type="range"
+              id="volume-slider"
+              min="0"
+              max="100"
+              // value={volume}
+              // onChange={handleVolumeChange}
+              style={{ width: "100%" }}
+            />
+          </div>
+        );
       default:
         return <p>Select an option from the left.</p>;
     }

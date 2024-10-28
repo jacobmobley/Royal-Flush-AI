@@ -360,9 +360,12 @@ p {
   border-radius: 8px;
   border: 4px solid black;
   cursor: pointer;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 80px;
   width: 100%;
+  color: white !important;
 }
 .poker:hover {
   background-color: #1b5193;
@@ -376,9 +379,9 @@ p {
 .homeLogo {
   display: block;
   margin: 0 auto; /* Center the logo horizontally */
-  width: 400px; /* Adjust the size as needed */
-  height: auto; /* Maintain aspect ratio */
-  margin-bottom: 20px; /* Add space below the logo */
+  width: 400px;
+  height: auto;
+  margin-bottom: 20px;
 }
 
 .menu {
@@ -396,4 +399,9 @@ p {
 
 .settingsContainer p {
   color: black;
+}
+.accountButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
