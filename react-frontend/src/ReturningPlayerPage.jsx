@@ -9,6 +9,7 @@ import styles from "./frontpage-styles.module.css";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import logo from "./assets/RoyalFlushAILogo.png";
+import ResetPasswordPopup from "./popups/ResetPasswordPopup"
 
 const ReturningPlayerPage = () => {
   const navigate = useNavigate();
@@ -19,6 +20,12 @@ const ReturningPlayerPage = () => {
   });
   const [message, setMessage] = useState("");
   const [messageStyle, setMessageStyle] = useState({});
+  const [showResetPassPopup, setshowResetPassPopup] = useState(false);
+
+
+  const toggleResetPassPopup= () => {
+    setshowResetPassPopup(!showResetPassPopup);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,6 +33,45 @@ const ReturningPlayerPage = () => {
   };
 
   const handleSubmit = (e) => {
+    e.preventDefault();
+
+    setPersistence(auth, browserLocalPersistence)
+      .then(() => {
+        // Proceed with sign in after setting persistence
+        return signInWithEmailAndPassword(
+          auth,
+          formData.email,
+          formData.password
+        );
+      })
+      .then((userCredential) => {
+        // Successful login
+        setMessage("Sign-in successful!");
+        setMessageStyle({ color: "green" });
+        console.log("User signed in:", userCredential.user);
+
+        // Redirect to the game page
+        navigate("/homepage");
+      })
+      .catch((error) => {
+        let errorMsg = "";
+        switch (error.message) {
+          case "auth/user-not-found":
+            errorMsg = "No user found with this email.";
+            break;
+          case "auth/wrong-password":
+            errorMsg = "Incorrect password.";
+            break;
+          default:
+            errorMsg = error.message;
+        }
+        setMessage(errorMsg);
+        setMessageStyle({ color: "red" });
+        console.error("Error signing in:", error);
+      });
+  };
+
+  const handleResetPass = (e) => {
     e.preventDefault();
 
     setPersistence(auth, browserLocalPersistence)
@@ -102,7 +148,31 @@ const ReturningPlayerPage = () => {
           />
 
           <button className={styles.submitButton}>Sign In</button>
+          <button 
+          onClick={toggleResetPassPopup}>
+            Forgot You Password?
+          </button>
+        {showResetPassPopup && (
+              <div className={`${styles.modalOverlay}`}>
+                <ResetPasswordPopup
+                  toggleResetPassPopup={toggleResetPassPopup}
+                />
+              </div>
+            )}
         </form>
+        {/* <button 
+          onClick={toggleResetPassPopup}
+          className={styles.submitButton}>
+            Forgot You Password?
+          </button>
+        {showResetPassPopup && (
+              <div className={`${styles.modalOverlay}`}>
+                <ResetPasswordPopup
+                  toggleResetPassPopup={toggleResetPassPopup}
+                  onSubmit={onSubmit}
+                />
+              </div>
+            )} */}
       </div>
       {message && (
         <div id="message" style={{ display: "block", ...messageStyle }}>
