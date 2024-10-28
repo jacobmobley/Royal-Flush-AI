@@ -7,7 +7,7 @@ import TitleScreen from "./TitleScreen";
 import PlinkoGame from "./PlinkoGame";
 import Blackjack from "./Blackjack";
 import Roulette from "./Roulette";
-import Settings from "./Settings";
+import Poker from "./Poker";
 
 function App() {
   return (
@@ -21,6 +21,7 @@ function App() {
           <Route path="/plinkogame" element={<PlinkoGame />} />
           <Route path="/blackjack" element={<Blackjack />} />
           <Route path="/roulette" element={<Roulette />} />
+          <Route path="/poker" element={<Poker />} />
         </Routes>
       </div>
     </Router>

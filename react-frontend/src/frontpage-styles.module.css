@@ -360,9 +360,12 @@ p {
   border-radius: 8px;
   border: 4px solid black;
   cursor: pointer;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 80px;
   width: 100%;
+  color: white !important;
 }
 .poker:hover {
   background-color: #1b5193;

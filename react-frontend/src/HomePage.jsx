@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, firestore_db } from "./firebase";
 import { doc, getDoc } from "firebase/firestore";
@@ -7,6 +7,7 @@ import gear from "./assets/Settings.png";
 import { Link } from "react-router-dom";
 import Settings from "./Settings";
 import logo from "./assets/RoyalFlushAILogo.png";
+import funky from "./assets/funky.mp3"; // Import funky.mp3
 
 const HomePage = () => {
   const images = [
@@ -27,7 +28,7 @@ const HomePage = () => {
     avatar: 0,
   });
   const [showSettings, setShowSettings] = useState(false);
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true);
   const [image, setImage] = useState("");
 
   const toggleSettings = () => {
@@ -38,53 +39,47 @@ const HomePage = () => {
     const fetchUserData = async (user) => {
       if (user) {
         try {
-          // Reference to the user's document in Firestore
           const userDocRef = doc(firestore_db, "users", user.email);
           const docSnap = await getDoc(userDocRef);
           if (docSnap.exists()) {
-            // Update user data state
             setUserData(docSnap.data());
-            console.log(docSnap.data());
-
             setImage(images[docSnap.data().avatar]);
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
         } finally {
-          setLoading(false); // Set loading to false after data is fetched
+          setLoading(false);
         }
       } else {
-        setLoading(false); // No user, set loading to false
+        setLoading(false);
       }
     };
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Fetch the user data once the user is authenticated
         fetchUserData(user);
       } else {
-        console.log("No user is signed in.");
-        // Handle the case where there is no user logged in
         setUserData(null);
-        setLoading(false); // No user, set loading to false
+        setLoading(false);
       }
     });
 
-    // Cleanup the subscription on unmount
     return () => unsubscribe();
   }, []);
 
-  // Show loading spinner or message while user data is being fetched
   if (loading) {
     return <div>Loading user data...</div>;
   }
 
   return (
     <div className="container">
-      {/* Show user info only when data is available */}
       <div className={styles.userInfo}>
         <span>
-          <img src={image} className={styles.profileImgTitlePage} />
+          <img
+            src={image}
+            className={styles.profileImgTitlePage}
+            alt="Avatar"
+          />
         </span>
         <span>{userData?.username}</span> <span>|</span>
         <span>Currency: {userData?.currency}</span>
@@ -93,9 +88,9 @@ const HomePage = () => {
       <div className={styles.menu}>
         <img src={logo} alt="Royal Flush AI Logo" className={styles.homeLogo} />
         <div className={styles.pokerButtons}>
-          <button type="poker" className={styles.poker}>
+          <Link to="/Poker" className={styles.poker}>
             Texas Hold'em
-          </button>
+          </Link>
         </div>
         <div className={styles.gameButtons}>
           <Link
@@ -110,9 +105,6 @@ const HomePage = () => {
           >
             Roulette
           </Link>
-          {/*<Link to="/PlinkoGame" className={`${styles.button} ${styles.plinko}`}>
-          Plinko
-        </Link>*/}
         </div>
       </div>
       <img

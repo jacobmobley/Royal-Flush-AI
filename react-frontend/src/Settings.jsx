@@ -146,7 +146,21 @@ const Settings = ({ toggleSettings }) => {
       case "Game Appearance":
         return <p>Customize the game's appearance here.</p>;
       case "Sound Settings":
-        return <p>Adjust sound settings for the game.</p>;
+        return (
+          <div className={styles.volumeControl}>
+            <p>Adjust sound settings for the game.</p>
+            {/* <label htmlFor="volume-slider">Volume: {volume}%</label> */}
+            <input
+              type="range"
+              id="volume-slider"
+              min="0"
+              max="100"
+              // value={volume}
+              // onChange={handleVolumeChange}
+              style={{ width: "100%" }}
+            />
+          </div>
+        );
       default:
         return <p>Select an option from the left.</p>;
     }
