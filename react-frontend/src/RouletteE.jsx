@@ -42,7 +42,7 @@ const numbers = [
   { number: 26, color: "black" },
 ];
 
-const Roulette = () => {
+const RouletteE = () => {
   const [curUser] = useState(new FireBaseAuth());
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
@@ -217,49 +217,57 @@ const Roulette = () => {
 
     let win = false;
 
-    if (placedBet.type === "number" && placedBet.value === winningNumber) {
-      win = true;
-    } else if (
-      placedBet.type === "color" &&
-      numbers[winningIndex].color === placedBet.value
-    ) {
-      win = true;
-    } else if (
-      placedBet.type === "parity" &&
-      (placedBet.value === "even"
-        ? winningNumber % 2 === 0
-        : winningNumber % 2 !== 0)
-    ) {
-      win = true;
-    } else if (
-      placedBet.type === "range" &&
-      ((placedBet.value === "1-18" &&
-        winningNumber >= 1 &&
-        winningNumber <= 18) ||
-        (placedBet.value === "19-36" &&
-          winningNumber >= 19 &&
-          winningNumber <= 36))
-    ) {
-      win = true;
-    } else if (
-      placedBet.type === "dozen" &&
-      ((placedBet.value === "1st12" &&
-        winningNumber >= 1 &&
-        winningNumber <= 12) ||
-        (placedBet.value === "2nd12" &&
-          winningNumber >= 13 &&
-          winningNumber <= 24) ||
-        (placedBet.value === "3rd12" &&
-          winningNumber >= 25 &&
-          winningNumber <= 36))
-    ) {
-      win = true;
-    }
-
-    if (win) {
+    if (placedBet.type === 'number' && placedBet.value === winningNumber) {
       setMessage(`You win! The winning number is ${winningNumber}.`);
-      setTotalPoints((prev) => {
-        const newTotal = prev + betAmount * 2;
+      setTotalPoints(prev => {
+        const newTotal = prev + betAmount*36;
+        console.log("Updated totalPoints:", newTotal);
+    
+        // After calculating, update both local state and Firebase
+        setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
+        return newTotal;  // Update local state with the new total
+      });
+    } else if (placedBet.type === 'color' && numbers[winningIndex].color === placedBet.value) {
+      setMessage(`You win! The winning number is ${winningNumber}.`);
+      setTotalPoints(prev => {
+        const newTotal = prev + betAmount*2;
+        console.log("Updated totalPoints:", newTotal);
+    
+        // After calculating, update both local state and Firebase
+        setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
+        return newTotal;  // Update local state with the new total
+      });
+    } else if (placedBet.type === 'parity' && (placedBet.value === 'even' ? winningNumber % 2 === 0 : winningNumber % 2 !== 0)) {
+      setMessage(`You win! The winning number is ${winningNumber}.`);
+      setTotalPoints(prev => {
+        const newTotal = prev + betAmount*2;
+        console.log("Updated totalPoints:", newTotal);
+    
+        // After calculating, update both local state and Firebase
+        setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
+        return newTotal;  // Update local state with the new total
+      });
+    } else if (placedBet.type === 'range' && (
+      (placedBet.value === '1-18' && winningNumber >= 1 && winningNumber <= 18) ||
+      (placedBet.value === '19-36' && winningNumber >= 19 && winningNumber <= 36)
+    )) {
+      setMessage(`You win! The winning number is ${winningNumber}.`);
+      setTotalPoints(prev => {
+        const newTotal = prev + betAmount*2;
+        console.log("Updated totalPoints:", newTotal);
+    
+        // After calculating, update both local state and Firebase
+        setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
+        return newTotal;  // Update local state with the new total
+      });
+    } else if (placedBet.type === 'dozen' && (
+      (placedBet.value === '1st12' && winningNumber >= 1 && winningNumber <= 12) ||
+      (placedBet.value === '2nd12' && winningNumber >= 13 && winningNumber <= 24) ||
+      (placedBet.value === '3rd12' && winningNumber >= 25 && winningNumber <= 36)
+    )) {
+      setMessage(`You win! The winning number is ${winningNumber}.`);
+      setTotalPoints(prev => {
+        const newTotal = prev + betAmount*3;
         console.log("Updated totalPoints:", newTotal);
 
         // After calculating, update both local state and Firebase
@@ -616,4 +624,4 @@ const RouletteTable = ({ onPlaceBet }) => {
   );
 };
 
-export default Roulette;
+export default RouletteE;

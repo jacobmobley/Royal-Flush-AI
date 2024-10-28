@@ -27,6 +27,7 @@ const HomePage = () => {
     currency: 0,
     avatar: 0,
   });
+  const [deckCount, setDeckCount] = useState(3); // Default to 1 deck
   const [showSettings, setShowSettings] = useState(false);
   const [loading, setLoading] = useState(true);
   const [image, setImage] = useState("");
@@ -94,18 +95,33 @@ const HomePage = () => {
         </div>
         <div className={styles.gameButtons}>
           <Link
-            to="/Blackjack"
+            to={`/blackjack/${deckCount}`}
             className={`${styles.button} ${styles.blackjack}`}
           >
             Blackjack
           </Link>
           <Link
-            to="/Roulette"
+            to="/RouletteE"
             className={`${styles.button} ${styles.roulette}`}
           >
-            Roulette
+            European Roulette
+          </Link>
+          <Link
+            to="/RouletteA"
+            className={`${styles.button} ${styles.roulette}`}
+          >
+            American Roulette
           </Link>
         </div>
+        <label htmlFor="deck-count">Number of Decks: </label>
+        <input
+            type="number"
+            id="deck-count"
+            value={deckCount}
+            min="1"
+            onChange={(e) => setDeckCount(e.target.value)}
+            className={styles.deckInput}
+          />
       </div>
       <img
         src={gear}

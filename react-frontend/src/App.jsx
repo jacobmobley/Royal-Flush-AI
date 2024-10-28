@@ -6,8 +6,13 @@ import ReturningPlayerPage from "./ReturningPlayerPage";
 import TitleScreen from "./TitleScreen";
 import PlinkoGame from "./PlinkoGame";
 import Blackjack from "./Blackjack";
+
 import Roulette from "./Roulette";
 import Poker from "./Poker";
+import RouletteE from "./RouletteE";
+import RouletteA from "./RouletteA";
+import Settings from "./Settings";
+
 
 function App() {
   return (
@@ -19,9 +24,15 @@ function App() {
           <Route path="/returningplayer" element={<ReturningPlayerPage />} />
           <Route path="/homepage" element={<HomePage />} />
           <Route path="/plinkogame" element={<PlinkoGame />} />
+
           <Route path="/blackjack" element={<Blackjack />} />
           <Route path="/roulette" element={<Roulette />} />
           <Route path="/poker" element={<Poker />} />
+
+          <Route path="/blackjack/:deckCount" element={<Blackjack />} />
+          <Route path="/roulettee" element={<RouletteE />} />
+          <Route path="/roulettea" element={<RouletteA />} />
+
         </Routes>
       </div>
     </Router>
