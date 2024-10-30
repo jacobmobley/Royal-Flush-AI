@@ -8,6 +8,7 @@ import PlinkoGame from "./PlinkoGame";
 import Blackjack from "./Blackjack";
 import RouletteE from "./RouletteE";
 import RouletteA from "./RouletteA";
+import ForgotPassword from "./ForgotPassword.jsx";
 import Settings from "./Settings";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="/blackjack/:deckCount" element={<Blackjack />} />
           <Route path="/roulettee" element={<RouletteE />} />
           <Route path="/roulettea" element={<RouletteA />} />
+          <Route path="/forgotpass" element={<ForgotPassword />} />
         </Routes>
       </div>
     </Router>
