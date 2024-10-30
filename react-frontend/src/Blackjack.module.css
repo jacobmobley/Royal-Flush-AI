@@ -1,11 +1,17 @@
 .blackjackGame {
   background-color: #1a242f;
   color: white;
-  padding: 200px;
+  padding: 90px;
   border-radius: 15px;
   max-width: 1600px;
   margin: 0 auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.blackjackTitle h1 {
+  color: white;
+  text-align: center;
+  font-size: 75px;
 }
 
 .gameArea {
@@ -20,20 +26,40 @@
 .dealerArea,
 .playerArea {
   background-color: #34495e;
-  padding: 90px;
+  padding: 50px 10px;
+  margin: 30px;
   border-radius: 10px;
-  width: 45%;
+  width: 60%;
+  height: 65%;
+  align-items: center;
+  text-align: center;
 }
 
 .cardArea {
   font-size: 24px;
   margin-bottom: 10px;
   text-align: center;
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.dealerArea h2,
+.playerArea h2 {
+  margin-bottom: 30px;
+}
+
+.cardImage {
+  width: 15%;
 }
 
 .score {
   font-size: 18px;
   color: yellow;
+  text-align: center;
 }
 
 .controls {

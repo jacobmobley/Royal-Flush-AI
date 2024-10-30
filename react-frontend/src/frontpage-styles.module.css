@@ -11,7 +11,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100%;
 }
 
 .settingsEmailLabel {
@@ -330,7 +330,6 @@ p {
   border-radius: 5px;
   display: flex;
   align-items: center;
-  width: 275px;
 }
 .userInfo span {
   margin-left: 5px;
@@ -347,7 +346,7 @@ p {
 .pokerButtons,
 .gameButtons {
   display: flex;
-  width: 400px;
+  width: 100%;
 }
 .poker {
   background-color: #0d2365;
@@ -388,6 +387,7 @@ p {
   background-color: white;
   border-radius: 25px;
   border: 4px black solid;
+  width: 500px;
 }
 
 .customBio {
