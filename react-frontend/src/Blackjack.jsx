@@ -1,9 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import styles from './Blackjack.module.css';
-import FireBaseAuth from './FireBaseAuth';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import styles from "./Blackjack.module.css";
+import FireBaseAuth from "./FireBaseAuth";
 
-const suits = ["♠", "♣", "♦", "♥"];
+import clubs2 from "./assets/cards/2_of_clubs.png";
+import clubs3 from "./assets/cards/3_of_clubs.png";
+import clubs4 from "./assets/cards/4_of_clubs.png";
+import clubs5 from "./assets/cards/5_of_clubs.png";
+import clubs6 from "./assets/cards/6_of_clubs.png";
+import clubs7 from "./assets/cards/7_of_clubs.png";
+import clubs8 from "./assets/cards/8_of_clubs.png";
+import clubs9 from "./assets/cards/9_of_clubs.png";
+import clubs10 from "./assets/cards/10_of_clubs.png";
+import clubsjack from "./assets/cards/jack_of_clubs.png";
+import clubsqueen from "./assets/cards/queen_of_clubs.png";
+import clubsking from "./assets/cards/king_of_clubs.png";
+import clubsace from "./assets/cards/ace_of_clubs.png";
+
+import diamonds2 from "./assets/cards/2_of_diamonds.png";
+import diamonds3 from "./assets/cards/3_of_diamonds.png";
+import diamonds4 from "./assets/cards/4_of_diamonds.png";
+import diamonds5 from "./assets/cards/5_of_diamonds.png";
+import diamonds6 from "./assets/cards/6_of_diamonds.png";
+import diamonds7 from "./assets/cards/7_of_diamonds.png";
+import diamonds8 from "./assets/cards/8_of_diamonds.png";
+import diamonds9 from "./assets/cards/9_of_diamonds.png";
+import diamonds10 from "./assets/cards/10_of_diamonds.png";
+import diamondsjack from "./assets/cards/jack_of_diamonds.png";
+import diamondsqueen from "./assets/cards/queen_of_diamonds.png";
+import diamondsking from "./assets/cards/king_of_diamonds.png";
+import diamondsace from "./assets/cards/ace_of_diamonds.png";
+
+import hearts2 from "./assets/cards/2_of_hearts.png";
+import hearts3 from "./assets/cards/3_of_hearts.png";
+import hearts4 from "./assets/cards/4_of_hearts.png";
+import hearts5 from "./assets/cards/5_of_hearts.png";
+import hearts6 from "./assets/cards/6_of_hearts.png";
+import hearts7 from "./assets/cards/7_of_hearts.png";
+import hearts8 from "./assets/cards/8_of_hearts.png";
+import hearts9 from "./assets/cards/9_of_hearts.png";
+import hearts10 from "./assets/cards/10_of_hearts.png";
+import heartsjack from "./assets/cards/jack_of_hearts.png";
+import heartsqueen from "./assets/cards/queen_of_hearts.png";
+import heartsking from "./assets/cards/king_of_hearts.png";
+import heartsace from "./assets/cards/ace_of_hearts.png";
+
+import spades2 from "./assets/cards/2_of_spades.png";
+import spades3 from "./assets/cards/3_of_spades.png";
+import spades4 from "./assets/cards/4_of_spades.png";
+import spades5 from "./assets/cards/5_of_spades.png";
+import spades6 from "./assets/cards/6_of_spades.png";
+import spades7 from "./assets/cards/7_of_spades.png";
+import spades8 from "./assets/cards/8_of_spades.png";
+import spades9 from "./assets/cards/9_of_spades.png";
+import spades10 from "./assets/cards/10_of_spades.png";
+import spadesjack from "./assets/cards/jack_of_spades.png";
+import spadesqueen from "./assets/cards/queen_of_spades.png";
+import spadesking from "./assets/cards/king_of_spades.png";
+import spadesace from "./assets/cards/ace_of_spades.png";
+
+const suits = ["spades", "clubs", "diamonds", "hearts"];
 const values = [
   "2",
   "3",
@@ -14,16 +70,74 @@ const values = [
   "8",
   "9",
   "10",
-  "J",
-  "Q",
-  "K",
-  "A",
+  "jack",
+  "queen",
+  "king",
+  "ace",
 ];
 
+const cardImageMap = {
+  clubs2,
+  clubs3,
+  clubs4,
+  clubs5,
+  clubs6,
+  clubs7,
+  clubs8,
+  clubs9,
+  clubs10,
+  clubsjack,
+  clubsqueen,
+  clubsking,
+  clubsace,
+  diamonds2,
+  diamonds3,
+  diamonds4,
+  diamonds5,
+  diamonds6,
+  diamonds7,
+  diamonds8,
+  diamonds9,
+  diamonds10,
+  diamondsjack,
+  diamondsqueen,
+  diamondsking,
+  diamondsace,
+  hearts2,
+  hearts3,
+  hearts4,
+  hearts5,
+  hearts6,
+  hearts7,
+  hearts8,
+  hearts9,
+  hearts10,
+  heartsjack,
+  heartsqueen,
+  heartsking,
+  heartsace,
+  spades2,
+  spades3,
+  spades4,
+  spades5,
+  spades6,
+  spades7,
+  spades8,
+  spades9,
+  spades10,
+  spadesjack,
+  spadesqueen,
+  spadesking,
+  spadesace,
+};
+
+function getCardImage(value, suit) {
+  const key = `${suit}${value}`;
+  return cardImageMap[key];
+}
 function Blackjack() {
   const { deckCount } = useParams(); // Get deck count from URL params
   const numDecks = parseInt(deckCount, 10) || 1; // Default to 1 deck if not specified
-
   const [curUser] = useState(new FireBaseAuth());
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
@@ -34,7 +148,7 @@ function Blackjack() {
   const [currentBet, setCurrentBet] = useState(100);
   const [message, setMessage] = useState("");
   const [resultClass, setResultClass] = useState("");
-  const [totalPoints, setTotalPoints] = useState(0);
+  const [totalPoints, setTotalPoints] = useState(999999999999);
 
   const setTotalPointsWithUpdate = (newPoints) => {
     setTotalPoints(newPoints); // Update local state
@@ -68,24 +182,22 @@ function Blackjack() {
 
   function initGame() {
     if (currentBet > totalPoints) {
-      setMessage('Not enough points to place this bet.');
+      setMessage("Not enough points to place this bet.");
       setIsGameOver(true);
       return;
     }
-
     const newDeck = shuffleDeck(createDeck(numDecks));
     setDeck(newDeck);
     setPlayerHand([newDeck.pop(), newDeck.pop()]);
     setDealerHand([newDeck.pop(), newDeck.pop()]);
     setIsGameOver(false);
-    setMessage('');
+    setMessage("");
     setTotalPoints((prevPoints) => {
       const newTotal = prevPoints - currentBet;
       setTotalPointsWithUpdate(newTotal);
       return newTotal;
     });
   }
-
   function createDeck(numDecks) {
     const newDeck = [];
     for (let i = 0; i < numDecks; i++) {
@@ -107,9 +219,10 @@ function Blackjack() {
   }
 
   function drawCard() {
-    const newDeck = [...deck];
-    const card = newDeck.pop();
-    setDeck(newDeck);
+    if (deck.length === 0) return null; // Guard against an empty deck
+
+    const card = deck.pop(); // Directly remove the last card from deck
+    setDeck([...deck]); // Update state with the modified deck
     return card;
   }
 
@@ -118,9 +231,9 @@ function Blackjack() {
     let aceCount = 0;
 
     hand.forEach((card) => {
-      if (["J", "Q", "K"].includes(card.value)) {
+      if (["jack", "queen", "king"].includes(card.value)) {
         score += 10;
-      } else if (card.value === "A") {
+      } else if (card.value === "ace") {
         score += 11;
         aceCount++;
       } else {
@@ -136,27 +249,6 @@ function Blackjack() {
     return score;
   }
 
-  function initGame() {
-    const newDeck = shuffleDeck(createDeck());
-    const playerStartingHand = [newDeck.pop(), newDeck.pop()];
-    const dealerStartingHand = [newDeck.pop(), newDeck.pop()];
-
-    setDeck(newDeck);
-    setPlayerHand(playerStartingHand);
-    setDealerHand(dealerStartingHand);
-    setIsGameOver(false);
-    setMessage("");
-    setResultClass(""); // Reset result class
-    setTotalPoints((prev) => {
-      const newTotal = prev - currentBet;
-      console.log("Updated totalPoints:", newTotal);
-
-      // After calculating, update both local state and Firebase
-      setTotalPointsWithUpdate(newTotal); // Call the custom setter with the new total points
-      return newTotal; // Update local state with the new total
-    });
-  }
-
   function handleHit() {
     if (isGameOver) return;
 
@@ -165,7 +257,6 @@ function Blackjack() {
 
     if (calculateScore(newPlayerHand) > 21) {
       setMessage("Bust! You lose.");
-      setResultClass(styles.redText);
       setIsGameOver(true);
     }
   }
@@ -173,36 +264,27 @@ function Blackjack() {
   function handleStand() {
     if (isGameOver) return;
 
-    const newDealerHand = [...dealerHand];
+    let newDealerHand = [...dealerHand];
     while (calculateScore(newDealerHand) < 17) {
       newDealerHand.push(drawCard());
     }
-    setDealerHand(newDealerHand);
-    determineWinner(newDealerHand);
-    setIsGameOver(true);
-  }
 
-  function determineWinner(dealerHand) {
+    setDealerHand(newDealerHand);
+    const dealerScore = calculateScore(newDealerHand);
     const playerScore = calculateScore(playerHand);
-    const dealerScore = calculateScore(dealerHand);
 
     if (dealerScore > 21 || playerScore > dealerScore) {
-      setMessage('You win!');
-      setTotalPoints((prevPoints) => {
-        const newTotal = prevPoints + currentBet * 2;
-        setTotalPointsWithUpdate(newTotal);
-        return newTotal;
-      });
-    } else if (dealerScore === playerScore) {
+      setMessage("You win!");
+      setTotalPointsWithUpdate(totalPoints + currentBet * 2);
+      setResultClass(styles.greenText);
+    } else if (playerScore === dealerScore) {
       setMessage("It's a tie!");
-      setTotalPoints((prevPoints) => {
-        const newTotal = prevPoints + currentBet;
-        setTotalPointsWithUpdate(newTotal);
-        return newTotal;
-      });
+      setTotalPointsWithUpdate(totalPoints + currentBet);
     } else {
-      setMessage('Dealer wins!');
+      setMessage("Dealer wins!");
+      setResultClass(styles.redText);
     }
+    setIsGameOver(true);
   }
 
   function handleBetChange(e) {
@@ -215,27 +297,36 @@ function Blackjack() {
 
   return (
     <div className={styles.blackjackGame}>
+      <div className={styles.blackjackTitle}>
+        <h1>BLACKJACK</h1>
+      </div>
       <div className={styles.gameArea}>
         <div className={styles.dealerArea}>
           <h2>Dealer's Hand</h2>
           <div className={styles.cardArea}>
             {dealerHand.map((card, i) => (
-              <span key={i}>
-                {card.value}
-                {card.suit}
-              </span>
+              <img
+                key={i}
+                src={getCardImage(card.value, card.suit)}
+                alt={`${card.value} of ${card.suit}`}
+                className={styles.cardImage}
+              />
             ))}
           </div>
-          <p className={styles.score}>Score: {isGameOver ? calculateScore(dealerHand) : '?'}</p>
+          <p className={styles.score}>
+            Score: {isGameOver ? calculateScore(dealerHand) : "?"}
+          </p>
         </div>
         <div className={styles.playerArea}>
           <h2>Your Hand</h2>
           <div className={styles.cardArea}>
             {playerHand.map((card, i) => (
-              <span key={i}>
-                {card.value}
-                {card.suit}
-              </span>
+              <img
+                key={i}
+                src={getCardImage(card.value, card.suit)}
+                alt={`${card.value} of ${card.suit}`}
+                className={styles.cardImage}
+              />
             ))}
           </div>
           <p className={styles.score}>Score: {calculateScore(playerHand)}</p>
@@ -245,7 +336,7 @@ function Blackjack() {
         <h3>
           Total Points: <span>{totalPoints}</span>
         </h3>
-        <label htmlFor="bet-amount">Bet Amount:</label>
+        <label htmlFor="bet-amount">Bet Amount: </label>
         <input
           className={styles.betInput}
           type="number"
@@ -254,17 +345,25 @@ function Blackjack() {
           onChange={handleBetChange}
         />
         <div className={styles.buttonArea}>
-          <button className={styles.hitButton} onClick={handleHit}>
+          <button
+            className={styles.hitButton}
+            onClick={handleHit}
+            disabled={isGameOver}
+          >
             Hit
           </button>
-          <button className={styles.standButton} onClick={handleStand}>
+          <button
+            className={styles.standButton}
+            onClick={handleStand}
+            disabled={isGameOver}
+          >
             Stand
           </button>
           <button className={styles.restartButton} onClick={handleRestart}>
             Restart
           </button>
         </div>
-        <p>{message}</p>
+        <p className={resultClass}>{message}</p>
       </div>
     </div>
   );

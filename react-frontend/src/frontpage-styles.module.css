@@ -11,7 +11,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100%;
 }
 
 .settingsEmailLabel {
@@ -352,7 +352,6 @@ p {
   border-radius: 5px;
   display: flex;
   align-items: center;
-  width: 275px;
 }
 .userInfo span {
   margin-left: 5px;
@@ -369,7 +368,7 @@ p {
 .pokerButtons,
 .gameButtons {
   display: flex;
-  width: 400px;
+  width: 100%;
 }
 .poker {
   background-color: #0d2365;
@@ -382,9 +381,12 @@ p {
   border-radius: 8px;
   border: 4px solid black;
   cursor: pointer;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 80px;
   width: 100%;
+  color: white !important;
 }
 .poker:hover {
   background-color: #1b5193;
@@ -398,15 +400,16 @@ p {
 .homeLogo {
   display: block;
   margin: 0 auto; /* Center the logo horizontally */
-  width: 400px; /* Adjust the size as needed */
-  height: auto; /* Maintain aspect ratio */
-  margin-bottom: 20px; /* Add space below the logo */
+  width: 400px;
+  height: auto;
+  margin-bottom: 20px;
 }
 
 .menu {
   background-color: white;
   border-radius: 25px;
   border: 4px black solid;
+  width: 500px;
 }
 
 .customBio {
@@ -418,4 +421,9 @@ p {
 
 .settingsContainer p {
   color: black;
+}
+.accountButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
