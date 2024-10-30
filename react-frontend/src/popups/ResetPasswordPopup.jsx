@@ -1,35 +1,29 @@
 import React, { useState } from "react";
 import styles from "../frontpage-styles.module.css";
-import { updatePassword, reauthenticateWithCredential, updateEmail, sendEmailVerification } from "firebase/auth";
+import { sendPasswordResetEmail } from "firebase/auth";
 import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { firestore_db, auth } from "../firebase";
 
-const ResetPasswordPopup = ({ togglePasswordPopup, onSubmit }) => {
+const ResetPasswordPopup = ({ toggleResetPassPopup, onSubmit }) => {
 
   const [message, setMessage] = useState("");
   const [messageStyle, setMessageStyle] = useState({});
 
   const changePassword = async (newPassword, confirmPassword) => {
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error("No user is currently signed in.");
-    }
-    if (newPassword != confirmPassword) {
-      throw new Error("Passwords dont match.");
-    }
-    updatePassword(auth.currentUser, newPassword).then(() => {
-      togglePasswordPopup();
-    }).catch((error) => {
-      setMessage("Error updating balls Password: ", error);
-      setMessageStyle({ color: "red" });
-    });
+    sendPasswordResetEmail(auth, email)
+  .then(() => {
+    // Password reset email sent!
+    // ..
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ..
+  });
   } 
   
   
   const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    confirmPassword: "",
     email: "",
   });
   
@@ -42,7 +36,7 @@ const ResetPasswordPopup = ({ togglePasswordPopup, onSubmit }) => {
     try {
       e.preventDefault(); 
 
-      await changePassword(formData.password, formData.confirmPassword);
+      await changePassword(formData.email);
 
       onSubmit();
     }
@@ -59,24 +53,16 @@ const ResetPasswordPopup = ({ togglePasswordPopup, onSubmit }) => {
           <div>
             <div>
               <div className={styles.modal}>
-                <button className={styles.closeButton} onClick={togglePasswordPopup}>
+                <button className={styles.closeButton} onClick={toggleResetPassPopup}>
                     X
                 </button>
                 <br></br>
                 <form id="signup-form" onSubmit={handleSubmit}>
                 <input
-                    type="password"
-                    name="password"
+                    type="email"
+                    name="email"
                     placeholder="Enter new password:"
                     value={formData.password}
-                    required
-                    onChange={handleChange}
-                />
-                <input
-                    type="Password"
-                    name="confirmPassword"
-                    placeholder="Confirm password:"
-                    value={formData.confirmPassword}
                     required
                     onChange={handleChange}
                 />

@@ -20,7 +20,7 @@ const ChangePasswordPopup = ({ togglePasswordPopup, onSubmit }) => {
     updatePassword(auth.currentUser, newPassword).then(() => {
       togglePasswordPopup();
     }).catch((error) => {
-      setMessage("Error updating balls Password: ", error);
+      setMessage("Error updating Password: ", error);
       setMessageStyle({ color: "red" });
     });
   } 
