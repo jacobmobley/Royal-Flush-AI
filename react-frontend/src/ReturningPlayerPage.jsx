@@ -19,6 +19,12 @@ const ReturningPlayerPage = () => {
   });
   const [message, setMessage] = useState("");
   const [messageStyle, setMessageStyle] = useState({});
+  const [showResetPassPopup, setshowResetPassPopup] = useState(false);
+
+
+  const toggleResetPassPopup= () => {
+    setshowResetPassPopup(!showResetPassPopup);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -103,6 +109,9 @@ const ReturningPlayerPage = () => {
 
           <button className={styles.submitButton}>Sign In</button>
         </form>
+        <Link to="/forgotpass" className={`${styles.button} ${styles.forgotpassButton}`}>
+          Forgot Password
+        </Link>
       </div>
       {message && (
         <div id="message" style={{ display: "block", ...messageStyle }}>
