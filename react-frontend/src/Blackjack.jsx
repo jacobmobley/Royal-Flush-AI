@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import styles from "./Blackjack.module.css";
 import FireBaseAuth from "./FireBaseAuth";
 
-
 import back from "./assets/cards/cardBack_red2.png";
 
 import clubs2 from "./assets/cards/2_of_clubs.png";
@@ -135,7 +134,6 @@ const cardImageMap = {
 };
 
 function Blackjack() {
-
   function getCardImage(value, suit, i) {
     if ((i == 1 && !showDealerCard) || !showCard) {
       return back;
@@ -143,7 +141,6 @@ function Blackjack() {
     const key = `${suit}${value}`;
     return cardImageMap[key];
   }
-
 
   const { deckCount } = useParams(); // Get deck count from URL params
   const numDecks = parseInt(deckCount, 10) || 1; // Default to 1 deck if not specified
@@ -194,8 +191,7 @@ function Blackjack() {
   function initGame() {
     if (currentBet == 0) {
       setShowCard(false);
-    }
-    else {
+    } else {
       setShowCard(true);
     }
     if (currentBet > totalPoints) {
@@ -379,7 +375,7 @@ function Blackjack() {
             Stand
           </button>
           <button className={styles.restartButton} onClick={handleRestart}>
-            Bet
+            Restart
           </button>
         </div>
         <p className={resultClass}>{message}</p>
