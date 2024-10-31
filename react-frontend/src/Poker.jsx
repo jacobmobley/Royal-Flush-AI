@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Poker.module.css";
 import api from "./api";
+import gear from "./assets/Settings.png";
+import Settings from "./Settings";
 
 function Poker() {
   const [potValue, setPotValue] = useState(0);
@@ -17,6 +19,12 @@ function Poker() {
     { name: "Player 5", bet: 50, cards: ["?", "?"] },
     { name: "Player 6", bet: 180, cards: ["?", "?"] },
   ]);
+
+  const [showSettings, setShowSettings] = useState(false);
+
+  const toggleSettings = () => {
+    setShowSettings(!showSettings);
+  };
 
   const handleRaiseChange = (event) => {
     setCurrentRaise(Number(event.target.value));
