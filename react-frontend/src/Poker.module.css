@@ -1,123 +1,119 @@
-.pokergame {
-  width: 100%;
-  height: 100%;
-}
-.buttonContainer {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+.pokerContainer {
   display: flex;
-  align-items: center;
-  width: 450px;
-  justify-content: space-around;
-  padding: 20px 0;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px;
 }
 
 .pokerTable {
-  width: 1250px;
-  height: 650px;
-  background-color: #357a38; /* Poker table green */
-  border-radius: 325px;
-  border: 16px solid rgb(49, 44, 44);
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+  width: 998px;
+  height: 998px;
+  background-color: #357a38;
+  border-radius: 50%;
+  border: 5px solid #333;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.3);
+  position: relative;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
 }
+
 .pot {
-  margin-top: 40px;
-  align-items: center;
+  margin-top: 19px;
   text-align: center;
-  font-size: 25px;
+  color: white;
+  font-size: 23px;
 }
-.river {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border: 1px solid black;
-  width: 900px;
-  height: 150px;
-}
-.tempButtons {
-  position: fixed; /* Sticks to the left side */
-  left: 0; /* Aligns container to the left edge */
-  top: 50%; /* Centers vertically */
-  transform: translateY(-50%); /* Adjusts to center the column vertically */
+
+.communityCards {
   display: flex;
-  flex-direction: column; /* Arrange buttons in a column */
-  gap: 10px; /* Space between buttons */
-  padding: 10px;
+  gap: 14px;
+  margin-top: 19px;
+  justify-content: center;
 }
 
-.actionButton{
-  color:black;
-  background-color:aliceblue;
+.card, .faceDownCard {
+  width: 76px;
+  height: 105px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 23px;
+  color: black;
+  font-weight: bold;
 }
 
-.tempButtons button:hover {
-  background-color: #b38b33;
+.card {
+  background-color: #fff;
+  border: 1px solid #000;
 }
 
-/* Dimmed background overlay */
-.popupOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+.faceDownCard {
+  background-color: #333;
+  border: 1px solid #000;
+  color: transparent;
+  margin: 0 5px;
+}
+
+.players {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.playerSlot {
+  color: white;
+  text-align: center;
+  position: absolute;
+}
+
+.playerCards {
   display: flex;
   justify-content: center;
+  margin-top: 5px;
+}
+
+.player1 { bottom: 5%; left: 50%; transform: translateX(-50%); }
+.player2 { bottom: 30%; left: 10%; }
+.player3 { top: 30%; left: 10%; }
+.player4 { top: 5%; left: 50%; transform: translateX(-50%); }
+.player5 { top: 30%; right: 10%; }
+.player6 { bottom: 30%; right: 10%; }
+
+.controls {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  z-index: 1000;
+  gap: 15px;
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-/* Popup message box */
-.turnPopup {
-  background-color: white;
-  padding: 20px 40px;
-  border-radius: 10px;
-  text-align: center;
-  font-size: 24px;
-  color: #333;
-  animation: popupAnimation 0.5s ease-in-out;
-
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-  z-index: 1001;
+.slider {
+  width: 200px;
 }
 
-/* Animation for the popup */
-@keyframes popupAnimation {
-  0% {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-  60% {
-    transform: scale(1.1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+.raiseDisplay {
+  font-size: 18px;
+  color: white;
 }
 
-.exitAnimation {
-  animation: exitAnimation 0.5s ease-in-out forwards;
+.controlButton {
+  width: 100px;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #357a38;
+  color: white;
+  cursor: pointer;
 }
 
-@keyframes exitAnimation {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-}
-
-.turnPopup p {
-  color: black;
+.controlButton:hover {
+  background-color: #2b6130;
 }
