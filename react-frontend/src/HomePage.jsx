@@ -33,6 +33,7 @@ const HomePage = () => {
   const [image, setImage] = useState("");
 
   const audioRef = useRef(new Audio(funky));
+  audioRef.current.loop = true;
 
   const toggleSettings = () => {
     setShowSettings(!showSettings);
@@ -82,7 +83,7 @@ const HomePage = () => {
   };
   return (
     <div className="container" onClick={play}>
-      <audio ref={audioRef} className={styles.backgroundMusic}>
+      <audio ref={audioRef} className={styles.backgroundMusic} loop>
         <source src={funky} type="audio/mpeg" />
       </audio>
       <div className={styles.userInfo}>
@@ -142,7 +143,7 @@ const HomePage = () => {
       />
       {showSettings && (
         <div className={`${styles.modalOverlay}`}>
-          <Settings toggleSettings={toggleSettings} />
+          <Settings toggleSettings={toggleSettings} audioRef={audioRef} />
         </div>
       )}
     </div>

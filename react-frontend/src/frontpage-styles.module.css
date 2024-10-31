@@ -246,6 +246,10 @@ p {
   color: black;
 }
 
+.volumeSlider {
+  width: 100%;
+}
+
 .closeButton {
   position: absolute;
   color: black;
