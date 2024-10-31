@@ -1,0 +1,4 @@
+eval7==0.1.10
+Flask==3.0.3
+flask_cors==5.0.0
+scikit_learn==1.5.2

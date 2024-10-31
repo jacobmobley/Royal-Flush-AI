@@ -1,11 +1,15 @@
 # Poker-Vision
 ## Running the Project
 ### Dependencies
-Make sure you have npm installed on your machine
+```
+npm
+python 3
+pip
+```
 ### Start server
 Run the following commands:
 ```
-cd react-frontend
-npm run dev
+bash startup.sh
+
 ```
 Connect using the outputed URL
