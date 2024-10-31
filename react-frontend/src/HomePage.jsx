@@ -32,6 +32,8 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [image, setImage] = useState("");
 
+  const audioRef = useRef(new Audio(funky));
+
   const toggleSettings = () => {
     setShowSettings(!showSettings);
   };
@@ -71,9 +73,18 @@ const HomePage = () => {
   if (loading) {
     return <div>Loading user data...</div>;
   }
-
+  const play = () => {
+    if (audioRef.current && audioRef.current.paused) {
+      audioRef.current.play().catch((error) => {
+        console.error("Audio play blocked by the browser:", error);
+      });
+    }
+  };
   return (
-    <div className="container">
+    <div className="container" onClick={play}>
+      <audio ref={audioRef} className={styles.backgroundMusic}>
+        <source src={funky} type="audio/mpeg" />
+      </audio>
       <div className={styles.userInfo}>
         <span>
           <img
