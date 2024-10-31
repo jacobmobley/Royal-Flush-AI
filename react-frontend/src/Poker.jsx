@@ -6,6 +6,10 @@ function Poker() {
   return (
     <div className={styles.pokergame}>
       <div className={styles.pokerTable}>
+        <div className={styles.pot}>
+          <div className={styles.potHeader}>Current Pot</div>
+          <div className={styles.potAmount}>$</div>
+        </div>
         <div className={styles.river}></div>
       </div>
       <div className={styles.tempButtons}>
