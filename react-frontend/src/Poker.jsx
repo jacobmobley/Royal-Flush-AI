@@ -8,6 +8,17 @@ function Poker() {
       <div className={styles.pokerTable}>
         <div className={styles.river}></div>
       </div>
+      <div className={styles.tempButtons}>
+        <button className={styles.addPlayer}>Add Player</button>
+        <button className={styles.newRound}>New Round</button>
+        <button className={styles.yourTurn}>Your Turn</button>
+        <button className={styles.dealCards}>Deal Cards</button>
+        <button className={styles.flopCards}>Flop Cards</button>
+        <button className={styles.turnCard}>Turn Cards</button>
+        <button className={styles.youWin}>You Win</button>
+        <button className={styles.youLose}>You Lose</button>
+      </div>
+
       <div className={styles.player}>
         <div className={styles.buttonContainer}>
           <button className={styles.actionButton}>Call/Check</button>
