@@ -50,6 +50,11 @@
   padding: 10px;
 }
 
+.actionButton{
+  color:black;
+  background-color:aliceblue;
+}
+
 .tempButtons button:hover {
   background-color: #b38b33;
 }
