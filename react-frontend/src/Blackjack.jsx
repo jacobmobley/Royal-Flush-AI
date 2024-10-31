@@ -3,6 +3,9 @@ import { useParams } from "react-router-dom";
 import styles from "./Blackjack.module.css";
 import FireBaseAuth from "./FireBaseAuth";
 
+
+import back from "./assets/cards/cardBack_red2.png";
+
 import clubs2 from "./assets/cards/2_of_clubs.png";
 import clubs3 from "./assets/cards/3_of_clubs.png";
 import clubs4 from "./assets/cards/4_of_clubs.png";
@@ -131,11 +134,17 @@ const cardImageMap = {
   spadesace,
 };
 
-function getCardImage(value, suit) {
-  const key = `${suit}${value}`;
-  return cardImageMap[key];
-}
 function Blackjack() {
+
+  function getCardImage(value, suit, i) {
+    if ((i == 1 && !showDealerCard) || !showCard) {
+      return back;
+    }
+    const key = `${suit}${value}`;
+    return cardImageMap[key];
+  }
+
+
   const { deckCount } = useParams(); // Get deck count from URL params
   const numDecks = parseInt(deckCount, 10) || 1; // Default to 1 deck if not specified
   const [curUser] = useState(new FireBaseAuth());
@@ -145,10 +154,12 @@ function Blackjack() {
   const [playerHand, setPlayerHand] = useState([]);
   const [dealerHand, setDealerHand] = useState([]);
   const [isGameOver, setIsGameOver] = useState(false);
-  const [currentBet, setCurrentBet] = useState(100);
+  const [currentBet, setCurrentBet] = useState(0);
   const [message, setMessage] = useState("");
   const [resultClass, setResultClass] = useState("");
   const [totalPoints, setTotalPoints] = useState(999999999999);
+  const [showDealerCard, setShowDealerCard] = useState(false);
+  const [showCard, setShowCard] = useState(false);
 
   const setTotalPointsWithUpdate = (newPoints) => {
     setTotalPoints(newPoints); // Update local state
@@ -181,6 +192,12 @@ function Blackjack() {
   }
 
   function initGame() {
+    if (currentBet == 0) {
+      setShowCard(false);
+    }
+    else {
+      setShowCard(true);
+    }
     if (currentBet > totalPoints) {
       setMessage("Not enough points to place this bet.");
       setIsGameOver(true);
@@ -262,6 +279,7 @@ function Blackjack() {
   }
 
   function handleStand() {
+    setShowDealerCard(true);
     if (isGameOver) return;
 
     let newDealerHand = [...dealerHand];
@@ -292,6 +310,7 @@ function Blackjack() {
   }
 
   function handleRestart() {
+    setShowDealerCard(false);
     initGame();
   }
 
@@ -307,7 +326,7 @@ function Blackjack() {
             {dealerHand.map((card, i) => (
               <img
                 key={i}
-                src={getCardImage(card.value, card.suit)}
+                src={getCardImage(card.value, card.suit, i)}
                 alt={`${card.value} of ${card.suit}`}
                 className={styles.cardImage}
               />
@@ -323,7 +342,7 @@ function Blackjack() {
             {playerHand.map((card, i) => (
               <img
                 key={i}
-                src={getCardImage(card.value, card.suit)}
+                src={getCardImage(card.value, card.suit, 0)}
                 alt={`${card.value} of ${card.suit}`}
                 className={styles.cardImage}
               />
@@ -360,7 +379,7 @@ function Blackjack() {
             Stand
           </button>
           <button className={styles.restartButton} onClick={handleRestart}>
-            Restart
+            Bet
           </button>
         </div>
         <p className={resultClass}>{message}</p>
