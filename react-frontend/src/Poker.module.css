@@ -23,9 +23,13 @@
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: center;
-  align-items: center;
 }
-
+.pot {
+  margin-top: 40px;
+  align-items: center;
+  text-align: center;
+  font-size: 25px;
+}
 .river {
   position: absolute;
   top: 50%;
@@ -48,4 +52,67 @@
 
 .tempButtons button:hover {
   background-color: #b38b33;
+}
+
+/* Dimmed background overlay */
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Popup message box */
+.turnPopup {
+  background-color: white;
+  padding: 20px 40px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+  animation: popupAnimation 0.5s ease-in-out;
+
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+}
+
+/* Animation for the popup */
+@keyframes popupAnimation {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.exitAnimation {
+  animation: exitAnimation 0.5s ease-in-out forwards;
+}
+
+@keyframes exitAnimation {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+}
+
+.turnPopup p {
+  color: black;
 }
