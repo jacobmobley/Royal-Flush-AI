@@ -1,78 +1,97 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Poker.module.css";
-import FireBaseAuth from "./FireBaseAuth";
+import api from "./api";
 
 function Poker() {
-  const [isTurnPopupVisible, setTurnPopupVisible] = useState(false);
-  const [isPopupExiting, setPopupExiting] = useState(false);
-  const [potValue, setPotValue] = useState(1300);
+  const [potValue, setPotValue] = useState(0);
+  const [currentRaise, setCurrentRaise] = useState(0);
+  const [flopCards, setFlopCards] = useState(["10♦", "J♠", "Q♣"]);
+  const [turnCard, setTurnCard] = useState("K♥");
+  const [riverCard, setRiverCard] = useState("A♠");
+  const [playerHand, setPlayerHand] = useState(["5♠", "7♠"]); // User's hand as player 1
+  const [players, setPlayers] = useState([
+    { name: "Your Hand", bet: 100, cards: playerHand },
+    { name: "Player 2", bet: 150, cards: ["?", "?"] },
+    { name: "Player 3", bet: 200, cards: ["?", "?"] },
+    { name: "Player 4", bet: 120, cards: ["?", "?"] },
+    { name: "Player 5", bet: 50, cards: ["?", "?"] },
+    { name: "Player 6", bet: 180, cards: ["?", "?"] },
+  ]);
 
-  const handleYourTurnClick = () => {
-    setTurnPopupVisible(true);
-
-    setTimeout(() => {
-      setPopupExiting(true);
-
-      setTimeout(() => {
-        setTurnPopupVisible(false);
-        setPopupExiting(false);
-      }, 500);
-    }, 500);
+  const handleRaiseChange = (event) => {
+    setCurrentRaise(Number(event.target.value));
   };
 
-  const getMinimumChips = (amount) => {
-    const chipValues = [1000, 500, 100, 25, 5, 1]; // Yellow, Purple, Black, Green, Red, White
-    const chipNames = ['Yellow ($1000)', 'Purple ($500)', 'Black ($100)', 'Green ($25)', 'Red ($5)', 'White ($1)'];
-    const result = Array(chipValues.length).fill(0);
+  const handleBetRaise = () => {
+    setPotValue(potValue + currentRaise);
+    setCurrentRaise(0);
+  };
 
-    for (let i = 0; i < chipValues.length; i++) {
-      if (amount >= chipValues[i]) {
-        result[i] = Math.floor(amount / chipValues[i]);
-        amount -= result[i] * chipValues[i];
-      }
+  const sendGameData = async () => {
+    const gameData = {
+      "Current hand": playerHand,
+      Flop: flopCards,
+      River: riverCard,
+      Turn: turnCard,
+      "Pot amount": potValue,
+      "Current raise": currentRaise,
+    };
+    try {
+      await api.sendGameData(gameData);
+      console.log("Game data sent:", gameData);
+    } catch (error) {
+      console.error("Error sending game data:", error);
     }
-
-    return result.map((count, index) => count > 0 ? `${count} x ${chipNames[index]}` : null).filter(Boolean);
   };
 
-  const chipsNeeded = getMinimumChips(potValue);
+  useEffect(() => {
+    sendGameData();
+  }, [playerHand, flopCards, turnCard, riverCard, potValue, currentRaise]);
 
   return (
-    <div className={styles.pokergame}>
-      {isTurnPopupVisible && (
-        <div className={styles.popupOverlay}>
-          <div
-            className={`${styles.turnPopup} ${
-              isPopupExiting ? styles.exitAnimation : ""
-            }`}
-          >
-            <p>Your Turn!</p>
-          </div>
-        </div>
-      )}
+    <div className={styles.pokerContainer}>
       <div className={styles.pokerTable}>
         <div className={styles.pot}>
-          <div className={styles.potHeader}>Current Pot</div>
-          <div className={styles.potAmount}>${potValue}</div>
+          <div className={styles.potHeader}>Pot Amount</div>
+          <div className={styles.potValue}>${potValue}</div>
         </div>
-        <div className={styles.chipBreakdown}>
-          <h3>Chips:</h3>
-          <ul>
-            {chipsNeeded.map((chip, index) => (
-              <li key={index}>{chip}</li>
-            ))}
-          </ul>
+        <div className={styles.communityCards}>
+          {flopCards.map((card, index) => (
+            <div key={index} className={styles.card}>{card}</div>
+          ))}
+          <div className={styles.card}>{turnCard}</div>
+          <div className={styles.card}>{riverCard}</div>
         </div>
-        <div className={styles.river}></div>
+        <div className={styles.players}>
+          {players.map((player, index) => (
+            <div key={index} className={`${styles.playerSlot} ${styles[`player${index + 1}`]}`}>
+              <p>{player.name}</p>
+              <p>Bet: ${player.bet}</p>
+              <div className={styles.playerCards}>
+                {player.cards.map((card, idx) => (
+                  <div key={idx} className={card === "?" ? styles.faceDownCard : styles.card}>
+                    {card !== "?" ? card : ""}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className={styles.player}>
-        <div className={styles.buttonContainer}>
-          <button className={styles.actionButton} onClick={handleYourTurnClick}>Your Turn</button>
-          <button className={styles.actionButton}>Call/Check</button>
-          <button className={styles.actionButton}>Fold</button>
-          <button className={styles.actionButton}>Bet/Raise</button>
-        </div>
+      <div className={styles.controls}>
+        <input
+          type="range"
+          min="0"
+          max="500"
+          value={currentRaise}
+          onChange={handleRaiseChange}
+          className={styles.slider}
+        />
+        <div className={styles.raiseDisplay}>Raise: ${currentRaise}</div>
+        <button className={styles.controlButton} onClick={handleBetRaise}>Bet/Raise</button>
+        <button className={styles.controlButton}>Check/Call</button>
+        <button className={styles.controlButton}>Fold</button>
       </div>
     </div>
   );

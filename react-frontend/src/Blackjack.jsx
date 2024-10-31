@@ -142,8 +142,8 @@ function Blackjack() {
     return cardImageMap[key];
   }
 
-  const { deckCount } = useParams(); // Get deck count from URL params
-  const numDecks = parseInt(deckCount, 10) || 1; // Default to 1 deck if not specified
+  const { deckCount } = useParams();
+  const numDecks = parseInt(deckCount, 10) || 1;
   const [curUser] = useState(new FireBaseAuth());
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
@@ -159,22 +159,21 @@ function Blackjack() {
   const [showCard, setShowCard] = useState(false);
 
   const setTotalPointsWithUpdate = (newPoints) => {
-    setTotalPoints(newPoints); // Update local state
-    curUser.updateCurrency(newPoints); // Update Firebase
+    setTotalPoints(newPoints);
+    curUser.updateCurrency(newPoints);
   };
 
   useEffect(() => {
     const unsubscribe = curUser.getUnsubscribe();
 
-    // Check for loading completion
     const checkLoadingStatus = setInterval(() => {
       if (!curUser.loading) {
         setLoading(false);
-        setUserData(curUser.userData); // Sync with Firebase data
+        setUserData(curUser.userData);
         const initialPoints = curUser.userData?.currency || 0;
         setTotalPoints(initialPoints);
         clearInterval(checkLoadingStatus);
-        initGame(); // Start the game after loading
+        initGame();
       }
     }, 100);
 
@@ -232,10 +231,10 @@ function Blackjack() {
   }
 
   function drawCard() {
-    if (deck.length === 0) return null; // Guard against an empty deck
+    if (deck.length === 0) return null;
 
-    const card = deck.pop(); // Directly remove the last card from deck
-    setDeck([...deck]); // Update state with the modified deck
+    const card = deck.pop();
+    setDeck([...deck]);
     return card;
   }
 
