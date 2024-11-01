@@ -10,7 +10,7 @@ import styles from "./frontpage-styles.module.css";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-const Settings = ({ toggleSettings, audioRef }) => {
+const Settings = ({ toggleSettings, audioRef, effectsRef }) => {
   const [selectedTab, setSelectedTab] = useState("Account Security");
   const [bio, setBio] = useState(null);
   const [showUsernamePopup, setShowUsernamePopup] = useState(false);
@@ -31,6 +31,15 @@ const Settings = ({ toggleSettings, audioRef }) => {
     setVolume(newVolume);
     if (audioRef.current) {
       audioRef.current.volume = newVolume / 100; // Set audio volume (0 to 1 range)
+    }
+  };
+
+  const [effectsVolume, setEffectsVolume] = useState(50);
+  const handleEffectsVolumeChange = (event) => {
+    const newVolume = event.target.value;
+    setEffectsVolume(newVolume);
+    if (effectsRef.current) {
+      effectsRef.current.volume = newVolume / 100; // Set effects volume (0 to 1 range)
     }
   };
 
@@ -165,9 +174,9 @@ const Settings = ({ toggleSettings, audioRef }) => {
         return (
           <div className={styles.volumeControl}>
             <p>Adjust sound settings for the game.</p>
-
+            <p>-</p>
             <p>Music Volume</p>
-            <label htmlFor="volume-slider">Volume: {volume}%</label>
+            {/* <label htmlFor="volume-slider">Volume: {volume}%</label> */}
             <input
               type="range"
               id="volume-slider"
@@ -175,6 +184,17 @@ const Settings = ({ toggleSettings, audioRef }) => {
               max="100"
               value={volume}
               onChange={handleVolumeChange}
+              style={{ width: "100%" }}
+            />
+            <p>Effects Volume</p>
+            {/* <label htmlFor="volume-slider">Volume: {volume}%</label> */}
+            <input
+              type="range"
+              id="volume-slider"
+              min="0"
+              max="100"
+              value={effectsVolume}
+              onChange={handleEffectsVolumeChange}
               style={{ width: "100%" }}
             />
           </div>
