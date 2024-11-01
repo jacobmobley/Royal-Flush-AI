@@ -505,3 +505,14 @@ p {
   background-color: white;
   color: black;
 }
+
+.highestHand {
+  display: flex;
+}
+.highestHand p {
+  margin-left: 5px;
+}
+.checkbox {
+  width: 20px;
+  height: 20px;
+}
