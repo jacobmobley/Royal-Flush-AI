@@ -440,12 +440,8 @@ function Poker() {
 
   const decideAIAction = () => {
     const simulatedPlayerHands = generateSimulatedPlayerHands();
-    let aiWinProbability = evaluateAIWinProbability(
-      aiHand,
-      simulatedPlayerHands,
-      flopCards
-    );
-    aiWinProbability = randomNumber(0, 1);
+    //let aiWinProbability = evaluateAIWinProbability(aiHand, simulatedPlayerHands, flopCards);
+    let aiWinProbability=randomNumber(0, 1);
     console.log(aiWinProbability);
     // Make decision based on probability thresholds and current call amount
     if (aiWinProbability > 0.75 && potValue < aiPlayer.bankroll / 2) {
@@ -541,6 +537,7 @@ function Poker() {
 
   const handleEndGame = () => {
     const winner = whoWins();
+    console.log("winner:" + winner);
     if (winner === 0) {
       updatePlayerBankroll(curPlayer.bankroll + potValue); // Award pot to player
     } else if (winner === 1) {
@@ -579,8 +576,9 @@ function Poker() {
 
     // Combine player and AI hands with the community cards (flopCards)
     let bestHandPlayer = evaluateBestHand([...playerHand, ...flopCards]);
+    console.log(playerHand, aiHand);
     let bestHandAI = evaluateBestHand([...aiHand, ...flopCards]);
-
+    console.log(bestHandPlayer, bestHandAI);
     // Compare the best hands
     if (compareHands(bestHandPlayer, bestHandAI) > 0) {
       return 0; // Player wins
@@ -605,8 +603,8 @@ function Poker() {
         bestHand = rankedHand;
       }
     }
-
     return bestHand;
+    
   }
 
   function isHigherHand(hand1Values, hand2Values) {
@@ -631,6 +629,7 @@ function Poker() {
     let suits = cards.map((card) => card.suit);
 
     let valueCounts = countValues(values);
+    console.log(cards);
     let isFlush = new Set(suits).size === 1;
     let isStraight = checkStraight(values);
 
@@ -645,18 +644,13 @@ function Poker() {
     if (isFlush && isStraight) return { rank: 8, values: values.sort() }; // Straight Flush
     if (isFlush) return { rank: 5, values: values.sort() }; // Flush
     if (isStraight) return { rank: 4, values: values.sort() }; // Straight
-
-    if (valueCounts[4])
-      return { rank: 7, values: getTopValues(valueCounts, 4) }; // Four of a Kind
-    if (valueCounts[3] && valueCounts[2])
-      return { rank: 6, values: getTopValues(valueCounts, 3, 2) }; // Full House
-    if (valueCounts[3])
-      return { rank: 3, values: getTopValues(valueCounts, 3) }; // Three of a Kind
-    if (Object.keys(valueCounts).length === 3)
-      return { rank: 2, values: getTopValues(valueCounts, 2, 2) }; // Two Pair
-    if (valueCounts[2])
-      return { rank: 1, values: getTopValues(valueCounts, 2) }; // One Pair
-
+  
+    if (valueCounts[4]) return { rank: 7, values: values.sort() }; // Four of a Kind
+    if (valueCounts && valueCounts[2]) return { rank: 6, values: values.sort() }; // Full House
+    if (valueCounts[3]) return { rank: 3, values: values.sort() }; // Three of a Kind
+    if (Object.keys(valueCounts).length === 3) return { rank: 2, values: values.sort() }; // Two Pair
+    if (valueCounts[2]) return { rank: 1, values: values.sort() }; // One Pair
+  
     return { rank: 0, values: values.sort().reverse() }; // High Card
   }
 
@@ -727,6 +721,7 @@ function Poker() {
   }
 
   function countValues(values) {
+    console.log(values);
     let counts = {};
     values.forEach((value) => (counts[value] = (counts[value] || 0) + 1));
     return counts;
