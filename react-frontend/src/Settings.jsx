@@ -24,6 +24,20 @@ const Settings = ({ toggleSettings, audioRef, effectsRef }) => {
     window.location.reload();
   };
 
+  // Toggle checkbox state
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
+  const [isChecked, setIsChecked] = useState(() => {
+    const saved = localStorage.getItem("checkboxState");
+    return saved === "true"; // Parse string to boolean
+  });
+
+  // Update localStorage whenever isChecked changes
+  useEffect(() => {
+    localStorage.setItem("checkboxState", isChecked);
+  }, [isChecked]);
+
   const [volume, setVolume] = useState(50); // Default volume to 50%
 
   const handleVolumeChange = (event) => {
@@ -169,7 +183,20 @@ const Settings = ({ toggleSettings, audioRef, effectsRef }) => {
           </>
         );
       case "Game Appearance":
-        return <p>Customize the game's appearance here.</p>;
+        return (
+          <div className={styles.gameSettings}>
+            <p>Customize the game's appearance here.</p>;
+            <div className={styles.highestHand}>
+              <input
+                className={styles.checkbox}
+                type="checkbox"
+                checked={isChecked}
+                onChange={handleCheckboxChange}
+              />
+              <p>Display current highest hand</p>
+            </div>
+          </div>
+        );
       case "Sound Settings":
         return (
           <div className={styles.volumeControl}>
