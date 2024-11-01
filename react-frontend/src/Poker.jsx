@@ -328,7 +328,7 @@ function Poker() {
 
   const handleCheck = () => {
     console.log("player: check");
-    setCurrentRaise(0); // No raise for a check
+    setCurrentRaise(currentRaise); // No raise for a check
     setCurAction(curAction ^ 1); // Switch turn
     if (curAction === curBig) {
       setRoundComplete(true); // End the round if both players have acted
@@ -420,7 +420,7 @@ function Poker() {
   };
 
   const handleAICall = () => {
-    const amountToCall = curCall - currentRaise;
+    const amountToCall = currentRaise;
     updateAiBankroll(aiPlayer.bankroll - amountToCall);
     setPotValue(potValue + amountToCall);
     setCurAction(0); // Pass control back to the player
@@ -428,7 +428,7 @@ function Poker() {
   };
 
   const handleAIRaise = () => {
-    const raiseAmount = curCall + 10;
+    const raiseAmount = currentRaise +10;
     updateAiBankroll(aiPlayer.bankroll - raiseAmount);
     setPotValue(potValue + raiseAmount);
     setCurrentRaise(raiseAmount);
@@ -438,7 +438,7 @@ function Poker() {
   };
 
   const handleAICheck = () => {
-    setCurrentRaise(0); // No raise on a check
+    setCurrentRaise(currentRaise); // No raise on a check
     setCurAction(0); // Pass control back to the player
     setRoundComplete(curAction === curBig); // Set round complete if needed
   };
@@ -504,7 +504,7 @@ function Poker() {
     // Navigate to a summary screen or display end-game results here
     console.log("Game over! Final Bankrolls - Player:", curPlayer.bankroll, "AI:", aiPlayer.bankroll);
     // Optionally navigate or display a message based on your app's structure
-    navigate("/end-screen"); // Assuming you have an end screen route
+    navigate("/homepage"); // Assuming you have an end screen route
   };
 
   const resetGame = () => {
