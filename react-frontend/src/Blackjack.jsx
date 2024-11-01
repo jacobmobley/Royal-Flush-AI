@@ -202,6 +202,7 @@ function Blackjack() {
     setDeck(newDeck);
     setPlayerHand([newDeck.pop(), newDeck.pop()]);
     setDealerHand([newDeck.pop(), newDeck.pop()]);
+    
     setIsGameOver(false);
     setMessage("");
     setTotalPoints((prevPoints) => {
@@ -215,6 +216,7 @@ function Blackjack() {
     for (let i = 0; i < numDecks; i++) {
       for (let suit of suits) {
         for (let value of values) {
+          console.log(value,suit);
           newDeck.push({ value, suit });
         }
       }
@@ -278,6 +280,7 @@ function Blackjack() {
     if (isGameOver) return;
 
     let newDealerHand = [...dealerHand];
+    console.log(dealerHand);
     while (calculateScore(newDealerHand) < 17) {
       newDealerHand.push(drawCard());
     }
