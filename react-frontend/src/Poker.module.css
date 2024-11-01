@@ -85,7 +85,7 @@
 /* Chip styling */
 .chips {
   display: flex;
-  gap: 12px;
+  gap: 1px;
   margin-top: 5px;
 }
 
@@ -98,7 +98,7 @@
 .chip {
   width: 35px;
   height: 35px;
-  margin-bottom: -29px;
+  margin-bottom: -30px;
   border-radius: 50%;
   border: 1px solid #000;
   position: relative;
@@ -142,8 +142,24 @@
   color: #FFF;
   font-weight: bold;
   z-index: 1;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
+.pot {
+  margin-top: 20px;
+  text-align: center;
+  color: white;
+  font-size: 23px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.potChips {
+  display: flex;
+  gap: 1px;
+  margin-top: 10px;
+}
 
 /* Controls styling */
 .controls {

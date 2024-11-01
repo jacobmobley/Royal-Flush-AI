@@ -3,7 +3,7 @@ import styles from "./Poker.module.css";
 import api from "./api";
 
 function Poker() {
-  const [potValue, setPotValue] = useState(0);
+  const [potValue, setPotValue] = useState(1000);
   const [currentRaise, setCurrentRaise] = useState(0);
   const [flopCards, setFlopCards] = useState([]);
   const [turnCard, setTurnCard] = useState();
@@ -31,9 +31,10 @@ function Poker() {
     }));
   };
 
+
   const getMinimumChips = (amount) => {
     const chipValues = [1000, 500, 100, 25, 5, 1];
-    const chipColors = ['#FFD700', '#800080', '#000000', '#008000', '#FF0000', '#FFFFFF'];
+    const chipColors = ['#FFD700', '#800080', '#333333', '#008000', '#FF0000', '#FFFFFF'];
     const chipLabels = ['$1000', '$500', '$100', '$25', '$5', '$1'];
     const result = [];
 
@@ -86,9 +87,10 @@ function Poker() {
     <div className={styles.pokerContainer}>
       <div className={styles.pokerTable}>
         <div className={styles.pot}>
-          <div className={styles.potHeader}>Pot Amount</div>
+          <div className={styles.potHeader}>Total Pot</div>
           <div className={styles.potValue}>${potValue}</div>
         </div>
+        
         <div className={styles.communityCards}>
           {flopCards.map((card, index) => (
             <div key={0} className={styles.card}>{card}</div>
@@ -96,6 +98,23 @@ function Poker() {
           <div className={styles.card}>{turnCard}</div>
           <div className={styles.card}>{riverCard}</div>
         </div>
+
+        <div className={styles.potChips}>
+          {getMinimumChips(potValue).map((chip, idx) => (
+            <div key={idx} className={styles.chipStack}>
+              {[...Array(chip.count)].map((_, i) => (
+                <div
+                  key={i}
+                  className={styles.chip}
+                  style={{ backgroundColor: chip.color }}
+                >
+                  <span className={styles.chipLabel}>{chip.label}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+
         <div className={styles.players}>
           <div key={0} className={`${styles.playerSlot} ${styles[`player1`]}`}>
             <p>{curPlayer.name}</p>
