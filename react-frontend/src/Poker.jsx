@@ -3,19 +3,19 @@ import styles from "./Poker.module.css";
 import api from "./api";
 
 function Poker() {
-  const [potValue, setPotValue] = useState(0);
+  const [potValue, setPotValue] = useState(1000);
   const [currentRaise, setCurrentRaise] = useState(0);
   const [flopCards, setFlopCards] = useState(["10♦", "J♠", "Q♣"]);
   const [turnCard, setTurnCard] = useState("K♥");
   const [riverCard, setRiverCard] = useState("A♠");
-  const [playerHand, setPlayerHand] = useState(["5♠", "7♠"]); // User's hand as player 1
+  const [playerHand, setPlayerHand] = useState(["5♠", "7♠"]);
   const [players, setPlayers] = useState([
-    { name: "Your Hand", bet: 1374, cards: playerHand },
-    { name: "Player 2", bet: 132, cards: ["?", "?"] },
-    { name: "Player 3", bet: 2795, cards: ["?", "?"] },
-    { name: "Player 4", bet: 1173, cards: ["?", "?"] },
-    { name: "Player 5", bet: 1111, cards: ["?", "?"] },
-    { name: "Player 6", bet: 1010, cards: ["?", "?"] },
+    { name: "Your Hand", bet: 1238, cards: playerHand },
+    { name: "Player 2", bet: 1383, cards: ["?", "?"] },
+    { name: "Player 3", bet: 2034, cards: ["?", "?"] },
+    { name: "Player 4", bet: 4444, cards: ["?", "?"] },
+    { name: "Player 5", bet: 3333, cards: ["?", "?"] },
+    { name: "Player 6", bet: 2222, cards: ["?", "?"] },
   ]);
 
   const getMinimumChips = (amount) => {
@@ -68,9 +68,10 @@ function Poker() {
     <div className={styles.pokerContainer}>
       <div className={styles.pokerTable}>
         <div className={styles.pot}>
-          <div className={styles.potHeader}>Pot Amount</div>
+          <div className={styles.potHeader}>Total Pot</div>
           <div className={styles.potValue}>${potValue}</div>
         </div>
+        
         <div className={styles.communityCards}>
           {flopCards.map((card, index) => (
             <div key={index} className={styles.card}>{card}</div>
@@ -78,6 +79,23 @@ function Poker() {
           <div className={styles.card}>{turnCard}</div>
           <div className={styles.card}>{riverCard}</div>
         </div>
+
+        <div className={styles.potChips}>
+          {getMinimumChips(potValue).map((chip, idx) => (
+            <div key={idx} className={styles.chipStack}>
+              {[...Array(chip.count)].map((_, i) => (
+                <div
+                  key={i}
+                  className={styles.chip}
+                  style={{ backgroundColor: chip.color }}
+                >
+                  <span className={styles.chipLabel}>{chip.label}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+
         <div className={styles.players}>
           {players.map((player, index) => (
             <div key={index} className={`${styles.playerSlot} ${styles[`player${index + 1}`]}`}>

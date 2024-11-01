@@ -142,7 +142,23 @@
   color: #FFF;
   font-weight: bold;
   z-index: 1;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; /* Black outline */
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.pot {
+  margin-top: 20px;
+  text-align: center;
+  color: white;
+  font-size: 23px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.potChips {
+  display: flex;
+  gap: 1px;
+  margin-top: 10px;
 }
 
 /* Controls styling */
