@@ -20,7 +20,6 @@
 }
 
 .pot {
-  margin-top: 20px;
   text-align: center;
   color: white;
   font-size: 23px;
@@ -28,12 +27,13 @@
 
 .communityCards {
   display: flex;
-  gap: 15px;
   margin-top: 20px;
+  gap: 15px;
   justify-content: center;
 }
 
-.card, .faceDownCard {
+.card,
+.faceDownCard {
   width: 80px;
   height: 110px;
   border-radius: 5px;
@@ -75,12 +75,35 @@
   margin-top: 5px;
 }
 
-.player1 { bottom: 5%; left: 50%; transform: translateX(-50%); }
-.player2 { bottom: 30%; left: 10%; }
-.player3 { top: 30%; left: 10%; }
-.player4 { top: 5%; left: 50%; transform: translateX(-50%); }
-.player5 { top: 30%; right: 10%; }
-.player6 { bottom: 30%; right: 10%; }
+.player1 {
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.player1 .playerCards {
+  gap: 10px;
+}
+.player2 {
+  bottom: 30%;
+  left: 10%;
+}
+.player3 {
+  top: 30%;
+  left: 10%;
+}
+.player4 {
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.player5 {
+  top: 30%;
+  right: 10%;
+}
+.player6 {
+  bottom: 30%;
+  right: 10%;
+}
 
 /* Chip styling */
 .chips {
@@ -127,10 +150,17 @@
   height: 26px;
   border-radius: 50%;
   position: absolute;
-  background: radial-gradient(circle at center, transparent 50%, currentColor 51%);
+  background: radial-gradient(
+    circle at center,
+    transparent 50%,
+    currentColor 51%
+  );
   box-sizing: border-box;
-  background-image: 
-    radial-gradient(circle at 25% 25%, transparent 48%, currentColor 49%),
+  background-image: radial-gradient(
+      circle at 25% 25%,
+      transparent 48%,
+      currentColor 49%
+    ),
     radial-gradient(circle at 75% 75%, transparent 48%, currentColor 49%),
     radial-gradient(circle at 75% 25%, transparent 48%, currentColor 49%),
     radial-gradient(circle at 25% 75%, transparent 48%, currentColor 49%);
@@ -139,10 +169,11 @@
 .chipLabel {
   position: relative;
   font-size: 10px;
-  color: #FFF;
+  color: #fff;
   font-weight: bold;
   z-index: 1;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
 }
 
 .pot {
@@ -196,4 +227,38 @@
 
 .controlButton:hover {
   background-color: #2b6130;
+}
+
+.guide {
+  position: fixed; /* Fixed position to stay on the left */
+  left: 0;
+  top: 50%; /* Centers vertically */
+  transform: translateY(-50%); /* Adjusts for true vertical center */
+  display: flex;
+  flex-direction: column; /* Stack the button and box vertically */
+  align-items: flex-start; /* Aligns box to start under the button */
+}
+
+.guide button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 2px black solid;
+  background-color: #357a38;
+  color: #fff;
+}
+
+.guide .box {
+  position: relative;
+  border: 1px solid black;
+  margin-top: 10px; /* Space between button and box */
+  margin-left: 0; /* Aligns directly under the button */
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.guide p {
+  color: black;
 }
