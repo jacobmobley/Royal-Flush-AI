@@ -6,12 +6,12 @@
 }
 
 .pokerTable {
-  width: 998px;
-  height: 998px;
+  width: 1050px;
+  height: 1050px;
   background-color: #357a38;
   border-radius: 50%;
   border: 5px solid #333;
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -20,7 +20,7 @@
 }
 
 .pot {
-  margin-top: 19px;
+  margin-top: 20px;
   text-align: center;
   color: white;
   font-size: 23px;
@@ -28,15 +28,14 @@
 
 .communityCards {
   display: flex;
-  gap: 14px;
-  margin-top: 19px;
+  gap: 15px;
+  margin-top: 20px;
   justify-content: center;
 }
 
-.card,
-.faceDownCard {
-  width: 76px;
-  height: 105px;
+.card, .faceDownCard {
+  width: 80px;
+  height: 110px;
   border-radius: 5px;
   display: flex;
   align-items: center;
@@ -76,33 +75,80 @@
   margin-top: 5px;
 }
 
-.player1 {
-  bottom: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-.player2 {
-  bottom: 30%;
-  left: 10%;
-}
-.player3 {
-  top: 30%;
-  left: 10%;
-}
-.player4 {
-  top: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-.player5 {
-  top: 30%;
-  right: 10%;
-}
-.player6 {
-  bottom: 30%;
-  right: 10%;
+.player1 { bottom: 5%; left: 50%; transform: translateX(-50%); }
+.player2 { bottom: 30%; left: 10%; }
+.player3 { top: 30%; left: 10%; }
+.player4 { top: 5%; left: 50%; transform: translateX(-50%); }
+.player5 { top: 30%; right: 10%; }
+.player6 { bottom: 30%; right: 10%; }
+
+/* Chip styling */
+.chips {
+  display: flex;
+  gap: 12px; /* Increased gap between chip stacks */
+  margin-top: 5px;
 }
 
+.chipStack {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+}
+
+.chip {
+  width: 35px; /* Increased chip size */
+  height: 35px;
+  margin-bottom: -29px; /* Adjusted overlap */
+  border-radius: 50%;
+  border: 1px solid #000;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px; /* Slightly larger font */
+  color: black;
+  transform: translateY(-1px); /* Overlap each chip slightly */
+}
+
+/* Outer ring design */
+.chip::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: absolute;
+  box-sizing: border-box;
+  border: 3px solid currentColor;
+  opacity: 0.3;
+}
+
+/* Inner ring with alternating segments */
+.chip::after {
+  content: "";
+  width: 26px; /* Slightly smaller than chip width for inner design */
+  height: 26px;
+  border-radius: 50%;
+  position: absolute;
+  background: radial-gradient(circle at center, transparent 50%, currentColor 51%);
+  box-sizing: border-box;
+  background-image: 
+    radial-gradient(circle at 25% 25%, transparent 48%, currentColor 49%),
+    radial-gradient(circle at 75% 75%, transparent 48%, currentColor 49%),
+    radial-gradient(circle at 75% 25%, transparent 48%, currentColor 49%),
+    radial-gradient(circle at 25% 75%, transparent 48%, currentColor 49%);
+}
+
+/* Center text label */
+.chipLabel {
+  position: relative;
+  font-size: 10px; /* Larger font for clarity */
+  color: #FFF;
+  font-weight: bold;
+  z-index: 1;
+}
+
+
+/* Controls styling */
 .controls {
   width: 250px;
   display: flex;
@@ -137,100 +183,4 @@
 
 .controlButton:hover {
   background-color: #2b6130;
-}
-
-.settings {
-  width: 50px;
-  height: auto;
-  cursor: pointer;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  transition: transform 0.3s ease-in-out;
-  transform: rotate(0deg);
-}
-
-.settings:hover {
-  transition: transform 0.3s ease-in-out;
-  transform: rotate(90deg);
-}
-
-/* Modal styles */
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5); /* Dark background for the overlay */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000; /* Ensure the modal is above other content */
-}
-
-.modal {
-  position: relative;
-  background: white;
-  padding: 20px;
-  border-radius: 25px;
-  margin-right: 10px;
-
-  width: 400px;
-  height: 100%;
-  max-width: 100%;
-  z-index: 1001; /* Ensure the modal content is above the overlay */
-}
-
-.modalGrid {
-  position: relative;
-  background: white;
-  padding: 20px;
-  border-radius: 25px;
-  margin-right: 10px;
-
-  width: 400px;
-  height: auto;
-  max-width: 100%;
-  z-index: 1001;
-}
-
-.modal h1,
-p {
-  color: black;
-}
-
-.closeButton {
-  position: absolute;
-  color: black;
-  top: 10px;
-  right: 10px;
-  padding: 5px;
-
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.closeButton:hover {
-  font-weight: bold;
-  background-color: transparent;
-}
-.closeButton:focus {
-  outline: none; /* Removes the focus outline */
-}
-
-/* Style for the buttons on the side of the modal */
-
-.settingsTitle {
-  position: relative;
-  align-items: left;
-  width: 100%;
-  display: flex;
-}
-.settingsTitle h1 {
-  margin-top: 20px;
-  margin-left: 30px;
-  color: black;
 }
