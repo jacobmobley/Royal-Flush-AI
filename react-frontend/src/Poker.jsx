@@ -391,7 +391,7 @@ function Poker() {
         break;
       case "fold":
         console.log("ai: fold");
-        handleAIFold();
+        handleAICheck();
         break;
       default:
         handleAICheck(); // Default to check if no decision made
