@@ -472,6 +472,7 @@ p {
   border-radius: 25px;
   border: 4px black solid;
   width: 500px;
+  height: 600px;
 }
 
 .customBio {
@@ -488,4 +489,19 @@ p {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+}
+
+.deckNumLabel {
+  color: black;
+}
+
+.deckCount {
+  display: flex;
+  justify-content: center;
+}
+
+.deckCount input {
+  margin-left: 10px;
+  background-color: white;
+  color: black;
 }
