@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import { Link } from "react-router-dom";
-import styles from "./frontpage-styles.module.css"; // Import CSS module
+import styles from "./frontpage-styles.module.css";
 import logo from "./assets/RoyalFlushAILogo.png";
-import funky from "./assets/funky.mp3"; // Import funky.mp3
+import funky from "./assets/funky.mp3";
 
 const TitleScreen = () => {
   return (
@@ -16,7 +16,6 @@ const TitleScreen = () => {
       </div>
       <div className={styles.buttonContainer}>
         <h1>Royal Flush AI</h1>
-        {/* Link for New Player page */}
         <Link
           to="/newplayer"
           className={`${styles.button} ${styles.newPlayer}`}
@@ -24,7 +23,6 @@ const TitleScreen = () => {
           New Player? <br />
           Create a New Account
         </Link>
-        {/* Link for Returning Player page */}
         <Link
           to="/returningplayer"
           className={`${styles.button} ${styles.returningPlayer}`}
