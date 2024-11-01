@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./Poker.module.css";
 import api from "./api";
 import { getBuyIn } from "./PokerSettings.js";
 import { useNavigate } from "react-router-dom";
+import gear from "./assets/Settings.png";
+import { Link } from "react-router-dom";
+import Settings from "./Settings";
 
 import back from "./assets/cards/cardBack_red2.png";
 
@@ -62,6 +65,11 @@ import spadesqueen from "./assets/cards/queen_of_spades.png";
 import spadesking from "./assets/cards/king_of_spades.png";
 import spadesace from "./assets/cards/ace_of_spades.png";
 import { updateCurrentUser } from "firebase/auth";
+
+import funky from "./assets/funky.mp3";
+import chill from "./assets/chill.mp3";
+import relaxing from "./assets/relaxing.mp3";
+import click from "./assets/click2.mp3";
 
 const suits = ["spades", "clubs", "diamonds", "hearts"];
 const values = [
@@ -154,6 +162,7 @@ const cardImageMap = {
 function Poker() {
   const navigate = useNavigate();
 
+  const [showSettings, setShowSettings] = useState(false);
   const [potValue, setPotValue] = useState(0);
   const [currentRaise, setCurrentRaise] = useState(0);
   const [flopCards, setFlopCards] = useState([]);
@@ -184,6 +193,58 @@ function Poker() {
 
   const [isTurnPopupVisible, setTurnPopupVisible] = useState(false);
 
+  const playlist = [funky, chill, relaxing];
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(
+    Math.floor(Math.random() * playlist.length)
+  ); // Start from random track
+
+  const audioRef = useRef(new Audio(playlist[currentTrackIndex])); // Initialize with a random track
+  const effectsRef = useRef(new Audio(click));
+
+  const playClickSound = () => {
+    effectsRef.current.play().catch((error) => {
+      console.error("Click sound play error:", error);
+    });
+  };
+
+  const handleBetRaise = () => {
+    playClickSound(); // Play sound when Raise is clicked
+    setPotValue(potValue + currentRaise);
+    updatePlayerBankroll(curPlayer.bankroll - currentRaise);
+  };
+
+  const handleCheckCall = () => {
+    playClickSound(); // Play sound when Check/Call is clicked
+    // Add Check/Call logic here
+  };
+
+  const toggleSettings = () => {
+    effectsRef.current.play().catch((error) => {
+      console.error("Click sound play error:", error);
+    });
+    setShowSettings(!showSettings);
+  };
+
+  const playNextTrack = () => {
+    if (!audioRef.current.paused) {
+      audioRef.current.pause();
+    }
+    const nextTrackIndex = (currentTrackIndex + 1) % playlist.length;
+    setCurrentTrackIndex(nextTrackIndex);
+    audioRef.current.src = playlist[nextTrackIndex];
+    audioRef.current
+      .play()
+      .catch((error) => console.error("Audio play error:", error));
+  };
+  useEffect(() => {
+    audioRef.current.addEventListener("ended", playNextTrack);
+
+    return () => {
+      audioRef.current.pause();
+      audioRef.current.removeEventListener("ended", playNextTrack); // Clean up event listener
+    };
+  }, []);
+
   useEffect(() => {
     if (curAction === 0) {
       // Show the popup when it's the player's turn
@@ -196,6 +257,22 @@ function Poker() {
       return () => clearTimeout(timeout); // Clean up timeout on effect cleanup
     }
   }, [curAction]);
+
+  useEffect(() => {
+    // Ensure the audio source updates without autoplaying unexpectedly
+    if (audioRef.current.src !== playlist[currentTrackIndex]) {
+      audioRef.current.src = playlist[currentTrackIndex];
+    }
+  }, [currentTrackIndex]);
+
+  const play = () => {
+    // Play only if the audio is paused, to prevent overlapping sounds
+    if (audioRef.current.paused) {
+      audioRef.current.play().catch((error) => {
+        console.error("Audio play blocked by the browser:", error);
+      });
+    }
+  };
 
   function getCardImage(value, suit, showBack) {
     if (!showBack) {
@@ -441,7 +518,7 @@ function Poker() {
   const decideAIAction = () => {
     const simulatedPlayerHands = generateSimulatedPlayerHands();
     //let aiWinProbability = evaluateAIWinProbability(aiHand, simulatedPlayerHands, flopCards);
-    let aiWinProbability=randomNumber(0, 1);
+    let aiWinProbability = randomNumber(0, 1);
     console.log(aiWinProbability);
     // Make decision based on probability thresholds and current call amount
     if (aiWinProbability > 0.75 && potValue < aiPlayer.bankroll / 2) {
@@ -604,7 +681,6 @@ function Poker() {
       }
     }
     return bestHand;
-    
   }
 
   function isHigherHand(hand1Values, hand2Values) {
@@ -644,13 +720,15 @@ function Poker() {
     if (isFlush && isStraight) return { rank: 8, values: values.sort() }; // Straight Flush
     if (isFlush) return { rank: 5, values: values.sort() }; // Flush
     if (isStraight) return { rank: 4, values: values.sort() }; // Straight
-  
+
     if (valueCounts[4]) return { rank: 7, values: values.sort() }; // Four of a Kind
-    if (valueCounts && valueCounts[2]) return { rank: 6, values: values.sort() }; // Full House
+    if (valueCounts && valueCounts[2])
+      return { rank: 6, values: values.sort() }; // Full House
     if (valueCounts[3]) return { rank: 3, values: values.sort() }; // Three of a Kind
-    if (Object.keys(valueCounts).length === 3) return { rank: 2, values: values.sort() }; // Two Pair
+    if (Object.keys(valueCounts).length === 3)
+      return { rank: 2, values: values.sort() }; // Two Pair
     if (valueCounts[2]) return { rank: 1, values: values.sort() }; // One Pair
-  
+
     return { rank: 0, values: values.sort().reverse() }; // High Card
   }
 
@@ -792,10 +870,11 @@ function Poker() {
 
   const toggleBox = () => {
     setIsOpen(!isOpen);
+    playClickSound();
   };
 
   return (
-    <div className={styles.pokerContainer}>
+    <div className={styles.pokerContainer} onClick={play}>
       {!gameStarted ? (
         <button
           className={styles.startButton}
@@ -1019,6 +1098,21 @@ function Poker() {
               </button>
             )}
           </div>
+          <img
+            src={gear}
+            alt="Settings Icon"
+            className={`${styles.settings}`}
+            onClick={toggleSettings}
+          />
+          {showSettings && (
+            <div className={`${styles.modalOverlay}`}>
+              <Settings
+                toggleSettings={toggleSettings}
+                audioRef={audioRef}
+                effectsRef={effectsRef}
+              />
+            </div>
+          )}
         </>
       )}
     </div>
