@@ -161,7 +161,7 @@ function Poker() {
   const [aiHand, setAIhand] = useState([]);
   const [curPlayer, setCurPlayer] = useState({
     name: "Your Hand",
-    bankroll: 100,
+    bankroll: getBuyIn(),
   });
   const [aiPlayer, setAiPlayer] = useState({
     name: "AI Player",
