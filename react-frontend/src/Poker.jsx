@@ -14,9 +14,9 @@ function Poker() {
     { name: "Your Hand", bankroll: 100, cards: playerHand });
   const [aiPlayer, setAiPlayer] = useState(
     { name: "AI Player", bankroll: 150, cards: ['?', '?'] });
-  const [curAction, setCurAction] = useState(1);
+  const [curAction, setCurAction] = useState(0);
   //0 for player 1 for ai;
-  const [curBig, setCurBig] = useState(0);
+  const [curBig, setCurBig] = useState(1);
 
   function getCardImage(value, suit, i) {
     if ((i == 1 && !showDealerCard) || !showCard) {
@@ -64,6 +64,17 @@ function Poker() {
   const handleBetRaise = () => {
     setPotValue(potValue + currentRaise);
     updatePlayerBankroll(curPlayer.bankroll - currentRaise);
+  };
+
+  const handleNewGame = () => {
+    setCurBig(curBig ^ 1);
+    setCurAction(curBig ^ 1);
+
+  };
+
+  const handleNewturn = () => {
+    setCurBig(curBig ^ 1);
+
   };
 
 
@@ -136,10 +147,9 @@ function Poker() {
           <div key={0} className={`${styles.playerSlot} ${styles[`player1`]} 
               ${curAction == 0 ? styles.playerAction : ''}
             `}>
-
             {curBig == 0 &&
             <div
-              className={curBig == 0 &&  curAction ? styles.bigbutton : ''}
+              className={curBig == 0 ? styles.bigbutton : ''}
             >
               <span className={styles.bigbuttonText}>BB</span>
             </div>
@@ -176,7 +186,7 @@ function Poker() {
             `}>
             {curBig == 1 &&
             <div
-              className={curBig == 1 &&  curAction ? styles.bigbuttonai : ''}
+              className={curBig == 1  ? styles.bigbuttonai : ''}
             >
               <span className={styles.bigbuttonText}>BB</span>
             </div>
