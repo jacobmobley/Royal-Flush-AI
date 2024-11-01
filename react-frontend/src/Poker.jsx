@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Poker.module.css";
 import api from "./api";
-import gear from "./assets/Settings.png";
-import Settings from "./Settings";
 
 function Poker() {
   const [potValue, setPotValue] = useState(0);
@@ -16,10 +14,20 @@ function Poker() {
     { name: "Player 2", bet: 150, cards: ["?", "?"] },
   ]);
 
-  const [showSettings, setShowSettings] = useState(false);
+  const getMinimumChips = (amount) => {
+    const chipValues = [1000, 500, 100, 25, 5, 1];
+    const chipColors = ['#FFD700', '#800080', '#000000', '#008000', '#FF0000', '#FFFFFF'];
+    const chipLabels = ['$1000', '$500', '$100', '$25', '$5', '$1'];
+    const result = [];
 
-  const toggleSettings = () => {
-    setShowSettings(!showSettings);
+    for (let i = 0; i < chipValues.length; i++) {
+      const count = Math.floor(amount / chipValues[i]);
+      amount -= count * chipValues[i];
+      if (count > 0) {
+        result.push({ count, color: chipColors[i], label: chipLabels[i] });
+      }
+    }
+    return result;
   };
 
   const handleRaiseChange = (event) => {
@@ -61,28 +69,35 @@ function Poker() {
         </div>
         <div className={styles.communityCards}>
           {flopCards.map((card, index) => (
-            <div key={index} className={styles.card}>
-              {card}
-            </div>
+            <div key={index} className={styles.card}>{card}</div>
           ))}
           <div className={styles.card}>{turnCard}</div>
           <div className={styles.card}>{riverCard}</div>
         </div>
         <div className={styles.players}>
           {players.map((player, index) => (
-            <div
-              key={index}
-              className={`${styles.playerSlot} ${styles[`player${index + 1}`]}`}
-            >
+            <div key={index} className={`${styles.playerSlot} ${styles[`player${index + 1}`]}`}>
               <p>{player.name}</p>
               <p>Bet: ${player.bet}</p>
               <div className={styles.playerCards}>
                 {player.cards.map((card, idx) => (
-                  <div
-                    key={idx}
-                    className={card === "?" ? styles.faceDownCard : styles.card}
-                  >
+                  <div key={idx} className={card === "?" ? styles.faceDownCard : styles.card}>
                     {card !== "?" ? card : ""}
+                  </div>
+                ))}
+              </div>
+              <div className={styles.chips}>
+                {getMinimumChips(player.bet).map((chip, idx) => (
+                  <div key={idx} className={styles.chipStack}>
+                    {[...Array(chip.count)].map((_, i) => (
+                      <div
+                        key={i}
+                        className={styles.chip}
+                        style={{ backgroundColor: chip.color }}
+                      >
+                        <span className={styles.chipLabel}>{chip.label}</span>
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>
@@ -101,23 +116,10 @@ function Poker() {
           className={styles.slider}
         />
         <div className={styles.raiseDisplay}>Raise: ${currentRaise}</div>
-        <button className={styles.controlButton} onClick={handleBetRaise}>
-          Bet/Raise
-        </button>
+        <button className={styles.controlButton} onClick={handleBetRaise}>Bet/Raise</button>
         <button className={styles.controlButton}>Check/Call</button>
         <button className={styles.controlButton}>Fold</button>
       </div>
-      <img
-        src={gear}
-        alt="Settings Icon"
-        className={`${styles.settings}`}
-        onClick={toggleSettings}
-      />
-      {showSettings && (
-        <div className={`${styles.modalOverlay}`}>
-          <Settings toggleSettings={toggleSettings} />
-        </div>
-      )}
     </div>
   );
 }
