@@ -85,7 +85,7 @@
 /* Chip styling */
 .chips {
   display: flex;
-  gap: 12px; /* Increased gap between chip stacks */
+  gap: 12px;
   margin-top: 5px;
 }
 
@@ -96,21 +96,20 @@
 }
 
 .chip {
-  width: 35px; /* Increased chip size */
+  width: 35px;
   height: 35px;
-  margin-bottom: -29px; /* Adjusted overlap */
+  margin-bottom: -29px;
   border-radius: 50%;
   border: 1px solid #000;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px; /* Slightly larger font */
+  font-size: 12px;
   color: black;
-  transform: translateY(-1px); /* Overlap each chip slightly */
+  transform: translateY(-1px);
 }
 
-/* Outer ring design */
 .chip::before {
   content: "";
   width: 100%;
@@ -122,10 +121,9 @@
   opacity: 0.3;
 }
 
-/* Inner ring with alternating segments */
 .chip::after {
   content: "";
-  width: 26px; /* Slightly smaller than chip width for inner design */
+  width: 26px;
   height: 26px;
   border-radius: 50%;
   position: absolute;
@@ -138,10 +136,9 @@
     radial-gradient(circle at 25% 75%, transparent 48%, currentColor 49%);
 }
 
-/* Center text label */
 .chipLabel {
   position: relative;
-  font-size: 10px; /* Larger font for clarity */
+  font-size: 10px;
   color: #FFF;
   font-weight: bold;
   z-index: 1;
