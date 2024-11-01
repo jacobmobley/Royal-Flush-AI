@@ -10,17 +10,17 @@ function Poker() {
   const [riverCard, setRiverCard] = useState("A♠");
   const [playerHand, setPlayerHand] = useState(["5♠", "7♠"]); // User's hand as player 1
   const [players, setPlayers] = useState([
-    { name: "Your Hand", bet: 100, cards: playerHand },
-    { name: "Player 2", bet: 150, cards: ["?", "?"] },
-    { name: "Player 3", bet: 200, cards: ["?", "?"] },
-    { name: "Player 4", bet: 120, cards: ["?", "?"] },
-    { name: "Player 5", bet: 50, cards: ["?", "?"] },
-    { name: "Player 6", bet: 180, cards: ["?", "?"] },
+    { name: "Your Hand", bet: 1374, cards: playerHand },
+    { name: "Player 2", bet: 132, cards: ["?", "?"] },
+    { name: "Player 3", bet: 2795, cards: ["?", "?"] },
+    { name: "Player 4", bet: 1173, cards: ["?", "?"] },
+    { name: "Player 5", bet: 1111, cards: ["?", "?"] },
+    { name: "Player 6", bet: 1010, cards: ["?", "?"] },
   ]);
 
   const getMinimumChips = (amount) => {
     const chipValues = [1000, 500, 100, 25, 5, 1];
-    const chipColors = ['#FFD700', '#800080', '#000000', '#008000', '#FF0000', '#FFFFFF'];
+    const chipColors = ['#FFD700', '#800080', '#333333', '#008000', '#FF0000', '#FFFFFF'];
     const chipLabels = ['$1000', '$500', '$100', '$25', '$5', '$1'];
     const result = [];
 
