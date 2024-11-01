@@ -92,9 +92,8 @@
   transform: translateX(-50%);
 }
 .playerAction {
-  border:1px solid black;
+  border: 1px solid black;
 }
-
 
 /* Chip styling */
 .chips {
@@ -125,14 +124,14 @@
 }
 
 .bigbutton {
-  width: 50px;           
-  height: 50px;          
-  background-color: white; 
-  border-radius: 50%;     
-  position: absolute;       
-  top: -100px;        
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: -100px;
   left: 50%;
-  font-size: 20px;       
+  font-size: 20px;
   transform: translateX(-50%);
   display: flex;
   justify-content: center;
@@ -140,12 +139,12 @@
 }
 
 .bigbuttonai {
-  width: 50px;           
-  height: 50px;          
-  background-color: white; 
-  border-radius: 50%;      
-  position: absolute;       
-  top: 275px;        
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 275px;
   left: 50%;
   font-size: 20px;
   transform: translateX(-50%);
@@ -155,7 +154,7 @@
 }
 
 .bigbuttonText {
-  color:red;
+  color: red;
   font-weight: bold;
 }
 
@@ -287,4 +286,92 @@
 
 .guide p {
   color: black;
+}
+
+/* settings */
+/* Settings icon */
+.settings {
+  width: 50px;
+  height: auto;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  transition: transform 0.3s ease-in-out;
+  transform: rotate(0deg);
+}
+
+.settings:hover {
+  transition: transform 0.3s ease-in-out;
+  transform: rotate(90deg);
+}
+
+/* Modal styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* Dark background for the overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure the modal is above other content */
+}
+
+.modal {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 25px;
+  margin-right: 10px;
+
+  width: 400px;
+  height: 100%;
+  max-width: 100%;
+  z-index: 1001; /* Ensure the modal content is above the overlay */
+}
+
+.modalGrid {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 25px;
+  margin-right: 10px;
+
+  width: 400px;
+  height: auto;
+  max-width: 100%;
+  z-index: 1001;
+}
+
+.modal h1,
+p {
+  color: black;
+}
+
+.volumeSlider {
+  width: 100%;
+}
+
+.closeButton {
+  position: absolute;
+  color: black;
+  top: 10px;
+  right: 10px;
+  padding: 5px;
+
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  font-weight: bold;
+  background-color: transparent;
+}
+.closeButton:focus {
+  outline: none; /* Removes the focus outline */
 }

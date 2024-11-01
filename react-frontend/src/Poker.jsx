@@ -1,20 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./Poker.module.css";
 import api from "./api";
-import { getBuyIn } from "./PokerSettings.js"
+import { getBuyIn } from "./PokerSettings.js";
 import { useNavigate } from "react-router-dom";
+import funky from "./assets/funky.mp3";
+import chill from "./assets/chill.mp3";
+import relaxing from "./assets/relaxing.mp3";
+import click from "./assets/click.mp3";
+import gear from "./assets/Settings.png";
+import { Link } from "react-router-dom";
+import Settings from "./Settings";
 
 function Poker() {
   const navigate = useNavigate();
 
+  const [showSettings, setShowSettings] = useState(false);
+
   const [potValue, setPotValue] = useState(1000);
   const [currentRaise, setCurrentRaise] = useState(0);
   const [flopCards, setFlopCards] = useState([]);
-  const [playerHand, setPlayerHand] = useState(['?', '?']); // User's hand as player 1
-  const [curPlayer, setCurPlayer] = useState(
-    { name: "Your Hand", bankroll: 100, cards: playerHand });
-  const [aiPlayer, setAiPlayer] = useState(
-    { name: "AI Player", bankroll: 150, cards: ['?', '?'] });
+  const [playerHand, setPlayerHand] = useState(["?", "?"]); // User's hand as player 1
+  const [curPlayer, setCurPlayer] = useState({
+    name: "Your Hand",
+    bankroll: 100,
+    cards: playerHand,
+  });
+  const [aiPlayer, setAiPlayer] = useState({
+    name: "AI Player",
+    bankroll: 150,
+    cards: ["?", "?"],
+  });
   const [curAction, setCurAction] = useState(0);
   //0 for player 1 for ai;
   const [curBig, setCurBig] = useState(1);
@@ -28,12 +43,11 @@ function Poker() {
   }
 
   const updatePlayerBankroll = (newValue) => {
-    setCurPlayer(prevPlayer => ({
+    setCurPlayer((prevPlayer) => ({
       ...prevPlayer,
       bankroll: newValue,
     }));
   };
-
 
   const getMinimumChips = (amount) => {
     const chipValues = [1000, 500, 100, 25, 5, 1];
@@ -58,11 +72,18 @@ function Poker() {
     return result;
   };
 
+  const playClickSound = () => {
+    effectsRef.current.play().catch((error) => {
+      console.error("Click sound play error:", error);
+    });
+  };
+
   const handleRaiseChange = (event) => {
     setCurrentRaise(Number(event.target.value));
   };
 
   const handleBetRaise = () => {
+    playClickSound();
     setPotValue(potValue + currentRaise);
     updatePlayerBankroll(curPlayer.bankroll - currentRaise);
   };
@@ -70,14 +91,11 @@ function Poker() {
   const handleNewGame = () => {
     setCurBig(curBig ^ 1);
     setCurAction(curBig ^ 1);
-
   };
 
   const handleNewturn = () => {
     setCurBig(curBig ^ 1);
-
   };
-
 
   // const handleTurn = () {
 
@@ -111,11 +129,64 @@ function Poker() {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleBox = () => {
+    playClickSound();
     setIsOpen(!isOpen);
   };
 
+  useEffect(() => {
+    audioRef.current.addEventListener("ended", playNextTrack);
+
+    return () => {
+      audioRef.current.pause();
+      audioRef.current.removeEventListener("ended", playNextTrack); // Clean up event listener
+    };
+  }, []);
+
+  const playlist = [funky, chill, relaxing];
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(
+    Math.floor(Math.random() * playlist.length)
+  ); // Start from random track
+
+  const audioRef = useRef(new Audio(playlist[currentTrackIndex])); // Initialize with a random track
+  const effectsRef = useRef(new Audio(click));
+
+  const toggleSettings = () => {
+    effectsRef.current.play().catch((error) => {
+      console.error("Click sound play error:", error);
+    });
+    setShowSettings(!showSettings);
+  };
+
+  useEffect(() => {
+    // Ensure the audio source updates without autoplaying unexpectedly
+    if (audioRef.current.src !== playlist[currentTrackIndex]) {
+      audioRef.current.src = playlist[currentTrackIndex];
+    }
+  }, [currentTrackIndex]);
+
+  const playNextTrack = () => {
+    if (!audioRef.current.paused) {
+      audioRef.current.pause();
+    }
+    const nextTrackIndex = (currentTrackIndex + 1) % playlist.length;
+    setCurrentTrackIndex(nextTrackIndex);
+    audioRef.current.src = playlist[nextTrackIndex];
+    audioRef.current
+      .play()
+      .catch((error) => console.error("Audio play error:", error));
+  };
+
+  const play = () => {
+    // Play only if the audio is paused, to prevent overlapping sounds
+    if (audioRef.current.paused) {
+      audioRef.current.play().catch((error) => {
+        console.error("Audio play blocked by the browser:", error);
+      });
+    }
+  };
+
   return (
-    <div className={styles.pokerContainer}>
+    <div className={styles.pokerContainer} onClick={play}>
       <div className={styles.pokerTable}>
         <div className={styles.pot}>
           <div className={styles.potHeader}>Total Pot</div>
@@ -124,7 +195,9 @@ function Poker() {
 
         <div className={styles.communityCards}>
           {flopCards.map((card, index) => (
-            <div key={0} className={styles.card}>{card}</div>
+            <div key={0} className={styles.card}>
+              {card}
+            </div>
           ))}
         </div>
 
@@ -145,21 +218,25 @@ function Poker() {
         </div>
 
         <div className={styles.players}>
-          <div key={0} className={`${styles.playerSlot} ${styles[`player1`]} 
-              ${curAction == 0 ? styles.playerAction : ''}
-            `}>
-            {curBig == 0 &&
-            <div
-              className={curBig == 0 ? styles.bigbutton : ''}
-            >
-              <span className={styles.bigbuttonText}>BB</span>
-            </div>
-            }
+          <div
+            key={0}
+            className={`${styles.playerSlot} ${styles[`player1`]} 
+              ${curAction == 0 ? styles.playerAction : ""}
+            `}
+          >
+            {curBig == 0 && (
+              <div className={curBig == 0 ? styles.bigbutton : ""}>
+                <span className={styles.bigbuttonText}>BB</span>
+              </div>
+            )}
             <p>{curPlayer.name}</p>
             <p>Bankroll: ${curPlayer.bankroll}</p>
             <div className={styles.playerCards}>
               {curPlayer.cards.map((card, idx) => (
-                <div key={idx} className={card === "?" ? styles.faceDownCard : styles.card}>
+                <div
+                  key={idx}
+                  className={card === "?" ? styles.faceDownCard : styles.card}
+                >
                   {card !== "?" ? card : ""}
                 </div>
               ))}
@@ -181,22 +258,26 @@ function Poker() {
             </div>
           </div>
         </div>
-        <div className={styles.players} >
-          <div key={0} className={`${styles.playerSlot} ${styles[`player2`]} 
-              ${curAction == 1 ? styles.playerAction : ''}
-            `}>
-            {curBig == 1 &&
-            <div
-              className={curBig == 1  ? styles.bigbuttonai : ''}
-            >
-              <span className={styles.bigbuttonText}>BB</span>
-            </div>
-            }
+        <div className={styles.players}>
+          <div
+            key={0}
+            className={`${styles.playerSlot} ${styles[`player2`]} 
+              ${curAction == 1 ? styles.playerAction : ""}
+            `}
+          >
+            {curBig == 1 && (
+              <div className={curBig == 1 ? styles.bigbuttonai : ""}>
+                <span className={styles.bigbuttonText}>BB</span>
+              </div>
+            )}
             <p>{aiPlayer.name}</p>
             <p>Bankroll: ${aiPlayer.bankroll}</p>
             <div className={styles.playerCards}>
               {aiPlayer.cards.map((card, idx) => (
-                <div key={idx} className={card === "?" ? styles.faceDownCard : styles.card}>
+                <div
+                  key={idx}
+                  className={card === "?" ? styles.faceDownCard : styles.card}
+                >
                   {card !== "?" ? card : ""}
                 </div>
               ))}
@@ -252,25 +333,46 @@ function Poker() {
         )}
       </div>
       <div className={styles.controls}>
-        {curAction == 0 &&
-        <input
-          type="range"
-          min="0"
-          max={curPlayer.bankroll}
-          value={currentRaise}
-          onChange={handleRaiseChange}
-          className={styles.slider}
-        />}
-        {curAction == 0 &&
-        <div className={styles.raiseDisplay}>Raise: ${currentRaise}</div>
-        }
-        {curAction == 0 &&
-        <button className={styles.controlButton} onClick={handleBetRaise}>Raise</button>}
-        {curAction == 0 &&
-        <button className={styles.controlButton}>Check/Call</button>}
-        {curAction == 0 &&
-        <button className={styles.controlButton}>Fold</button>}
+        {curAction == 0 && (
+          <input
+            type="range"
+            min="0"
+            max={curPlayer.bankroll}
+            value={currentRaise}
+            onChange={handleRaiseChange}
+            className={styles.slider}
+          />
+        )}
+        {curAction == 0 && (
+          <div className={styles.raiseDisplay}>Raise: ${currentRaise}</div>
+        )}
+        {curAction == 0 && (
+          <button className={styles.controlButton} onClick={handleBetRaise}>
+            Raise
+          </button>
+        )}
+        {curAction == 0 && (
+          <button className={styles.controlButton}>Check/Call</button>
+        )}
+        {curAction == 0 && (
+          <button className={styles.controlButton}>Fold</button>
+        )}
       </div>
+      <img
+        src={gear}
+        alt="Settings Icon"
+        className={`${styles.settings}`}
+        onClick={toggleSettings}
+      />
+      {showSettings && (
+        <div className={`${styles.modalOverlay}`}>
+          <Settings
+            toggleSettings={toggleSettings}
+            audioRef={audioRef}
+            effectsRef={effectsRef}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -98,7 +98,6 @@ const HomePage = () => {
     audioRef.current.addEventListener("ended", playNextTrack);
 
     return () => {
-      unsubscribe();
       audioRef.current.pause();
       audioRef.current.removeEventListener("ended", playNextTrack); // Clean up event listener
     };
