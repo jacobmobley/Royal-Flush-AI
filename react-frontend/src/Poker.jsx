@@ -192,6 +192,21 @@ function Poker() {
   const [gameStarted, setGameStarted] = useState(false);
 
   const [isTurnPopupVisible, setTurnPopupVisible] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [winnerMessage, setWinnerMessage] = useState("");
+
+  useEffect(() => {
+    if (curAction === 0) {
+      // Show the popup when it's the player's turn
+      setTurnPopupVisible(true);
+      // Automatically hide the popup after 2 seconds
+      const timeout = setTimeout(() => {
+        setTurnPopupVisible(false);
+      }, 1000);
+
+      return () => clearTimeout(timeout); // Clean up timeout on effect cleanup
+    }
+  }, [curAction]);
 
   const playlist = [funky, chill, relaxing];
   const [currentTrackIndex, setCurrentTrackIndex] = useState(
@@ -614,14 +629,34 @@ function Poker() {
 
   const handleEndGame = () => {
     const winner = whoWins();
-    console.log("winner:" + winner);
     if (winner === 0) {
       updatePlayerBankroll(curPlayer.bankroll + potValue); // Award pot to player
+      setWinnerMessage("You won the game!");
     } else if (winner === 1) {
       updateAiBankroll(aiPlayer.bankroll + potValue); // Award pot to AI
+      setWinnerMessage("The AI won the game!");
+    } else {
+      setWinnerMessage("It's a tie!");
     }
     setPotValue(0); // Reset pot
-    resetGame(); // Reset game or navigate to end screen
+    setShowModal(true); // Show the popup
+  };
+
+  const WinnerModal = ({ message, onClose }) => (
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContent}>
+        <h2>Game Over</h2>
+        <p>{message}</p>
+        <button onClick={onClose} className={styles.modalButton}>
+          Start New Game
+        </button>
+      </div>
+    </div>
+  );
+
+  const closeModal = () => {
+    setShowModal(false);
+    resetGame(); // Start a new game
   };
 
   const navigateToEndScreen = () => {
@@ -874,7 +909,10 @@ function Poker() {
   };
 
   return (
+
     <div className={styles.pokerContainer} onClick={play}>
+      {showModal && <WinnerModal message={winnerMessage} onClose={closeModal} />}
+
       {!gameStarted ? (
         <button
           className={styles.startButton}
@@ -887,6 +925,14 @@ function Poker() {
         </button>
       ) : (
         <>
+          {isTurnPopupVisible && (
+            <div className={styles.popupOverlay}>
+              <div className={styles.turnPopup}>
+                <p>Your Turn!</p>
+              </div>
+            </div>
+          )}
+
           {isTurnPopupVisible && (
             <div className={styles.popupOverlay}>
               <div className={styles.turnPopup}>
