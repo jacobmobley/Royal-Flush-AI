@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Poker.module.css";
 import api from "./api";
+import { getBuyIn } from "./PokerSettings.js"
 
 function Poker() {
   const [potValue, setPotValue] = useState(1000);
