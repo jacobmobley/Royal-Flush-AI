@@ -327,6 +327,7 @@ function Poker() {
   };
 
   const handleCheck = () => {
+    console.log("player: check");
     setCurrentRaise(0); // No raise for a check
     setCurAction(curAction ^ 1); // Switch turn
     if (curAction === curBig) {
@@ -335,6 +336,7 @@ function Poker() {
   };
   
   const handleCall = () => {
+    console.log("player: call");
     const amountToCall = curCall - currentRaise;
     setCurrentRaise(amountToCall);
     updatePlayerBankroll(curPlayer.bankroll - amountToCall);
@@ -347,6 +349,7 @@ function Poker() {
 
   // Handle fold action
   const handleFold = () => {
+    console.log("player: fold");
     if (curAction === 0) {
       updateAiBankroll(aiPlayer.bankroll + potValue);
     } else {
@@ -375,15 +378,19 @@ function Poker() {
     
     switch (aiDecision) {
       case "call":
+        console.log("ai: call");
         handleAICall();
         break;
       case "raise":
+        console.log("ai: raise");
         handleAIRaise();
         break;
       case "check":
+        console.log("ai: check");
         handleAICheck();
         break;
       case "fold":
+        console.log("ai: fold");
         handleAIFold();
         break;
       default:
@@ -391,14 +398,19 @@ function Poker() {
     }
   };
 
+  function randomNumber(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
   const decideAIAction = () => {
     const simulatedPlayerHands = generateSimulatedPlayerHands();
-    const aiWinProbability = evaluateAIWinProbability(aiHand, simulatedPlayerHands, flopCards);
+    let aiWinProbability = evaluateAIWinProbability(aiHand, simulatedPlayerHands, flopCards);
+    aiWinProbability=randomNumber(0, 1);
     console.log(aiWinProbability);
     // Make decision based on probability thresholds and current call amount
     if (aiWinProbability > 0.75 && potValue < aiPlayer.bankroll / 2) {
       return "raise"; // Confident hand and pot size is reasonable
-    } else if (aiWinProbability > 0.5) {
+    } else if (aiWinProbability > 0.1) {
       return "call"; // Decent hand, call
     } else if (curCall === 0) {
       return "check"; // Weak hand, but no risk in checking
@@ -432,6 +444,7 @@ function Poker() {
   };
 
   const handleAIFold = () => {
+    console.log(curPlayer)
     updatePlayerBankroll(curPlayer.bankroll + potValue); // Award pot to player
     resetGame(); // Reset round or start a new game
   };
