@@ -76,9 +76,9 @@
 }
 
 .player1 { bottom: 5%; left: 50%; transform: translateX(-50%); }
-.player2 { bottom: 30%; left: 10%; }
+.player4 { bottom: 30%; left: 10%; }
 .player3 { top: 30%; left: 10%; }
-.player4 { top: 5%; left: 50%; transform: translateX(-50%); }
+.player2 { top: 5%; left: 50%; transform: translateX(-50%); }
 .player5 { top: 30%; right: 10%; }
 .player6 { bottom: 30%; right: 10%; }
 
