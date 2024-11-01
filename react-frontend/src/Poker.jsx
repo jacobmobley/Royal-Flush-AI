@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Poker.module.css";
 import api from "./api";
+import { getBuyIn } from "./PokerSettings.js"
 import { useNavigate } from "react-router-dom";
 
 import back from "./assets/cards/cardBack_red2.png";
