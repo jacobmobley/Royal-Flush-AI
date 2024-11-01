@@ -10,7 +10,7 @@ import styles from "./frontpage-styles.module.css";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-const Settings = ({ toggleSettings }) => {
+const Settings = ({ toggleSettings, audioRef }) => {
   const [selectedTab, setSelectedTab] = useState("Account Security");
   const [bio, setBio] = useState(null);
   const [showUsernamePopup, setShowUsernamePopup] = useState(false);
@@ -22,6 +22,16 @@ const Settings = ({ toggleSettings }) => {
   const onSubmit = async () => {
     await sleep(500);
     window.location.reload();
+  };
+
+  const [volume, setVolume] = useState(50); // Default volume to 50%
+
+  const handleVolumeChange = (event) => {
+    const newVolume = event.target.value;
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume / 100; // Set audio volume (0 to 1 range)
+    }
   };
 
   const sleep = (milliseconds) => {
@@ -155,14 +165,16 @@ const Settings = ({ toggleSettings }) => {
         return (
           <div className={styles.volumeControl}>
             <p>Adjust sound settings for the game.</p>
-            {/* <label htmlFor="volume-slider">Volume: {volume}%</label> */}
+
+            <p>Music Volume</p>
+            <label htmlFor="volume-slider">Volume: {volume}%</label>
             <input
               type="range"
               id="volume-slider"
               min="0"
               max="100"
-              // value={volume}
-              // onChange={handleVolumeChange}
+              value={volume}
+              onChange={handleVolumeChange}
               style={{ width: "100%" }}
             />
           </div>

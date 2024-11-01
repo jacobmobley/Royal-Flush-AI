@@ -189,13 +189,14 @@ const RouletteA = () => {
         clearInterval(spinAnimation);
         setWinningIndex(winIndex);
         setCurrentHighlightIndex(null);
-        checkWin(numbers[winIndex].number);
+        checkWin(numbers[winIndex].number, winIndex);
         setIsSpinning(false);
       }
     }, spinSpeed);
   };
 
-  const checkWin = (winningNumber) => {
+  const checkWin = (winningNumber, winIndex) => {
+    console.log(winningNumber, winIndex, numbers[winIndex].color);
     if (!placedBet) return;
 
     let win = false;
@@ -210,8 +211,8 @@ const RouletteA = () => {
         setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
         return newTotal;  // Update local state with the new total
       });
-    } else if (placedBet.type === 'color' && numbers[winningIndex].color === placedBet.value) {
-      setMessage(`You win! The winning number is ${winningNumber}.`);
+    } else if (placedBet.type === 'color' && numbers[winIndex].color === placedBet.value) {
+      setMessage(`You win! The winning color is ${numbers[winIndex].color}.`);
       setTotalPoints(prev => {
         const newTotal = prev + betAmount*2;
         console.log("Updated totalPoints:", newTotal);
