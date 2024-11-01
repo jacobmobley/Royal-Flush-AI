@@ -6,6 +6,7 @@ import ReturningPlayerPage from "./ReturningPlayerPage";
 import TitleScreen from "./TitleScreen";
 import PlinkoGame from "./PlinkoGame";
 import Blackjack from "./Blackjack";
+import PokerInit from "./PokerInit"
 
 import Poker from "./Poker";
 import RouletteE from "./RouletteE";
@@ -32,6 +33,7 @@ function App() {
           <Route path="/roulettee" element={<RouletteE />} />
           <Route path="/roulettea" element={<RouletteA />} />
           <Route path="/forgotpass" element={<ForgotPassword />} />
+          <Route path="/pokerinit" element={<PokerInit />} />
         </Routes>
       </div>
     </Router>
