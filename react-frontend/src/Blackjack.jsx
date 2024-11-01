@@ -143,7 +143,7 @@ function Blackjack() {
   }
 
   const { deckCount } = useParams();
-  const numDecks = parseInt(deckCount, 10) || 1;
+  const numDecks = deckCount >= 1 ? parseInt(deckCount, 10) : 1;
   const [curUser] = useState(new FireBaseAuth());
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
@@ -188,6 +188,7 @@ function Blackjack() {
   }
 
   function initGame() {
+    console.log(numDecks);
     if (currentBet == 0) {
       setShowCard(false);
     } else {
@@ -202,6 +203,7 @@ function Blackjack() {
     setDeck(newDeck);
     setPlayerHand([newDeck.pop(), newDeck.pop()]);
     setDealerHand([newDeck.pop(), newDeck.pop()]);
+    
     setIsGameOver(false);
     setMessage("");
     setTotalPoints((prevPoints) => {
@@ -212,13 +214,16 @@ function Blackjack() {
   }
   function createDeck(numDecks) {
     const newDeck = [];
+    let c = 0;
     for (let i = 0; i < numDecks; i++) {
       for (let suit of suits) {
         for (let value of values) {
+          c++;
           newDeck.push({ value, suit });
         }
       }
     }
+    console.log('num cards: ' + c);
     return newDeck;
   }
 
@@ -278,6 +283,7 @@ function Blackjack() {
     if (isGameOver) return;
 
     let newDealerHand = [...dealerHand];
+    console.log(dealerHand);
     while (calculateScore(newDealerHand) < 17) {
       newDealerHand.push(drawCard());
     }

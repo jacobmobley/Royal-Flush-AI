@@ -10,6 +10,7 @@ import logo from "./assets/RoyalFlushAILogo.png";
 import funky from "./assets/funky.mp3";
 import chill from "./assets/chill.mp3";
 import relaxing from "./assets/relaxing.mp3";
+import click from "./assets/click.mp3";
 
 const HomePage = () => {
   const images = [
@@ -39,11 +40,23 @@ const HomePage = () => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(
     Math.floor(Math.random() * playlist.length)
   ); // Start from random track
-  const audioRef = useRef(new Audio());
 
-  const toggleSettings = () => setShowSettings(!showSettings);
+  const audioRef = useRef(new Audio(playlist[currentTrackIndex])); // Initialize with a random track
+  const effectsRef = useRef(new Audio(click));
+
+  const toggleSettings = () => {
+    effectsRef.current.play().catch((error) => {
+      console.error("Click sound play error:", error);
+    });
+    setShowSettings(!showSettings);
+  };
+
+  // const toggleSettings = () => setShowSettings(!showSettings);
 
   const playNextTrack = () => {
+    if (!audioRef.current.paused) {
+      audioRef.current.pause();
+    }
     const nextTrackIndex = (currentTrackIndex + 1) % playlist.length;
     setCurrentTrackIndex(nextTrackIndex);
     audioRef.current.src = playlist[nextTrackIndex];
@@ -81,27 +94,30 @@ const HomePage = () => {
       }
     });
 
-    // Play the initial random track
-    audioRef.current.src = playlist[currentTrackIndex];
-    audioRef.current
-      .play()
-      .catch((error) => console.error("Audio play error:", error));
-
     // Event listener to play the next track when the current track ends
     audioRef.current.addEventListener("ended", playNextTrack);
 
     return () => {
       unsubscribe();
+      audioRef.current.pause();
       audioRef.current.removeEventListener("ended", playNextTrack); // Clean up event listener
     };
-  }, [currentTrackIndex]); // Re-run when currentTrackIndex changes
+  }, []); // Only run on mount/unmount
+
+  useEffect(() => {
+    // Ensure the audio source updates without autoplaying unexpectedly
+    if (audioRef.current.src !== playlist[currentTrackIndex]) {
+      audioRef.current.src = playlist[currentTrackIndex];
+    }
+  }, [currentTrackIndex]);
 
   if (loading) {
     return <div>Loading user data...</div>;
   }
 
   const play = () => {
-    if (audioRef.current && audioRef.current.paused) {
+    // Play only if the audio is paused, to prevent overlapping sounds
+    if (audioRef.current.paused) {
       audioRef.current.play().catch((error) => {
         console.error("Audio play blocked by the browser:", error);
       });
@@ -171,7 +187,11 @@ const HomePage = () => {
       />
       {showSettings && (
         <div className={`${styles.modalOverlay}`}>
-          <Settings toggleSettings={toggleSettings} audioRef={audioRef} />
+          <Settings
+            toggleSettings={toggleSettings}
+            audioRef={audioRef}
+            effectsRef={effectsRef}
+          />
         </div>
       )}
     </div>
