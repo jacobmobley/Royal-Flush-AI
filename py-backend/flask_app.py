@@ -15,11 +15,7 @@ def make_pred():
     req_data = json.loads(request.data)
 
     hand = req_data['Current hand']
-    if (req_data['Turn'] != None):
-        hand += req_data['Turn']
-    elif (req_data['River'] != None):
-        hand += req_data['River']
-    elif (req_data['Flop'] != None):
+    if (req_data['Flop'] != None):
         hand += req_data['Flop']
     
     score = evaluate_hand([eval7.Card(card) for card in hand])
@@ -28,16 +24,24 @@ def make_pred():
 
     prediction = model.predict(tscore)
 
-
-    match(prediction):
-        case 0:
-            action = 'fold'
-        case 1:
-            action = 'check'
-        case 2: 
-            action = 'raise'
-
-    return jsonify({'action': action})
+    if not req_data['Current raise']:
+        match(prediction):
+            case 0:
+                action = 'fold'
+            case 1:
+                action = 'check'
+            case 2: 
+                action = 'raise'
+    else:
+        match(prediction):
+            case 0:
+                action = 'fold'
+            case 1:
+                action = 'call'
+            case 2: 
+                action = 'raise'
+    
+    return jsonify({'action': round(action)})
 
 if __name__ == '__main__':
     app.run(debug=True)
