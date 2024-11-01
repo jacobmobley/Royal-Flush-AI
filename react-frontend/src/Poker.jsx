@@ -12,10 +12,6 @@ function Poker() {
   const [players, setPlayers] = useState([
     { name: "Your Hand", bet: 100, cards: playerHand },
     { name: "Player 2", bet: 150, cards: ["?", "?"] },
-    { name: "Player 3", bet: 200, cards: ["?", "?"] },
-    { name: "Player 4", bet: 120, cards: ["?", "?"] },
-    { name: "Player 5", bet: 50, cards: ["?", "?"] },
-    { name: "Player 6", bet: 180, cards: ["?", "?"] },
   ]);
 
   const handleRaiseChange = (event) => {
