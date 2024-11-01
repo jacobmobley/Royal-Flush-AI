@@ -92,9 +92,8 @@
   transform: translateX(-50%);
 }
 .playerAction {
-  border:1px solid black;
+  border: 1px solid black;
 }
-
 
 /* Chip styling */
 .chips {
@@ -125,14 +124,14 @@
 }
 
 .bigbutton {
-  width: 50px;           
-  height: 50px;          
-  background-color: white; 
-  border-radius: 50%;     
-  position: absolute;       
-  top: -100px;        
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: -100px;
   left: 50%;
-  font-size: 20px;       
+  font-size: 20px;
   transform: translateX(-50%);
   display: flex;
   justify-content: center;
@@ -140,12 +139,12 @@
 }
 
 .bigbuttonai {
-  width: 50px;           
-  height: 50px;          
-  background-color: white; 
-  border-radius: 50%;      
-  position: absolute;       
-  top: 275px;        
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 275px;
   left: 50%;
   font-size: 20px;
   transform: translateX(-50%);
@@ -155,7 +154,7 @@
 }
 
 .bigbuttonText {
-  color:red;
+  color: red;
   font-weight: bold;
 }
 
@@ -287,4 +286,58 @@
 
 .guide p {
   color: black;
+}
+
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.3
+  ); /* Optional for a subtle overlay effect */
+  z-index: 1000; /* Ensures the overlay is above all other content */
+}
+
+.turnPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centers the element perfectly */
+  background-color: white;
+  padding: 20px 40px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 24px;
+  color: black;
+  animation: popupAnimation 0.5s ease-in-out;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+}
+
+.turnPopup p {
+  color: black !important;
+}
+
+/* Animation for the popup */
+@keyframes popupAnimation {
+  0% {
+    transform: scale(0.5) translate(-50%, -50%);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.1) translate(-50%, -50%);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translate(-50%, -50%);
+    opacity: 1;
+  }
 }
