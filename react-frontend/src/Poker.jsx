@@ -36,8 +36,15 @@ function Poker() {
 
   const getMinimumChips = (amount) => {
     const chipValues = [1000, 500, 100, 25, 5, 1];
-    const chipColors = ['#FFD700', '#800080', '#333333', '#008000', '#FF0000', '#FFFFFF'];
-    const chipLabels = ['$1000', '$500', '$100', '$25', '$5', '$1'];
+    const chipColors = [
+      "#FFD700",
+      "#800080",
+      "#333333",
+      "#008000",
+      "#FF0000",
+      "#FFFFFF",
+    ];
+    const chipLabels = ["$1000", "$500", "$100", "$25", "$5", "$1"];
     const result = [];
 
     for (let i = 0; i < chipValues.length; i++) {
@@ -89,6 +96,12 @@ function Poker() {
     }
   }, [playerHand, flopCards, potValue, currentRaise]);
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleBox = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <div className={styles.pokerContainer}>
       <div className={styles.pokerTable}>
@@ -96,7 +109,7 @@ function Poker() {
           <div className={styles.potHeader}>Total Pot</div>
           <div className={styles.potValue}>${potValue}</div>
         </div>
-        
+
         <div className={styles.communityCards}>
           {flopCards.map((card, index) => (
             <div key={0} className={styles.card}>{card}</div>
@@ -188,7 +201,38 @@ function Poker() {
           </div>
         </div>
       </div>
-
+      <div className={styles.guide}>
+        <button onClick={toggleBox} style={styles.button}>
+          {isOpen ? "Close " : "Open "}
+          Guide
+        </button>
+        {isOpen && (
+          <div className={styles.box}>
+            <ul className={styles.list}>
+              <p>
+                The order of poker hand rankings from highest to lowest are as
+                follows:{" "}
+              </p>
+              <p>-</p>
+              <p>Royal Flush - A, K, Q, J, 10, all the same suit</p>
+              <p>
+                Straight Flush - Five cards in a sequence, all the same suit
+              </p>
+              <p>Four of a Kind - All four cards of the same rank</p>
+              <p>Full House - Three of a kind with a pair</p>
+              <p>Flush - Any five cards of the same suit</p>
+              <p>Straight - Five cards in a sequence, not the same suit</p>
+              <p>Three of a Kind - Three cards of the same rank</p>
+              <p>Two Pair - Two different pairs</p>
+              <p>Pair - Two cards of the same rank</p>
+              <p>
+                High Card - If none of the above are made, the highest card
+                plays
+              </p>
+            </ul>
+          </div>
+        )}
+      </div>
       <div className={styles.controls}>
         {curAction == 0 &&
         <input
@@ -208,7 +252,6 @@ function Poker() {
         <button className={styles.controlButton}>Check/Call</button>}
         {curAction == 0 &&
         <button className={styles.controlButton}>Fold</button>}
-
       </div>
     </div>
   );

@@ -7,7 +7,9 @@ import gear from "./assets/Settings.png";
 import { Link } from "react-router-dom";
 import Settings from "./Settings";
 import logo from "./assets/RoyalFlushAILogo.png";
-import funky from "./assets/funky.mp3"; // Import funky.mp3
+import funky from "./assets/funky.mp3";
+import chill from "./assets/chill.mp3";
+import relaxing from "./assets/relaxing.mp3";
 
 const HomePage = () => {
   const images = [
@@ -22,21 +24,32 @@ const HomePage = () => {
     "./src/assets/avatars/rabbit.png",
     "./src/assets/avatars/sea-lion.png",
   ];
+
   const [userData, setUserData] = useState({
     username: "",
     currency: 0,
     avatar: 0,
   });
-  const [deckCount, setDeckCount] = useState(3); // Default to 1 deck
+  const [deckCount, setDeckCount] = useState(3);
   const [showSettings, setShowSettings] = useState(false);
   const [loading, setLoading] = useState(true);
   const [image, setImage] = useState("");
 
-  const audioRef = useRef(new Audio(funky));
-  audioRef.current.loop = true;
+  const playlist = [funky, chill, relaxing];
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(
+    Math.floor(Math.random() * playlist.length)
+  ); // Start from random track
+  const audioRef = useRef(new Audio());
 
-  const toggleSettings = () => {
-    setShowSettings(!showSettings);
+  const toggleSettings = () => setShowSettings(!showSettings);
+
+  const playNextTrack = () => {
+    const nextTrackIndex = (currentTrackIndex + 1) % playlist.length;
+    setCurrentTrackIndex(nextTrackIndex);
+    audioRef.current.src = playlist[nextTrackIndex];
+    audioRef.current
+      .play()
+      .catch((error) => console.error("Audio play error:", error));
   };
 
   useEffect(() => {
@@ -68,12 +81,25 @@ const HomePage = () => {
       }
     });
 
-    return () => unsubscribe();
-  }, []);
+    // Play the initial random track
+    audioRef.current.src = playlist[currentTrackIndex];
+    audioRef.current
+      .play()
+      .catch((error) => console.error("Audio play error:", error));
+
+    // Event listener to play the next track when the current track ends
+    audioRef.current.addEventListener("ended", playNextTrack);
+
+    return () => {
+      unsubscribe();
+      audioRef.current.removeEventListener("ended", playNextTrack); // Clean up event listener
+    };
+  }, [currentTrackIndex]); // Re-run when currentTrackIndex changes
 
   if (loading) {
     return <div>Loading user data...</div>;
   }
+
   const play = () => {
     if (audioRef.current && audioRef.current.paused) {
       audioRef.current.play().catch((error) => {
@@ -81,11 +107,9 @@ const HomePage = () => {
       });
     }
   };
+
   return (
     <div className="container" onClick={play}>
-      <audio ref={audioRef} className={styles.backgroundMusic} loop>
-        <source src={funky} type="audio/mpeg" />
-      </audio>
       <div className={styles.userInfo}>
         <span>
           <img
@@ -125,15 +149,19 @@ const HomePage = () => {
             American Roulette
           </Link>
         </div>
-        <label htmlFor="deck-count">Number of Decks: </label>
-        <input
-          type="number"
-          id="deck-count"
-          value={deckCount}
-          min="1"
-          onChange={(e) => setDeckCount(e.target.value)}
-          className={styles.deckInput}
-        />
+        <div className={styles.deckCount}>
+          <label className={styles.deckNumLabel} htmlFor="deck-count">
+            Number of Decks:{" "}
+          </label>
+          <input
+            type="number"
+            id="deck-count"
+            value={deckCount}
+            min="1"
+            onChange={(e) => setDeckCount(e.target.value)}
+            className={styles.deckInput}
+          />
+        </div>
       </div>
       <img
         src={gear}
