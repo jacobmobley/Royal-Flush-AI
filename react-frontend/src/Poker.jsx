@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Poker.module.css";
 import api from "./api";
+import { useNavigate } from "react-router-dom";
 
 function Poker() {
+  const navigate = useNavigate();
+
   const [potValue, setPotValue] = useState(1000);
   const [currentRaise, setCurrentRaise] = useState(0);
   const [flopCards, setFlopCards] = useState([]);
-  const [turnCard, setTurnCard] = useState();
-  const [riverCard, setRiverCard] = useState();
-  const [playerHand, setPlayerHand] = useState(["5♠", "7♠"]); // User's hand as player 1
+  const [playerHand, setPlayerHand] = useState([]); // User's hand as player 1
   const [curPlayer, setCurPlayer] = useState(
     { name: "Your Hand", bankroll: 100, cards: playerHand });
   const [aiPlayer, setAiPlayer] = useState(
-    { name: "AI Player", bankroll: 150, cards: ["?", "?"] });
+    { name: "AI Player", bankroll: 150, cards: [] });
   const [curAction, setCurAction] = useState(0);
   //0 for player 1 for ai;
+  const [curBig, setCurBig] = useState(1);
 
   function getCardImage(value, suit, i) {
     if ((i == 1 && !showDealerCard) || !showCard) {
@@ -24,7 +26,7 @@ function Poker() {
     return cardImageMap[key];
   }
 
-  const updatePlayer = (newValue) => {
+  const updatePlayerBankroll = (newValue) => {
     setCurPlayer(prevPlayer => ({
       ...prevPlayer,
       bankroll: newValue,
@@ -54,7 +56,7 @@ function Poker() {
 
   const handleBetRaise = () => {
     setPotValue(potValue + currentRaise);
-    updatePlayer(curPlayer.bankroll - currentRaise);
+    updatePlayerBankroll(curPlayer.bankroll - currentRaise);
   };
 
 
@@ -62,26 +64,30 @@ function Poker() {
 
   // };
 
-  const sendGameData = async () => {
-    const gameData = {
-      "Current hand": playerHand,
-      Flop: flopCards,
-      River: riverCard,
-      Turn: turnCard,
-      "Pot amount": potValue,
-      "Current raise": currentRaise,
-    };
-    try {
-      await api.sendGameData(gameData);
-      console.log("Game data sent:", gameData);
-    } catch (error) {
-      console.error("Error sending game data:", error);
-    }
-  };
+  // const sendGameData = async () => {
+  //   const gameData = {
+  //     "Current hand": aiPlayer.cards,
+  //     Flop: flopCards,
+  //     "Pot amount": potValue,
+  //     "Current raise": currentRaise,
+  //   };
+  //   try {
+  //     await api.sendGameData(gameData);
+  //     console.log("Game data sent:", gameData);
+  //   } catch (error) {
+  //     console.error("Error sending game data:", error);
+  //   }
+  // };
 
   useEffect(() => {
-    sendGameData();
-  }, [playerHand, flopCards, turnCard, riverCard, potValue, currentRaise]);
+    // sendGameData();
+    // if (curPlayer.bankroll <= 0) {
+    //   navigate("/homepage");
+    // }
+    if (currentRaise > curPlayer.bankroll) {
+      setCurrentRaise(curPlayer.bankroll);
+    }
+  }, [playerHand, flopCards, potValue, currentRaise]);
 
   return (
     <div className={styles.pokerContainer}>
@@ -95,8 +101,6 @@ function Poker() {
           {flopCards.map((card, index) => (
             <div key={0} className={styles.card}>{card}</div>
           ))}
-          <div className={styles.card}>{turnCard}</div>
-          <div className={styles.card}>{riverCard}</div>
         </div>
 
         <div className={styles.potChips}>
@@ -116,7 +120,12 @@ function Poker() {
         </div>
 
         <div className={styles.players}>
-          <div key={0} className={`${styles.playerSlot} ${styles[`player1`]}`}>
+          <div key={0} className={`${styles.playerSlot} ${styles[`player1`]} 
+              ${curAction == 0 ? styles.playerAction : ''}
+            `}>
+            <div
+              className={curBig == 0 ? styles.bigbutton : ''}
+            ></div>
             <p>{curPlayer.name}</p>
             <p>BankRoll: ${curPlayer.bankroll}</p>
             <div className={styles.playerCards}>
@@ -143,19 +152,26 @@ function Poker() {
             </div>
           </div>
         </div>
-        <div className={styles.players}>
-          <div key={0} className={`${styles.playerSlot} ${styles[`player2`]}`}>
-            <p>{curPlayer.name}</p>
-            <p>BankRoll: ${curPlayer.bankroll}</p>
+        <div className={styles.players} >
+          <div key={0} className={`${styles.playerSlot} ${styles[`player2`]} 
+              ${curAction == 1 ? styles.playerAction : ''}
+            `}>
+            <div
+              className={curBig == 1 ? styles.bigbuttonai : ''}
+            >
+              <span className={styles.bigbuttonText}>BB</span>
+            </div>
+            <p>{aiPlayer.name}</p>
+            <p>BankRoll: ${aiPlayer.bankroll}</p>
             <div className={styles.playerCards}>
-              {curPlayer.cards.map((card, idx) => (
+              {aiPlayer.cards.map((card, idx) => (
                 <div key={idx} className={card === "?" ? styles.faceDownCard : styles.card}>
                   {card !== "?" ? card : ""}
                 </div>
               ))}
             </div>
             <div className={styles.chips}>
-              {getMinimumChips(curPlayer.bankroll).map((chip, idx) => (
+              {getMinimumChips(aiPlayer.bankroll).map((chip, idx) => (
                 <div key={idx} className={styles.chipStack}>
                   {[...Array(chip.count)].map((_, i) => (
                     <div
@@ -174,6 +190,7 @@ function Poker() {
       </div>
 
       <div className={styles.controls}>
+        {curAction == 0 &&
         <input
           type="range"
           min="0"
@@ -181,11 +198,17 @@ function Poker() {
           value={currentRaise}
           onChange={handleRaiseChange}
           className={styles.slider}
-        />
+        />}
+        {curAction == 0 &&
         <div className={styles.raiseDisplay}>Raise: ${currentRaise}</div>
-        <button className={styles.controlButton} onClick={handleBetRaise}>Check/Raise</button>
-        <button className={styles.controlButton}>Check/Call</button>
-        <button className={styles.controlButton}>Fold</button>
+        }
+        {curAction == 0 &&
+        <button className={styles.controlButton} onClick={handleBetRaise}>Check/Raise</button>}
+        {curAction == 0 &&
+        <button className={styles.controlButton}>Check/Call</button>}
+        {curAction == 0 &&
+        <button className={styles.controlButton}>Fold</button>}
+
       </div>
     </div>
   );
