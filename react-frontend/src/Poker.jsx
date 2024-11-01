@@ -10,11 +10,11 @@ function Poker() {
   const [potValue, setPotValue] = useState(1000);
   const [currentRaise, setCurrentRaise] = useState(0);
   const [flopCards, setFlopCards] = useState([]);
-  const [playerHand, setPlayerHand] = useState([]); // User's hand as player 1
+  const [playerHand, setPlayerHand] = useState(['?', '?']); // User's hand as player 1
   const [curPlayer, setCurPlayer] = useState(
     { name: "Your Hand", bankroll: 100, cards: playerHand });
   const [aiPlayer, setAiPlayer] = useState(
-    { name: "AI Player", bankroll: 150, cards: [] });
+    { name: "AI Player", bankroll: 150, cards: ['?', '?'] });
   const [curAction, setCurAction] = useState(0);
   //0 for player 1 for ai;
   const [curBig, setCurBig] = useState(1);
@@ -65,6 +65,17 @@ function Poker() {
   const handleBetRaise = () => {
     setPotValue(potValue + currentRaise);
     updatePlayerBankroll(curPlayer.bankroll - currentRaise);
+  };
+
+  const handleNewGame = () => {
+    setCurBig(curBig ^ 1);
+    setCurAction(curBig ^ 1);
+
+  };
+
+  const handleNewturn = () => {
+    setCurBig(curBig ^ 1);
+
   };
 
 
@@ -137,11 +148,15 @@ function Poker() {
           <div key={0} className={`${styles.playerSlot} ${styles[`player1`]} 
               ${curAction == 0 ? styles.playerAction : ''}
             `}>
+            {curBig == 0 &&
             <div
               className={curBig == 0 ? styles.bigbutton : ''}
-            ></div>
+            >
+              <span className={styles.bigbuttonText}>BB</span>
+            </div>
+            }
             <p>{curPlayer.name}</p>
-            <p>BankRoll: ${curPlayer.bankroll}</p>
+            <p>Bankroll: ${curPlayer.bankroll}</p>
             <div className={styles.playerCards}>
               {curPlayer.cards.map((card, idx) => (
                 <div key={idx} className={card === "?" ? styles.faceDownCard : styles.card}>
@@ -170,13 +185,15 @@ function Poker() {
           <div key={0} className={`${styles.playerSlot} ${styles[`player2`]} 
               ${curAction == 1 ? styles.playerAction : ''}
             `}>
+            {curBig == 1 &&
             <div
-              className={curBig == 1 ? styles.bigbuttonai : ''}
+              className={curBig == 1  ? styles.bigbuttonai : ''}
             >
               <span className={styles.bigbuttonText}>BB</span>
             </div>
+            }
             <p>{aiPlayer.name}</p>
-            <p>BankRoll: ${aiPlayer.bankroll}</p>
+            <p>Bankroll: ${aiPlayer.bankroll}</p>
             <div className={styles.playerCards}>
               {aiPlayer.cards.map((card, idx) => (
                 <div key={idx} className={card === "?" ? styles.faceDownCard : styles.card}>
@@ -248,7 +265,7 @@ function Poker() {
         <div className={styles.raiseDisplay}>Raise: ${currentRaise}</div>
         }
         {curAction == 0 &&
-        <button className={styles.controlButton} onClick={handleBetRaise}>Check/Raise</button>}
+        <button className={styles.controlButton} onClick={handleBetRaise}>Raise</button>}
         {curAction == 0 &&
         <button className={styles.controlButton}>Check/Call</button>}
         {curAction == 0 &&
