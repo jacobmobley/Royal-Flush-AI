@@ -10,7 +10,7 @@ import logo from "./assets/RoyalFlushAILogo.png";
 import funky from "./assets/funky.mp3";
 import chill from "./assets/chill.mp3";
 import relaxing from "./assets/relaxing.mp3";
-import click from "./assets/click.mp3";
+import click from "./assets/click2.mp3";
 
 const HomePage = () => {
   const images = [
