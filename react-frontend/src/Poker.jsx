@@ -192,8 +192,8 @@ function Poker() {
   }
 
   const updatePlayerBankroll = (newValue) => {
-    setCurPlayer(prevPlayer => ({
-      ...prevPlayer,
+    setCurPlayer(({
+      name: 'Your Hand',
       bankroll: newValue,
     }));
   };
@@ -384,7 +384,7 @@ function Poker() {
         handleAICheck();
         break;
       case "fold":
-        handleAIFold();
+        handleAICheck();
         break;
       default:
         handleAICheck(); // Default to check if no decision made
