@@ -80,6 +80,9 @@ const values = [
   "ace",
 ];
 
+const valueOrder = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace"];
+
+
 const cardImageMap = {
   clubs2,
   clubs3,
@@ -147,17 +150,20 @@ function Poker() {
     { name: "Your Hand", bankroll: 100});
   const [aiPlayer, setAiPlayer] = useState(
     { name: "AI Player", bankroll: 150});
-  const [curAction, setCurAction] = useState(1);
-  //0 for player 1 for ai;
-  const [curBig, setCurBig] = useState(0);
+  const [curBig, setCurBig] = useState(1);
   const [curCall, setCurCall] = useState(0);
-  const [check, setCheck] = useState(false);
-  const [turnCount, setTurnCount] = useState(1);
-  const [call, setCall] = useState(false);
   const [deck, setDeck] = useState([]);
-  const [aiTurnDone, setAiTurnDone] = useState(false);
   const [endState, setEndState] = useState(false);
-  const [cardCount, setCardCount] = useState(0);
+
+  const phases = ["pre-flop", "flop", "turn", "river"]; // Define the game phases
+  const [phase, setPhase] = useState("pre-flop"); // State to track the current phase
+  const [roundComplete, setRoundComplete] = useState(false); // Tracks if the round is complete
+  const [curAction, setCurAction] = useState(0); // Player with small blind acts first
+
+  const smallBlindAmount = 5; // Small blind amount
+  const bigBlindAmount = 10; // Big blind amount
+
+  const [gameStarted, setGameStarted] = useState(false);
 
   function getCardImage(value, suit, showBack) {
     if (!showBack) {
@@ -198,7 +204,6 @@ function Poker() {
     }));
   };
 
-
   const getMinimumChips = (amount) => {
     const chipValues = [1000, 500, 100, 25, 5, 1];
     const chipColors = [
@@ -226,175 +231,399 @@ function Poker() {
     setCurrentRaise(Number(event.target.value));
   };
 
-  const handleAction = () => {
-    setPotValue(potValue + currentRaise);
-    if (curAction == 0) {
-      updatePlayerBankroll(curPlayer.bankroll - currentRaise);
+  const handleFlop = () => {
+    const newFlop = [deck.pop(), deck.pop(), deck.pop()];
+    console.log(deck);
+    console.log(newFlop);
+    setFlopCards(newFlop);
+  };
+  
+  const handleTurn = () => {
+    setFlopCards([...flopCards, deck.pop()]);
+  };
+  
+  const handleRiver = () => {
+    setFlopCards([...flopCards, deck.pop()]);
+  };
+
+  const handleNewGame = () => {
+    setGameStarted(true); // Ensure game is marked as started
+    setPhase("pre-flop");
+    setCurAction(curBig ^ 1); // Player with small blind acts first
+    setPotValue(smallBlindAmount + bigBlindAmount); // Initialize pot with blinds
+    setCurrentRaise(0);
+    setCurCall(bigBlindAmount); // Set minimum call amount to the big blind
+    setRoundComplete(false); // Reset round complete state for new game
+    setEndState(false);
+  
+    // Reset player and AI hands
+    setPlayerHand([]);
+    setAIhand([]);
+  
+    // Create, shuffle, and assign a new deck
+    const newDeck = shuffleDeck(createDeck());
+    setDeck(newDeck);
+  
+    // Deal new hands to player and AI
+    const playerCards = [newDeck.pop(), newDeck.pop()];
+    setPlayerHand(playerCards);
+  
+    const aiCards = [newDeck.pop(), newDeck.pop()];
+    setAIhand(aiCards);
+  
+    // Reset community cards
+    setFlopCards([]);
+  
+    // Deduct blinds from the appropriate players
+    if (curBig === 0) {
+      updatePlayerBankroll(curPlayer.bankroll - bigBlindAmount); // Player is big blind
+      updateAiBankroll(aiPlayer.bankroll - smallBlindAmount); // AI is small blind
+    } else {
+      updatePlayerBankroll(curPlayer.bankroll - smallBlindAmount); // Player is small blind
+      updateAiBankroll(aiPlayer.bankroll - bigBlindAmount); // AI is big blind
     }
-    else {
+
+    console.log("New game started. Player bankroll:", curPlayer.bankroll, "AI bankroll:", aiPlayer.bankroll);
+  };
+
+  const advancePhase = () => {
+    console.log(phase);
+    const currentPhaseIndex = phases.indexOf(phase);
+    if (currentPhaseIndex < phases.length - 1) {
+      const newPhase = phases[currentPhaseIndex + 1];
+      setPhase(newPhase);
+  
+      // Reveal community cards based on the phase
+      if (newPhase === "flop") handleFlop();
+      if (newPhase === "turn") handleTurn();
+      if (newPhase === "river") handleRiver();
+  
+    } else {
+      setEndState(true); // End game after river phase
+      rotateBlinds(); // Rotate blinds at the end of each round
+    }
+  };
+
+  const rotateBlinds = () => {
+    setCurBig(curBig ^ 1); // Toggle curBig to switch blinds for the next game
+  };
+
+  const handleAction = () => {
+    if (curAction === 0) {
+      // Player's action
+      updatePlayerBankroll(curPlayer.bankroll - currentRaise);
+    } else {
+      // AI's action
       updateAiBankroll(aiPlayer.bankroll - currentRaise);
     }
-    
-    console.log("test");
-    handleNewturn();
+    setPotValue(potValue + currentRaise);
+    setCurAction(curAction ^ 1); // Switch turn
+    setCurrentRaise(0);
+  
+    // Check if both players have acted this round (round complete)
+    if (curAction === curBig) {
+      setRoundComplete(true);
+    }
   };
 
   const handleCheck = () => {
-    setCurrentRaise(0);
-    setCheck(true);
+    setCurrentRaise(0); // No raise for a check
+    setCurAction(curAction ^ 1); // Switch turn
+    if (curAction === curBig) {
+      setRoundComplete(true); // End the round if both players have acted
+    }
+  };
+  
+  const handleCall = () => {
+    const amountToCall = curCall - currentRaise;
+    setCurrentRaise(amountToCall);
+    updatePlayerBankroll(curPlayer.bankroll - amountToCall);
+    setPotValue(potValue + amountToCall);
+    setCurAction(curAction ^ 1);
+    if (curAction === curBig) {
+      setRoundComplete(true); // End the round if both players have acted
+    }
   };
 
-  useEffect(() => {
-    if (check) {
-      handleAction();
+  // Handle fold action
+  const handleFold = () => {
+    if (curAction === 0) {
+      updateAiBankroll(aiPlayer.bankroll + potValue);
+    } else {
+      updatePlayerBankroll(curPlayer.bankroll + potValue);
     }
-    setCheck(false);
-  }, [check]);
 
+    // Check for zero bankrolls after awarding the pot
+    if (curPlayer.bankroll === 0 || aiPlayer.bankroll === 0) {
+      navigateToEndScreen(); // End the game if a player is out of bankroll
+    } else {
+      handleNewGame(); // Otherwise, start a new game
+    }
+  };
+
+  // Trigger AI actions if it's the AI's turn
+    useEffect(() => {
+    if (curAction === 1 && !endState) {
+      const delay = setTimeout(() => handleAIturn(), 1000); // AI turn delay
+      return () => clearTimeout(delay);
+    }
+  }, [curAction, endState]);
+
+  // AI's turn logic
+  const handleAIturn = () => {
+    const aiDecision = decideAIAction();
+    
+    switch (aiDecision) {
+      case "call":
+        handleAICall();
+        break;
+      case "raise":
+        handleAIRaise();
+        break;
+      case "check":
+        handleAICheck();
+        break;
+      case "fold":
+        handleAIFold();
+        break;
+      default:
+        handleAICheck(); // Default to check if no decision made
+    }
+  };
+
+  const decideAIAction = () => {
+    const simulatedPlayerHands = generateSimulatedPlayerHands();
+    const aiWinProbability = evaluateAIWinProbability(aiHand, simulatedPlayerHands, flopCards);
+    console.log(aiWinProbability);
+    // Make decision based on probability thresholds and current call amount
+    if (aiWinProbability > 0.75 && potValue < aiPlayer.bankroll / 2) {
+      return "raise"; // Confident hand and pot size is reasonable
+    } else if (aiWinProbability > 0.5) {
+      return "call"; // Decent hand, call
+    } else if (curCall === 0) {
+      return "check"; // Weak hand, but no risk in checking
+    } else {
+      return "fold"; // Weak hand, fold if there’s a bet
+    }
+  };
+
+  const handleAICall = () => {
+    const amountToCall = curCall - currentRaise;
+    updateAiBankroll(aiPlayer.bankroll - amountToCall);
+    setPotValue(potValue + amountToCall);
+    setCurAction(0); // Pass control back to the player
+    setRoundComplete(curAction === curBig); // Set round complete if needed
+  };
+
+  const handleAIRaise = () => {
+    const raiseAmount = curCall + 10;
+    updateAiBankroll(aiPlayer.bankroll - raiseAmount);
+    setPotValue(potValue + raiseAmount);
+    setCurrentRaise(raiseAmount);
+    setCurCall(raiseAmount); // Update call amount to the new raise
+    setCurAction(0); // Pass control back to the player
+    setRoundComplete(curAction === curBig); // Set round complete if needed
+  };
+
+  const handleAICheck = () => {
+    setCurrentRaise(0); // No raise on a check
+    setCurAction(0); // Pass control back to the player
+    setRoundComplete(curAction === curBig); // Set round complete if needed
+  };
+
+  const handleAIFold = () => {
+    updatePlayerBankroll(curPlayer.bankroll + potValue); // Award pot to player
+    resetGame(); // Reset round or start a new game
+  };
+  
   
 
-  const handleCall = () => {
-    setCurrentRaise(curCall);
-    setCall(true);
-  };
-
-  useEffect(() => {
-    if (call) {
-      handleAction();
-      setCall(0);
+  function generateSimulatedPlayerHands() {
+    const unseenCards = deck.filter(card => !aiHand.includes(card) && !flopCards.includes(card));
+    const simulatedHands = [];
+  
+    for (let i = 0; i < 100; i++) { // Generate 100 simulated hands for variety
+      const randomHand = [unseenCards[Math.floor(Math.random() * unseenCards.length)],
+                          unseenCards[Math.floor(Math.random() * unseenCards.length)]];
+      simulatedHands.push(randomHand);
     }
-    setCall(false);
-  }, [call]);
-
-
-  const handleNewGame = () => {
-    if (curPlayer.bankroll == 0) {
-      navigate("/homepage");
-    }
-    // Create and shuffle the deck
-    const newDeck = shuffleDeck(createDeck());
-    setFlopCards([]);
-    setCardCount(0);
-    setEndState(false);
-
-    // Deal cards to the player
-    const playerCards = [newDeck.pop(), newDeck.pop()];
-    setPlayerHand(playerCards);
-    console.log(playerCards);
-
-    // Deal cards to the AI
-    const aiCards = [newDeck.pop(), newDeck.pop()];
-    setAIhand(aiCards);
-    console.log(aiHand);
-
-    // Update the deck state
-    setDeck(newDeck);
-    setCurBig(curBig ^ 1);
-    console.log(curBig);
-    setCurAction(curBig ^ 0);
-    setPotValue(0);
-  };
-
-  const handleNewturn = () => {
-    console.log("call: " + curCall);
-    if (turnCount >= 2) {
-      dealFlop();
-    }
-    if (currentRaise > curCall) {
-      setCurCall(currentRaise - curCall);
-      setTurnCount(2);
-    }
-    else {
-      setCurCall(0);
-      setTurnCount(prevTurnCount => prevTurnCount + 1);
-    }
-    setCurAction(curAction ^ 1);
-  };
-
-  const handleAIturn = () => {
-    let bet = 10;
-    if (curCall > 0) {
-      bet = curCall;
-    }
-    else {
-      bet = 0;
-    }
-    setCurrentRaise(bet);
-    setAiTurnDone(true);
-  };
-
-  const dealFlop = () => {
-    switch (cardCount) {
-      case 0:
-        handleFlop();
-        break;
-      case 1:
-        handleRiverTurn();
-        break;
-      case 2:
-        handleRiverTurn();
-        break;
-      case 3:
-        setEndState(true);
-        break;
-    }
-    setTurnCount(0);
+  
+    return simulatedHands;
   }
 
-  const handleFlop = () => {
-    const newDeck = deck;
-    const flop = [newDeck.pop(), newDeck.pop(), newDeck.pop()];
-    setDeck(newDeck);
-    setFlopCards(flop);
-    setCardCount(1);
-  };
-
-  const handleRiverTurn = () => {
-    const newDeck = deck;
-    const flop = flopCards;
-    flop.push(newDeck.pop());
-    setDeck(newDeck);
-    setFlopCards(flop);
-    setCardCount(cardCount + 1);
-  };
+  function evaluateAIWinProbability(aiHand, simulatedPlayerHands, communityCards) {
+    let aiWins = 0;
+    let totalSimulations = simulatedPlayerHands.length;
+  
+    for (let simulatedHand of simulatedPlayerHands) {
+      const aiBestHand = evaluateBestHand([...aiHand, ...communityCards]);
+      const playerBestHand = evaluateBestHand([...simulatedHand, ...communityCards]);
+      const result = compareHands(aiBestHand, playerBestHand);
+  
+      if (result > 0) {
+        aiWins += 1; // AI wins this simulated matchup
+      }
+      // No increment for a tie as we're only tracking AI wins
+    }
+  
+    return aiWins / totalSimulations; // Return win probability as a percentage
+  }
 
   useEffect(() => {
-    if (aiTurnDone) {
-      handleAction();
+    if (endState) {
+      handleEndGame();
+      rotateBlinds(); // Rotate blinds after awarding the pot
     }
-    setAiTurnDone(false);
-  }, [aiTurnDone]);
-  
+  }, [endState]);
 
-
-  const handleFold = () => {
-    console.log(curAction);
-    switch(curAction) {
-      case 0:
-        updateAiBankroll(aiPlayer.bankroll + potValue);
-        break;
-
-      case 1:
-        updatePlayerBankroll(curPlayer.bankroll + potValue);
-        break;
+  const handleEndGame = () => {
+    const winner = whoWins();
+    if (winner === 0) {
+      updatePlayerBankroll(curPlayer.bankroll + potValue); // Award pot to player
+    } else if (winner === 1) {
+      updateAiBankroll(aiPlayer.bankroll + potValue); // Award pot to AI
     }
-    handleNewGame();
+    setPotValue(0); // Reset pot
+    resetGame(); // Reset game or navigate to end screen
   };
 
-  function whoWins(handOne, handTwo) {
+  const navigateToEndScreen = () => {
+    // Navigate to a summary screen or display end-game results here
+    console.log("Game over! Final Bankrolls - Player:", curPlayer.bankroll, "AI:", aiPlayer.bankroll);
+    // Optionally navigate or display a message based on your app's structure
+    navigate("/end-screen"); // Assuming you have an end screen route
+  };
+
+  const resetGame = () => {
+    if (curPlayer.bankroll > 0 && aiPlayer.bankroll > 0) {
+      console.log("currbig" + curBig);
+      handleNewGame(); // Start a new game
+    } else {
+      navigateToEndScreen(); // End game if any player is out of bankroll
+    }
+  };
+
+  function whoWins() {
+    const hands = [
+      { name: 'player', hand: playerHand },
+      { name: 'ai', hand: aiHand }
+    ];
+  
+    // Combine player and AI hands with the community cards (flopCards)
+    let bestHandPlayer = evaluateBestHand([...playerHand, ...flopCards]);
+    let bestHandAI = evaluateBestHand([...aiHand, ...flopCards]);
+  
+    // Compare the best hands
+    if (compareHands(bestHandPlayer, bestHandAI) > 0) {
+      return 0; // Player wins
+    } else if (compareHands(bestHandPlayer, bestHandAI) < 0) {
+      return 1; // AI wins
+    } else {
+      return -1; // Tie
+    }
+  }
+
+  function evaluateBestHand(cards) {
+    let allCombinations = getAllCombinations(cards, 5);
+    let bestHand = { rank: -1, values: [] };
+  
+    for (let combination of allCombinations) {
+      let rankedHand = rankHand(combination);
+      if (rankedHand.rank > bestHand.rank ||
+        (rankedHand.rank === bestHand.rank && isHigherHand(rankedHand.values, bestHand.values))) {
+        bestHand = rankedHand;
+      }
+    }
+  
+    return bestHand;
+  }
+
+  function isHigherHand(hand1Values, hand2Values) {
+    // Sort both hands by value order to facilitate comparison
+    const sortedHand1 = hand1Values
+      .map(value => valueOrder.indexOf(value))
+      .sort((a, b) => b - a);
+    const sortedHand2 = hand2Values
+      .map(value => valueOrder.indexOf(value))
+      .sort((a, b) => b - a);
+  
+    // Compare each card in descending order
+    for (let i = 0; i < sortedHand1.length; i++) {
+      if (sortedHand1[i] > sortedHand2[i]) return true;  // Hand 1 is higher
+      if (sortedHand1[i] < sortedHand2[i]) return false; // Hand 2 is higher
+    }
+    return null; // Hands are equal in rank and value
+  }
+
+  function rankHand(cards) {
+    let values = cards.map(card => card.value);
+    let suits = cards.map(card => card.suit);
+  
+    let valueCounts = countValues(values);
+    let isFlush = new Set(suits).size === 1;
+    let isStraight = checkStraight(values);
+  
+    if (isFlush && isStraight && values.includes("ace") && values.includes("king")) {
+      return { rank: 9, values: ["A", "K", "Q", "J", "10"] }; // Royal Flush
+    }
+    if (isFlush && isStraight) return { rank: 8, values: values.sort() }; // Straight Flush
+    if (isFlush) return { rank: 5, values: values.sort() }; // Flush
+    if (isStraight) return { rank: 4, values: values.sort() }; // Straight
+  
+    if (valueCounts[4]) return { rank: 7, values: getTopValues(valueCounts, 4) }; // Four of a Kind
+    if (valueCounts[3] && valueCounts[2]) return { rank: 6, values: getTopValues(valueCounts, 3, 2) }; // Full House
+    if (valueCounts[3]) return { rank: 3, values: getTopValues(valueCounts, 3) }; // Three of a Kind
+    if (Object.keys(valueCounts).length === 3) return { rank: 2, values: getTopValues(valueCounts, 2, 2) }; // Two Pair
+    if (valueCounts[2]) return { rank: 1, values: getTopValues(valueCounts, 2) }; // One Pair
+  
+    return { rank: 0, values: values.sort().reverse() }; // High Card
+  }
+
+  function compareHands(hand1, hand2) {
+    if (hand1.rank !== hand2.rank) return hand1.rank - hand2.rank;
+    return compareValues(hand1.values, hand2.values);
+  }
+
+  function compareValues(values1, values2) {
+    const valueOrder = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace"];
+    for (let i = 0; i < values1.length; i++) {
+      if (valueOrder.indexOf(values1[i]) !== valueOrder.indexOf(values2[i])) {
+        return valueOrder.indexOf(values1[i]) - valueOrder.indexOf(values2[i]);
+      }
+    }
     return 0;
   }
 
-  const handleEndGame = () => {
-    let winner = whoWins();
-    if (winner == 0) {
-      updatePlayerBankroll(curPlayer.bankroll + potValue);
+  function getAllCombinations(arr, length) {
+    function combinationsHelper(start, chosen) {
+      if (chosen.length === length) return [chosen];
+      let result = [];
+      for (let i = start; i < arr.length; i++) {
+        result = result.concat(combinationsHelper(i + 1, [...chosen, arr[i]]));
+      }
+      return result;
     }
-    else {
-      updateAiBankroll(aiPlayer.bankroll + potValue);
+    return combinationsHelper(0, []);
+  }
+  
+  function checkStraight(values) {
+    const valueOrder = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace"];
+    let sortedValues = values.map(val => valueOrder.indexOf(val)).sort((a, b) => a - b);
+    for (let i = 1; i < sortedValues.length; i++) {
+      if (sortedValues[i] - sortedValues[i - 1] !== 1) return false;
     }
-    handleNewGame();
-  };
+    return true;
+  }
+  
+  function countValues(values) {
+    let counts = {};
+    values.forEach(value => counts[value] = (counts[value] || 0) + 1);
+    return counts;
+  }
+  
+  function getTopValues(counts, ...quantities) {
+    return quantities.flatMap(q => Object.keys(counts).filter(key => counts[key] === q));
+  }
 
 
   // const handleTurn = () {
@@ -417,6 +646,13 @@ function Poker() {
   // };
 
   useEffect(() => {
+    if (roundComplete) {
+      advancePhase(); // Move to the next phase
+      setRoundComplete(false); // Reset for the next phase
+    }
+  }, [roundComplete]);
+
+  useEffect(() => {
     if (curAction === 1) {
       const delay = setTimeout(() => {
         handleAIturn();
@@ -426,10 +662,6 @@ function Poker() {
       return () => clearTimeout(delay);
     }
   }, [curAction]);
-
-  useEffect(() => {
-    handleNewGame();
-  }, []);
 
   useEffect(() => {
     if (currentRaise > curPlayer.bankroll) {
@@ -457,6 +689,18 @@ function Poker() {
 
   return (
     <div className={styles.pokerContainer}>
+      {!gameStarted ? (
+      <button
+        className={styles.startButton}
+        onClick={() => {
+          setGameStarted(true);
+          handleNewGame(); // Start the game setup
+        }}
+      >
+        Start Game
+      </button>
+    ) : (
+      <>
       <div className={styles.pokerTable}>
         <div className={styles.pot}>
           <div className={styles.potHeader}>Total Pot</div>
@@ -635,6 +879,8 @@ function Poker() {
         {curAction == 0 &&
         <button className={styles.controlButton} onClick={handleFold}>Fold</button>}
       </div>
+      </>
+      )}
     </div>
   );
 }
