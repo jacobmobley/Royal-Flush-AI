@@ -909,9 +909,10 @@ function Poker() {
   };
 
   return (
-
     <div className={styles.pokerContainer} onClick={play}>
-      {showModal && <WinnerModal message={winnerMessage} onClose={closeModal} />}
+      {showModal && (
+        <WinnerModal message={winnerMessage} onClose={closeModal} />
+      )}
 
       {!gameStarted ? (
         <button
@@ -925,14 +926,6 @@ function Poker() {
         </button>
       ) : (
         <>
-          {isTurnPopupVisible && (
-            <div className={styles.popupOverlay}>
-              <div className={styles.turnPopup}>
-                <p>Your Turn!</p>
-              </div>
-            </div>
-          )}
-
           {isTurnPopupVisible && (
             <div className={styles.popupOverlay}>
               <div className={styles.turnPopup}>
