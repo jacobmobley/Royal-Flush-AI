@@ -38,7 +38,10 @@ const Settings = ({ toggleSettings, audioRef, effectsRef }) => {
     localStorage.setItem("checkboxState", isChecked);
   }, [isChecked]);
 
-  const [volume, setVolume] = useState(50); // Default volume to 50%
+  const [volume, setVolume] = useState(() => {
+    const savedVolume = localStorage.getItem("musicVolume");
+    return savedVolume ? Number(savedVolume) : 50;
+  }); // Default volume to 50%
 
   const handleVolumeChange = (event) => {
     const newVolume = event.target.value;
@@ -47,8 +50,10 @@ const Settings = ({ toggleSettings, audioRef, effectsRef }) => {
       audioRef.current.volume = newVolume / 100; // Set audio volume (0 to 1 range)
     }
   };
-
-  const [effectsVolume, setEffectsVolume] = useState(50);
+  const [effectsVolume, setEffectsVolume] = useState(() => {
+    const savedEffectsVolume = localStorage.getItem("effectsVolume");
+    return savedEffectsVolume ? Number(savedEffectsVolume) : 50;
+  });
   const handleEffectsVolumeChange = (event) => {
     const newVolume = event.target.value;
     setEffectsVolume(newVolume);
@@ -56,6 +61,21 @@ const Settings = ({ toggleSettings, audioRef, effectsRef }) => {
       effectsRef.current.volume = newVolume / 100; // Set effects volume (0 to 1 range)
     }
   };
+
+  // Update audio volume when volume state changes
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume / 100; // Set audio volume (0 to 1 range)
+    }
+    localStorage.setItem("musicVolume", volume); // Save to localStorage
+  }, [volume, audioRef]);
+
+  useEffect(() => {
+    if (effectsRef.current) {
+      effectsRef.current.volume = effectsVolume / 100; // Set effects volume (0 to 1 range)
+    }
+    localStorage.setItem("effectsVolume", effectsVolume); // Save to localStorage
+  }, [effectsVolume, effectsRef]);
 
   const sleep = (milliseconds) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
