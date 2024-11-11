@@ -11,6 +11,7 @@ import PokerInit from "./PokerInit"
 import Poker from "./Poker";
 import RouletteE from "./RouletteE";
 import RouletteA from "./RouletteA";
+import Multipoker from "./Multi-poker/Multipoker.jsx"
 import ForgotPassword from "./ForgotPassword.jsx";
 import Settings from "./Settings";
 
@@ -34,6 +35,7 @@ function App() {
           <Route path="/roulettea" element={<RouletteA />} />
           <Route path="/forgotpass" element={<ForgotPassword />} />
           <Route path="/pokerinit" element={<PokerInit />} />
+          <Route path="/Multipoker" element={<Multipoker />} />
         </Routes>
       </div>
     </Router>
