@@ -76,7 +76,8 @@ def join_game():
 # Retrieve the current game state
 @app.route('/game-state', methods=['GET'])
 def get_game_state():
-    return jsonify(game_state)
+    print("Current game state:", game_state)
+    return jsonify(game_state), 200
 
 # Process player actions (check, call, raise, fold)
 @app.route('/player-action', methods=['POST'])

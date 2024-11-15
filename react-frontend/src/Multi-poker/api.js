@@ -6,6 +6,7 @@ const API_BASE_URL = 'http://localhost:5000';
 const fetchGameState = async () => {
   try {
     const response = await axios.get(`${API_BASE_URL}/game-state`);
+    console.log("Game state data:", response.data); // Log the response data to check if it's valid JSON
     return response.data;
   } catch (error) {
     console.error('Error fetching game state:', error);
