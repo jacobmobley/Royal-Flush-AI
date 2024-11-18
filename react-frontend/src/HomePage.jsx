@@ -1,7 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, firestore_db } from "./firebase";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  collection,
+  query,
+  orderBy,
+  limit,
+  getDocs,
+} from "firebase/firestore";
+
 import styles from "./frontpage-styles.module.css";
 import gear from "./assets/Settings.png";
 import { Link } from "react-router-dom";
@@ -31,6 +40,8 @@ const HomePage = () => {
     currency: 0,
     avatar: 0,
   });
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [achievements, setAchievements] = useState([]);
   const [deckCount, setDeckCount] = useState(3);
   const [showSettings, setShowSettings] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -65,6 +76,25 @@ const HomePage = () => {
       .catch((error) => console.error("Audio play error:", error));
   };
 
+  const fetchLeaderboard = async () => {
+    const leaderboardQuery = query(
+      collection(firestore_db, "users"),
+      orderBy("currency", "desc"),
+      limit(10)
+    );
+
+    try {
+      const querySnapshot = await getDocs(leaderboardQuery);
+      const topUsers = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setLeaderboard(topUsers);
+    } catch (error) {
+      console.error("Error fetching leaderboard:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchUserData = async (user) => {
       if (user) {
@@ -85,9 +115,24 @@ const HomePage = () => {
       }
     };
 
+    const fetchAchievements = async (user) => {
+      try {
+        const achievementsRef = doc(firestore_db, 'users', user.email);
+        const docSnap = await getDoc(achievementsRef);
+        const data = docSnap.data();
+        const achievements = data.achievements;
+        console.log(achievements);
+        setAchievements(achievements);
+      } catch (error) {
+        console.error("Error fetching achievemtns:", error);
+      }
+    };
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         fetchUserData(user);
+        fetchLeaderboard(); // Fetch the leaderboard when the user is authenticated
+        fetchAchievements(user);
       } else {
         setUserData(null);
         setLoading(false);
@@ -138,21 +183,45 @@ const HomePage = () => {
         <span>Currency: {userData?.currency}</span>
       </div>
 
-      <div className={styles.achievements}>
-        <h4>Achievements</h4><br />
+      <div className={styles.leaderboard}>
+        <h2>Leaderboard</h2>
         <ul>
-          <li>Achievement 1 : Locked</li>
-          <li>Achievement 2 : Locked</li>
-          <li>Achievement 3 : Locked</li>
-          <li>Achievement 4 : Locked</li>
-          <li>Achievement 5 : Locked</li>
+          {leaderboard.map((user, index) => (
+            <div
+              key={user.id}
+              className={`${styles.leaderboardRow} ${
+                user.username === userData.username ? styles.highlight : ""
+              }`}
+            >
+              <p className={styles.rankingUser}>
+                #{index + 1} {user.username}
+              </p>
+              <p className={styles.theirCurrency}>{user.currency}</p>
+            </div>
+          ))}
         </ul>
       </div>
-
+      <div className={styles.achievements}>
+        <h2>Achievements</h2>
+        <ul>
+          {Object.keys(achievements).length > 0 ? (
+            Object.entries(achievements).map(([key, value]) => (
+              <div key={key} className={styles.achievementsRow}>
+                <p className={styles.rankingUser}>{key}</p>
+                <p className={styles.theirCurrency}>
+                  {value ? 'Completed' : 'Incomplete'}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p>No achievements available.</p>
+          )}
+        </ul>
+      </div>
       <div className={styles.menu}>
         <img src={logo} alt="Royal Flush AI Logo" className={styles.homeLogo} />
         <div className={styles.pokerButtons}>
-          <Link to="/pokerinit" className={styles.poker}>
+          <Link to="/pokerinit" className={`${styles.button} ${styles.poker}`}>
             Texas Hold'em
           </Link>
         </div>

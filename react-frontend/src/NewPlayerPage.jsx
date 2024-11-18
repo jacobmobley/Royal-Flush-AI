@@ -36,6 +36,13 @@ const isEmailTaken = async (email) => {
 };
 
 const NewPlayerPage = () => {
+  const [achievements, setAchievements] = useState({
+    test1: true,
+    test2: true,
+    test3: false,
+    test4: false,
+    test5: false,
+  });
   const navigate = useNavigate();
 
   // State for form data and messages
@@ -88,6 +95,7 @@ const NewPlayerPage = () => {
           currency: 5000,
           bio: "",
           avatar: 0,
+          achievements: { ...achievements },
         });
         setMessage("Sign-up successful!");
         setMessageStyle({ color: "green" });
