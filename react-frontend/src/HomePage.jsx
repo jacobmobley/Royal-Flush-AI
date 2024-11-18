@@ -41,6 +41,7 @@ const HomePage = () => {
     avatar: 0,
   });
   const [leaderboard, setLeaderboard] = useState([]);
+  const [achievements, setAchievements] = useState([]);
   const [deckCount, setDeckCount] = useState(3);
   const [showSettings, setShowSettings] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -114,10 +115,24 @@ const HomePage = () => {
       }
     };
 
+    const fetchAchievements = async (user) => {
+      try {
+        const achievementsRef = doc(firestore_db, 'users', user.email);
+        const docSnap = await getDoc(achievementsRef);
+        const data = docSnap.data();
+        const achievements = data.achievements;
+        console.log(achievements);
+        setAchievements(achievements);
+      } catch (error) {
+        console.error("Error fetching achievemtns:", error);
+      }
+    };
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         fetchUserData(user);
         fetchLeaderboard(); // Fetch the leaderboard when the user is authenticated
+        fetchAchievements(user);
       } else {
         setUserData(null);
         setLoading(false);
@@ -183,6 +198,23 @@ const HomePage = () => {
               <p className={styles.theirCurrency}>{user.currency}</p>
             </div>
           ))}
+        </ul>
+      </div>
+      <div className={styles.achievements}>
+        <h2>Achievements</h2>
+        <ul>
+          {Object.keys(achievements).length > 0 ? (
+            Object.entries(achievements).map(([key, value]) => (
+              <div key={key} className={styles.achievementsRow}>
+                <p className={styles.rankingUser}>{key}</p>
+                <p className={styles.theirCurrency}>
+                  {value ? 'Completed' : 'Incomplete'}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p>No achievements available.</p>
+          )}
         </ul>
       </div>
       <div className={styles.menu}>
