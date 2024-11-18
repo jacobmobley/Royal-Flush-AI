@@ -120,11 +120,14 @@ h1 {
   border: 4px solid black;
   cursor: pointer;
   width: 300px;
+  transition: all 0.3s ease;
 }
 
 .button:hover {
   background-color: #1b5193;
   color: #fff;
+  transform: translateY(-3px); /* Slight hover lift */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow on hover */
 }
 
 /* Form and input styles */
@@ -582,4 +585,8 @@ p {
 
 .leaderboardRow:nth-child(1) p {
   color: gold;
+}
+
+.highlight p {
+  color: lightgreen !important;
 }
