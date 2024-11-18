@@ -138,6 +138,17 @@ const HomePage = () => {
         <span>Currency: {userData?.currency}</span>
       </div>
 
+      <div className={styles.achievements}>
+        <h4>Achievements</h4><br />
+        <ul>
+          <li>Achievement 1 : Locked</li>
+          <li>Achievement 2 : Locked</li>
+          <li>Achievement 3 : Locked</li>
+          <li>Achievement 4 : Locked</li>
+          <li>Achievement 5 : Locked</li>
+        </ul>
+      </div>
+
       <div className={styles.menu}>
         <img src={logo} alt="Royal Flush AI Logo" className={styles.homeLogo} />
         <div className={styles.pokerButtons}>
