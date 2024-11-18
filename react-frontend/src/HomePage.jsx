@@ -186,10 +186,15 @@ const HomePage = () => {
         <h2>Leaderboard</h2>
         <ul>
           {leaderboard.map((user, index) => (
-            <div key={user.id} className={styles.leaderboardRow}>
+            <div
+              key={user.id}
+              className={`${styles.leaderboardRow} ${
+                user.username === userData.username ? styles.highlight : ""
+              }`}
+            >
               <p className={styles.rankingUser}>
                 #{index + 1} {user.username}
-              </p>{" "}
+              </p>
               <p className={styles.theirCurrency}>{user.currency}</p>
             </div>
           ))}
@@ -215,7 +220,7 @@ const HomePage = () => {
       <div className={styles.menu}>
         <img src={logo} alt="Royal Flush AI Logo" className={styles.homeLogo} />
         <div className={styles.pokerButtons}>
-          <Link to="/pokerinit" className={styles.poker}>
+          <Link to="/pokerinit" className={`${styles.button} ${styles.poker}`}>
             Texas Hold'em
           </Link>
         </div>
