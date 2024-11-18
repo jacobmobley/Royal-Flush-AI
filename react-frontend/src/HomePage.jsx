@@ -1,7 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, firestore_db } from "./firebase";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  collection,
+  query,
+  orderBy,
+  limit,
+  getDocs,
+} from "firebase/firestore";
+
 import styles from "./frontpage-styles.module.css";
 import gear from "./assets/Settings.png";
 import { Link } from "react-router-dom";
@@ -31,6 +40,7 @@ const HomePage = () => {
     currency: 0,
     avatar: 0,
   });
+  const [leaderboard, setLeaderboard] = useState([]);
   const [deckCount, setDeckCount] = useState(3);
   const [showSettings, setShowSettings] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -65,6 +75,25 @@ const HomePage = () => {
       .catch((error) => console.error("Audio play error:", error));
   };
 
+  const fetchLeaderboard = async () => {
+    const leaderboardQuery = query(
+      collection(firestore_db, "users"),
+      orderBy("currency", "desc"),
+      limit(10)
+    );
+
+    try {
+      const querySnapshot = await getDocs(leaderboardQuery);
+      const topUsers = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setLeaderboard(topUsers);
+    } catch (error) {
+      console.error("Error fetching leaderboard:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchUserData = async (user) => {
       if (user) {
@@ -88,6 +117,7 @@ const HomePage = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         fetchUserData(user);
+        fetchLeaderboard(); // Fetch the leaderboard when the user is authenticated
       } else {
         setUserData(null);
         setLoading(false);
@@ -137,7 +167,19 @@ const HomePage = () => {
         <span>{userData?.username}</span> <span>|</span>
         <span>Currency: {userData?.currency}</span>
       </div>
-
+      <div className={styles.leaderboard}>
+        <h2>Leaderboard</h2>
+        <ul>
+          {leaderboard.map((user, index) => (
+            <div key={user.id} className={styles.leaderboardRow}>
+              <p className={styles.rankingUser}>
+                #{index + 1} {user.username}
+              </p>{" "}
+              <p className={styles.theirCurrency}>{user.currency}</p>
+            </div>
+          ))}
+        </ul>
+      </div>
       <div className={styles.menu}>
         <img src={logo} alt="Royal Flush AI Logo" className={styles.homeLogo} />
         <div className={styles.pokerButtons}>
