@@ -66,6 +66,9 @@ function PokerInit() {
                 <button onClick={handleStartGame}>
                     Start Game
                 </button>
+                <button onClick={handleStartGame} className={styles.redButton}>
+                    Back
+                </button>
               </div>
             
             </div>
