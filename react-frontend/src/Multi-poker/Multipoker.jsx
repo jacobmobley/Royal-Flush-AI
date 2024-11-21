@@ -1,27 +1,33 @@
 import React, { useEffect, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
+import api from './api';
 import PokerTable from './components/PokerTable';
 import { GameProvider, GameContext } from './context/GameContext';
 
 const MultiPoker = () => {
   const { gameState, fetchGameState, loading, error } = useContext(GameContext);
+  const { search } = useLocation();
+  const lobbyUrl = new URLSearchParams(search).get('url');
 
   useEffect(() => {
-    fetchGameState(); // Fetch the game state on component load
-
-    // Optional: Set up polling or WebSocket for real-time updates
+    if (lobbyUrl) {
+      api.setApiBaseUrl(lobbyUrl); // Set the base URL dynamically
+      console.log(lobbyUrl)
+      fetchGameState();
+    }
     const interval = setInterval(() => {
       fetchGameState();
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [fetchGameState]);
+  }, [lobbyUrl, fetchGameState]);
 
-  if (loading) return <p>Loading game...</p>;
+
+  if (!gameState) return <p>Loading game...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="multi-poker">
-      <h1>Multiplayer Poker Game</h1>
       {gameState ? <PokerTable /> : <p>Loading game state...</p>}
     </div>
   );
