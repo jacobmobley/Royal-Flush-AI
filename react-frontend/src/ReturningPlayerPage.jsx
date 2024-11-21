@@ -9,6 +9,7 @@ import styles from "./frontpage-styles.module.css";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import logo from "./assets/RoyalFlushAILogo.png";
+import ReCAPTCHA from 'react-google-recaptcha'
 
 const ReturningPlayerPage = () => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const ReturningPlayerPage = () => {
   const [message, setMessage] = useState("");
   const [messageStyle, setMessageStyle] = useState({});
   const [showResetPassPopup, setshowResetPassPopup] = useState(false);
+  const [captchaState, setCaptchaState] = useState(false);
 
 
   const toggleResetPassPopup= () => {
@@ -31,8 +33,18 @@ const ReturningPlayerPage = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleCaptchaChange = (token) => {
+    setCaptchaState(true);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!captchaState) {
+      setMessage("Please fill CAPTCHA");
+      setMessageStyle({ color: "red" });
+      return;
+    }
 
     setPersistence(auth, browserLocalPersistence)
       .then(() => {
@@ -105,6 +117,11 @@ const ReturningPlayerPage = () => {
             value={formData.password}
             onChange={handleChange}
             className={styles.inputField}
+          />
+
+          <ReCAPTCHA
+            sitekey="6LcbOYQqAAAAAOXWZCe1gh8EWZ17a_Iuk_giEogz"
+            onChange={handleCaptchaChange}
           />
 
           <button className={styles.submitButton}>Sign In</button>
