@@ -64,7 +64,7 @@ const ChangePasswordPopup = ({ togglePasswordPopup, onSubmit }) => {
                 </button>
                 <br></br>
                 <form id="signup-form" onSubmit={handleSubmit}>
-                <input
+               <input
                     type="password"
                     name="password"
                     placeholder="Enter new password:"
