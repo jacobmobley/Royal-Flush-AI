@@ -19,11 +19,36 @@ export const fetchGameState = async () => {
 };
 
 // Send a player action (check, call, raise, fold) to the backend
-export const sendAction = async (actionType, amount = 0) => {
+export const sendAction = async (actionType, amount = 0, username) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/player-action`, {
       action: actionType,
       amount,
+      username, // Replace "playerId" with "username"
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Join the game by username
+export const joinGame = async (username) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/join`, {
+      username, // Replace "player_id" with "username"
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Signal readiness by username
+export const signalReady = async (username) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/ready`, {
+      username, // Send username to signal readiness
     });
     return response.data;
   } catch (error) {
@@ -35,4 +60,6 @@ export default {
   setApiBaseUrl,
   fetchGameState,
   sendAction,
+  joinGame,
+  signalReady, // Added signal readiness function
 };

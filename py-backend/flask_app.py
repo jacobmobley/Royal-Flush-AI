@@ -17,67 +17,31 @@ CORS(app)
 # Global variables for lobbies
 next_port = 5001
 active_lobbies = []
-LOBBY_LOG_FOLDER = "./lobbies"
-
-@app.route('/create-lobby', methods=['POST'])
-def create_lobby():
-    global next_port
-    try:
-        lobby_port = next_port
-        next_port += 1
-
-        # Detect terminal application
-        terminal_command = detect_terminal()
-
-        # Launch the poker server in the background
-        if platform.system() == "Darwin":  # Special handling for macOS
-            os.system(f"{terminal_command} \"python3 poker_server.py {lobby_port}\"' &")
-        else:
-            os.system(f"{terminal_command} python3 poker_server.py {lobby_port} &")
-
-        # Add lobby details to the list
-        lobby_info = {
-            "port": lobby_port,
-            "url": f"http://localhost:{lobby_port}",
-            "status": "open"
-        }
-        active_lobbies.append(lobby_info)
-
-        return jsonify({"message": "Lobby created", "lobby": lobby_info}), 201
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/kill-lobby', methods=['POST'])
-def kill_lobby():
-    port = request.json.get("port")
-    for lobby in active_lobbies:
-        if lobby["port"] == port:
-            try:
-                # Terminate the process
-                lobby["process"].terminate()
-                lobby["process"].wait()  # Ensure the process is fully terminated
-                active_lobbies.remove(lobby)
-                return jsonify({"message": f"Lobby on port {port} killed"}), 200
-            except Exception as e:
-                return jsonify({"error": str(e)}), 500
-    return jsonify({"error": "Lobby not found"}), 404
+LOG_FOLDER = "./lobbies"
 
 @app.route('/list-lobbies', methods=['GET'])
 def list_lobbies():
     # Ensure the log folder exists
-    if not os.path.exists(LOBBY_LOG_FOLDER):
-        os.makedirs(LOBBY_LOG_FOLDER)
+    if not os.path.exists(LOG_FOLDER):
+        os.makedirs(LOG_FOLDER)
 
     # Read all log files in the folder
     lobbies = []
-    for filename in os.listdir(LOBBY_LOG_FOLDER):
+    for filename in os.listdir(LOG_FOLDER):
         if filename.startswith("lobby_") and filename.endswith(".log"):
-            # Extract port from the filename
-            port = filename.split("_")[1].split(".")[0]
-            lobbies.append({
-                "port": int(port),
-                "url": f"http://localhost:{port}"
-            })
+            try:
+                # Extract port and buy-in from the filename
+                parts = filename.split("_")
+                port = int(parts[1])
+                buy_in = int(parts[2].split(".")[0])  # Buy-in is stored after the port in the filename
+
+                lobbies.append({
+                    "port": port,
+                    "buyIn": buy_in,
+                    "url": f"http://localhost:{port}"
+                })
+            except (IndexError, ValueError) as e:
+                print(f"Error parsing filename {filename}: {e}")
 
     return jsonify(lobbies), 200
 

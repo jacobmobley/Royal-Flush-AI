@@ -32,17 +32,18 @@
     justify-content: center;
   }
   
-  .card {
-    width: 60px;
-    height: 90px;
-    border-radius: 5px;
-    overflow: hidden;
+  .cardImage {
+    width: 60px; /* Adjust as needed */
+    height: auto;
+    border-radius: 5px; /* Optional for rounded corners */
+    margin: 2px; /* Space between cards */
   }
   
-  .cardImage {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .cards {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 10px;
   }
   
   /* Player Slots */
@@ -53,36 +54,61 @@
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.5); /* Slightly transparent background */
     border-radius: 10px;
-    min-width: 100px;
+    min-width: 150px;
   }
   
   .player1 {
-    bottom: 5%;
+    top: 85%; /* Bottom center */
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
   }
   
   .player2 {
-    top: 5%;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 65%; /* Bottom left */
+    left: 15%;
+    transform: translate(-50%, -50%);
   }
   
   .player3 {
-    left: 5%;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 35%; /* Top left */
+    left: 15%;
+    transform: translate(-50%, -50%);
   }
   
   .player4 {
-    right: 5%;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 15%; /* Top center */
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .player5 {
+    top: 35%; /* Top right */
+    left: 85%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .player6 {
+    top: 65%; /* Bottom right */
+    left: 85%;
+    transform: translate(-50%, -50%);
   }
   
   .playerAction {
     border: 2px solid yellow; /* Highlight active player */
     box-shadow: 0 0 10px yellow;
+  }
+
+  .currentUser {
+    border: 3px solid hotpink; /* Hot pink border */
+    box-shadow: 0 0 20px hotpink; /* Glow effect */
+    color: hotpink; /* Hot pink text */
+    z-index: 10; /* Ensure overlap visibility */
+  }
+  
+  .currentUser.playerAction {
+    border: 5px solid hotpink; /* Thicker border for current turn */
+    box-shadow: 0 0 30px hotpink; /* More intense glow */
+    color: hotpink; /* Text remains hot pink */
   }
   
   .playerCards {
