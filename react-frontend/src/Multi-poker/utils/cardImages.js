@@ -109,7 +109,15 @@ const cardImageMap = {
     spadesace,
   };
 
+  const royaltyMap = {
+    11: "jack",
+    12: "queen",
+    13: "king",
+    14: "ace",
+  };
+  
   export const getCardImage = (value, suit) => {
-    const key = `${suit}${value}`;
+    const cardValue = royaltyMap[value] || value; // Convert to royalty or keep numeric value
+    const key = `${suit}${cardValue}`; // Construct the key
     return cardImageMap[key];
   };
