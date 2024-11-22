@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./Blackjack.module.css";
 import FireBaseAuth from "./FireBaseAuth";
-import AchievementNotification from './popups/AchievementNotification';
+import AchievementNotification from "./popups/AchievementNotification";
 
 import back from "./assets/cards/cardBack_red2.png";
 
@@ -159,13 +159,16 @@ function Blackjack() {
   const [showDealerCard, setShowDealerCard] = useState(false);
   const [showCard, setShowCard] = useState(false);
   const [achievement, setAchievement] = useState(false);
-  const [achievementName, setAchievementName] = useState('Earn more than 10000 currency in one round of blackjack');
+  const [achievementName, setAchievementName] = useState(
+    "Earn more than 10000 currency in one round of blackjack"
+  );
+
+  const [roundHistory, setRoundHistory] = useState([]);
 
   const setTotalPointsWithUpdate = (newPoints) => {
     setTotalPoints(newPoints);
     curUser.updateCurrency(newPoints);
   };
-
 
   useEffect(() => {
     const unsubscribe = curUser.getUnsubscribe();
@@ -175,7 +178,8 @@ function Blackjack() {
         setLoading(false);
         setUserData(curUser.userData);
         const initialPoints = curUser.userData?.currency || 0;
-        const initialAchievement = curUser.userData?.achievements[achievementName] || '';
+        const initialAchievement =
+          curUser.userData?.achievements[achievementName] || "";
         setTotalPoints(initialPoints);
         setAchievement(initialAchievement);
         clearInterval(checkLoadingStatus);
@@ -209,7 +213,7 @@ function Blackjack() {
     setDeck(newDeck);
     setPlayerHand([newDeck.pop(), newDeck.pop()]);
     setDealerHand([newDeck.pop(), newDeck.pop()]);
-    
+
     setIsGameOver(false);
     setMessage("");
     setTotalPoints((prevPoints) => {
@@ -229,7 +233,7 @@ function Blackjack() {
         }
       }
     }
-    console.log('num cards: ' + c);
+    console.log("num cards: " + c);
     return newDeck;
   }
 
@@ -285,6 +289,7 @@ function Blackjack() {
   }
 
   function handleStand() {
+    let resultMessage = "";
     setShowDealerCard(true);
     if (isGameOver) return;
 
@@ -300,6 +305,7 @@ function Blackjack() {
 
     if (dealerScore > 21 || playerScore > dealerScore) {
       setMessage("You win!");
+      resultMessage = "Win";
       if (currentBet * 2 > 10000 && !achievement) {
         setAchievement(true);
         curUser.completeAchievement(achievementName);
@@ -308,14 +314,28 @@ function Blackjack() {
       setResultClass(styles.greenText);
     } else if (playerScore === dealerScore) {
       setMessage("It's a tie!");
+      resultMessage = "Tie";
       setTotalPointsWithUpdate(totalPoints + currentBet);
     } else {
       setMessage("Dealer wins!");
+      resultMessage = "Lose";
       setResultClass(styles.redText);
     }
+
+    setRoundHistory((prevHistory) => {
+      const updatedHistory = [
+        ...prevHistory,
+        {
+          playerScore,
+          dealerScore,
+          result: resultMessage,
+        },
+      ];
+      return updatedHistory.slice(-10); // Keep only the last 10 rounds
+    });
+
     setIsGameOver(true);
   }
-
 
   function handleBetChange(e) {
     setCurrentBet(parseInt(e.target.value, 10));
@@ -328,9 +348,32 @@ function Blackjack() {
 
   return (
     <div className={styles.blackjackGame}>
+      <div className={styles.historyArea}>
+        <h3>Round History</h3>
+        <table className={styles.historyTable}>
+          <thead>
+            <tr>
+              <th>Player Score</th>
+              <th>Dealer Score</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            {roundHistory.map((round, index) => (
+              <tr key={index}>
+                <td>{round.playerScore}</td>
+                <td>{round.dealerScore}</td>
+
+                <td>{round.result}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div className={styles.blackjackTitle}>
         <h1>BLACKJACK</h1>
       </div>
+
       <div className={styles.gameArea}>
         <div className={styles.dealerArea}>
           <h2>Dealer's Hand</h2>
@@ -397,9 +440,7 @@ function Blackjack() {
         <p className={resultClass}>{message}</p>
       </div>
       {showCard && achievement && (
-        <AchievementNotification
-          achievementName={achievementName}
-        />
+        <AchievementNotification achievementName={achievementName} />
       )}
     </div>
   );

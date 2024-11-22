@@ -3,7 +3,7 @@
   color: white;
   padding: 90px;
   border-radius: 15px;
-  width: 1200px;
+  width: 1500px;
   margin: 0 auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
@@ -151,4 +151,60 @@
   text-align: center;
   font-size: 24px;
   color: white;
+}
+
+.historyArea {
+  bottom: 10px;
+  text-align: center;
+  width: 15%;
+}
+.historyTable {
+  margin-right: 20px;
+  position: absolute;
+  color: black;
+}
+
+.historyTable table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.historyTable th,
+.historyTable td {
+  border: 1px solid #ddd;
+  padding: 2px;
+  text-align: center;
+  height: auto;
+}
+
+.historyTable td {
+  width: 30px;
+}
+
+.historyTable th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  padding: 8px;
+}
+
+.historyTable tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.historyTable tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.positiveChange {
+  color: green;
+}
+
+.negativeChange {
+  color: red;
+}
+
+.everything {
+  width: 100%;
+  height: 100%;
 }
