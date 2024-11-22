@@ -51,6 +51,63 @@ def make_pred():
     
     return jsonify({'action': round(action)})
 
+def ai_make_decision(ai_player, community_cards, current_raise):
+    """
+    Make a decision for the AI player based on the current hand and community cards.
+
+    Args:
+        ai_player (dict): The AI player's information including hand and chips.
+        community_cards (list): The current community cards in the game.
+        current_raise (int): The current raise amount in the game.
+
+    Returns:
+        dict: A dictionary with the action and amount for the AI player.
+    """
+    try:
+        # Convert cards to eval7 format
+        ai_hand = [convert_to_eval7_format(card) for card in ai_player["hand"]]
+        eval_community_cards = [convert_to_eval7_format(card) for card in community_cards]
+
+        print(f"AI Hand: {ai_hand}, Community Cards: {eval_community_cards}")
+
+        # Evaluate hand and community cards
+        eval_hand = [eval7.Card(card) for card in ai_hand + eval_community_cards]
+        print("eval_hand")
+        hand_score = eval7.evaluate(eval_hand)
+        print("hand_score")
+        print(hand_score)
+
+        # Scale and predict action
+        scaled_score = scaler.transform(hand_score)  # Reshape as required by the model
+        print("scaled_score")
+        print(scaled_score)
+        prediction = model.predict([[scaled_score]])  # Assume single prediction for this AI
+
+        # Determine action based on prediction
+        if current_raise == 0:
+            if prediction == 0:
+                return {"action": "Fold", "amount": 0}
+            elif prediction == 1:
+                return {"action": "Check", "amount": 0}
+            elif prediction == 2:
+                raise_amount = min(ai_player["chips"], 50)  # Example raise logic
+                return {"action": "Raise", "amount": raise_amount}
+        else:
+            if prediction == 0:
+                return {"action": "Fold", "amount": 0}
+            elif prediction == 1:
+                call_amount = min(ai_player["chips"], current_raise)
+                return {"action": "Call", "amount": call_amount}
+            elif prediction == 2:
+                raise_amount = min(ai_player["chips"], current_raise + 50)
+                return {"action": "Raise", "amount": raise_amount}
+
+    except ValueError as e:
+        print(f"Error during AI decision: {e}")
+        return {"action": "Fold", "amount": 0}  # Default to folding on error
+
+    return {"action": "Check", "amount": 0}  # Default fallback
+
 # Game state structure
 game_state = {
     "players": [],
@@ -209,14 +266,35 @@ def handle_fold(player):
 
 def ai_action(player):
     """
-    Placeholder function for AI action. 
-    Implement the AI's logic here.
+    Perform the AI action based on its current hand, community cards, and game state.
+
+    Args:
+        player (dict): The AI player's information.
     """
     print(f"AI Player {player['username']} is taking an action.")
-    # Example: For now, AI will just check
-    handle_check(player)
-    # Advance turn after AI completes its action
+
+    # Get the current raise amount
+    max_bet = max(p["bet"] for p in game_state["players"])
+    current_raise = max_bet - player["bet"]
+    print("current_raise:" + str(current_raise))
+
+    # Make a decision
+    decision = ai_make_decision(player, game_state["communityCards"], current_raise)
+    print("AIdecision")
+    print(decision)
+    # Perform the action
+    if decision["action"] == "Fold":
+        handle_fold(player)
+    elif decision["action"] == "Check":
+        handle_check(player)
+    elif decision["action"] == "Call":
+        handle_call(player)
+    elif decision["action"] == "Raise":
+        handle_raise(player, decision["amount"])
+
+    # Advance the turn after the AI action
     advance_turn()
+
 
 def advance_turn():
     """
@@ -271,6 +349,45 @@ def deal_community_cards(count):
 def determine_winner():
     # Placeholder: Implement hand evaluation logic
     game_state["winner"] = game_state["players"][0]["username"]  # Example winner
+
+def convert_to_eval7_format(card):
+    """
+    Convert a poker server card to eval7 card format.
+    
+    Args:
+        card (dict): A card represented in poker server format, 
+                     e.g., {"value": "14", "suit": "hearts"}.
+                     
+    Returns:
+        str: The card in eval7 format, e.g., "Ah" (Ace of hearts).
+    """
+    # Mapping of suit names to eval7 abbreviations
+    suit_map = {
+        "hearts": "h",
+        "diamonds": "d",
+        "clubs": "c",
+        "spades": "s"
+    }
+    
+    # Mapping card values to their eval7 equivalents
+    value_map = {
+        "10": "T",  # Ten
+        "11": "J",  # Jack
+        "12": "Q",  # Queen
+        "13": "K",  # King
+        "14": "A"   # Ace
+    }
+    
+    # Convert value and suit
+    value = value_map.get(card["value"], card["value"])  # Use mapped value or original
+    suit = suit_map.get(card["suit"])
+    
+    if not suit:
+        raise ValueError(f"Invalid suit: {card['suit']}")
+    if value not in "23456789TJQKA":
+        raise ValueError(f"Invalid value: {card['value']}")
+    
+    return f"{value}{suit}"
 
 @app.route('/')
 def index():
