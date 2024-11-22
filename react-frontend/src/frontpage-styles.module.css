@@ -668,3 +668,11 @@ p {
 .highlight p {
   color: lightgreen !important;
 }
+
+.bugReportText {
+  background-color: white;
+  border: black, 4px, solid;
+  border-radius: 2px;
+  color: black;
+  height: 100px;
+}
