@@ -8,6 +8,7 @@ import {
   arrayUnion,
   doc,
   getDoc,
+  arrayRemove
 } from "firebase/firestore";
 import { auth, firestore_db } from "../firebase";
 import styles from "../frontpage-styles.module.css";
@@ -64,7 +65,7 @@ function FriendsPopup({ toggleFriendsPopup }) {
       return;
     }
     return fbauth.userData["username"];
-  }
+  };
 
   const getUserByUsername = async (username) => {
     const userDocRef = collection(firestore_db, "users");
@@ -137,6 +138,30 @@ function FriendsPopup({ toggleFriendsPopup }) {
     }
   };
 
+  async function removeFriend(email) {
+    const user = auth.currentUser;
+
+    if (!user) {
+      console.error("No user authenticated");
+      return;
+    }
+
+    // Remove the friend's email from the user's friends array in Firestore
+    let userDocRef = doc(firestore_db, "users", user.email);
+    await updateDoc(userDocRef, {
+      friends: arrayRemove(email),
+    });
+    userDocRef = doc(firestore_db, "users", email);
+    await updateDoc(userDocRef, {
+      friends: arrayRemove(user.email),
+    });
+
+
+    // Update the local state to remove the friend from the displayed list
+    setFriends((prevFriends) => prevFriends.filter((friend) => friend.email !== email));
+
+  }
+
   return (
     <div className={styles.modal}>
       <button className={styles.closeButton} onClick={toggleFriendsPopup}>
@@ -163,8 +188,9 @@ function FriendsPopup({ toggleFriendsPopup }) {
       <ul>
         {friends.length > 0 ? (
           friends.map((friend) => (
-            <div key={friend.email} className={styles.leaderboardRow}>
+            <div key={friend.email} className={styles.friendsRow}>
               <p className={styles.rankingUser}>{friend.username}</p>
+              <button className={styles.redButton} onClick={() => removeFriend(friend.email)}>Remove</button>
             </div>
             
           ))
