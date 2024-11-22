@@ -271,7 +271,10 @@ const HomePage = () => {
         <img src={logo} alt="Royal Flush AI Logo" className={styles.homeLogo} />
         <div className={styles.pokerButtons}>
           <Link to="/pokerinit" className={`${styles.button} ${styles.poker}`}>
-            Texas Hold'em
+            Poker Singleplayer
+          </Link>
+          <Link to="/lobby" className={`${styles.button} ${styles.poker}`}>
+            Poker Multiplayer
           </Link>
         </div>
         <div className={styles.gameButtons}>
