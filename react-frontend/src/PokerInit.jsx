@@ -42,6 +42,10 @@ function PokerInit() {
 
         navigate("/poker"); // Navigate to the poker game page
       };
+
+      const handleBack = () => {
+        navigate("/homepage");
+      }
     
       // Display the settings
 
@@ -68,7 +72,7 @@ function PokerInit() {
                 <button onClick={handleStartGame}>
                     Start Game
                 </button>
-                <button onClick={handleStartGame} className={styles.redButton}>
+                <button onClick={handleBack} className={styles.redButton}>
                     Back
                 </button>
               </div>
@@ -81,6 +85,9 @@ function PokerInit() {
             <div className = {styles.modal}>
               <div className={styles.pokerInitError}>
                 <h2>You do not have enough money to play; you need at least 100 for the buy in.</h2>
+                <button onClick={handleBack} className={styles.redButton}>
+                    Back
+                </button>
               </div>
             </div>
           );
