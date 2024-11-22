@@ -20,6 +20,7 @@ import funky from "./assets/funky.mp3";
 import chill from "./assets/chill.mp3";
 import relaxing from "./assets/relaxing.mp3";
 import click from "./assets/click2.mp3";
+import friends from "./assets/friends.png";
 import FriendsPopup from "./popups/FriendsPopup";
 import FriendRequestPopup from "./popups/FriendRequestPopup";
 import FireBaseAuth from "./FireBaseAuth";
@@ -251,10 +252,15 @@ const HomePage = () => {
         <span>{userData?.username}</span> <span>|</span>
         <span>Currency: {userData?.currency}</span>
       </div>
-
-      <div className={styles.friendsPopupButton} onClick={toggleFriendsPopup}>
+      <img
+        src={friends}
+        alt="Friends Icon"
+        className={`${styles.friendsButton}`}
+        onClick={toggleFriendsPopup}
+      />
+      {/* <div className={styles.friendsPopupButton} onClick={toggleFriendsPopup}>
         Friends Menu
-      </div>
+      </div> */}
 
       {showFriendsPopup && (
         <div className={`${styles.modalOverlay}`}>
