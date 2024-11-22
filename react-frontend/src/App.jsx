@@ -27,7 +27,6 @@ function App() {
           <Route path="/plinkogame" element={<PlinkoGame />} />
 
           <Route path="/blackjack" element={<Blackjack />} />
-          {/* <Route path="/roulette" element={<Roulette />} /> */}
           <Route path="/poker" element={<Poker />} />
 
           <Route path="/blackjack/:deckCount" element={<Blackjack />} />

@@ -20,6 +20,9 @@ import funky from "./assets/funky.mp3";
 import chill from "./assets/chill.mp3";
 import relaxing from "./assets/relaxing.mp3";
 import click from "./assets/click2.mp3";
+import FriendsPopup from "./popups/FriendsPopup";
+import FriendRequestPopup from "./popups/FriendRequestPopup";
+import FireBaseAuth from "./FireBaseAuth";
 
 const HomePage = () => {
   const images = [
@@ -46,6 +49,9 @@ const HomePage = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [loading, setLoading] = useState(true);
   const [image, setImage] = useState("");
+  const [showFriendsPopup, setShowFriendsPopup] = useState(false);
+  const [showFriendRequestPopup, setShowFriendRequestPopup] = useState(false);
+  const [friendRequestEmail, setFriendRequestEmail] = useState(null);
 
   const playlist = [funky, chill, relaxing];
   const [currentTrackIndex, setCurrentTrackIndex] = useState(
@@ -62,7 +68,15 @@ const HomePage = () => {
     setShowSettings(!showSettings);
   };
 
-  // const toggleSettings = () => setShowSettings(!showSettings);
+  const toggleFriendsPopup = () => {
+    setShowFriendsPopup(!showFriendsPopup);
+  }
+
+  const toggleFriendRequest = () => {
+    setShowFriendRequestPopup(!showFriendRequestPopup);
+  }
+
+  const fbauth = new FireBaseAuth();
 
   const playNextTrack = () => {
     if (!audioRef.current.paused) {
@@ -128,8 +142,23 @@ const HomePage = () => {
       }
     };
 
+    const getFriendRequestEmail = async () => {
+      const user = auth.currentUser;
+
+      if (!user) {
+          console.log("No user authenticated");
+          return;
+      }
+      await fbauth.fetchUserData(user);
+      if (!fbauth.userData['requests'] || fbauth.userData['requests'].length === 0) return null;
+
+      setFriendRequestEmail(fbauth.userData["requests"][0]);
+      toggleFriendRequest();
+  }
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+        getFriendRequestEmail();
         fetchUserData(user);
         fetchLeaderboard(); // Fetch the leaderboard when the user is authenticated
         fetchAchievements(user);
@@ -170,7 +199,15 @@ const HomePage = () => {
   };
 
   return (
-    <div className="container" onClick={play}>
+    <div className="container">
+      {showFriendRequestPopup && (
+        <div className={`${styles.modalOverlay}`}>
+          <FriendRequestPopup
+            toggleFriendRequest={toggleFriendRequest}
+            requestEmail={friendRequestEmail}
+          />
+        </div>
+      )}
       <div className={styles.userInfo}>
         <span>
           <img
@@ -182,6 +219,18 @@ const HomePage = () => {
         <span>{userData?.username}</span> <span>|</span>
         <span>Currency: {userData?.currency}</span>
       </div>
+
+      <div className={styles.friendsPopupButton} onClick={toggleFriendsPopup}>
+        Friends Menu
+      </div>
+
+      {showFriendsPopup && (
+      <div className={`${styles.modalOverlay}`}>
+      <FriendsPopup
+        toggleFriendsPopup={toggleFriendsPopup}
+      />
+      </div>
+      )}
 
       <div className={styles.leaderboard}>
         <h2>Leaderboard</h2>
