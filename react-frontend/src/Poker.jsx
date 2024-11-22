@@ -70,6 +70,7 @@ import funky from "./assets/funky.mp3";
 import chill from "./assets/chill.mp3";
 import relaxing from "./assets/relaxing.mp3";
 import click from "./assets/click2.mp3";
+import FireBaseAuth from "./FireBaseAuth.jsx";
 
 const suits = ["spades", "clubs", "diamonds", "hearts"];
 const values = [
@@ -194,6 +195,22 @@ function Poker() {
   const [isTurnPopupVisible, setTurnPopupVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [winnerMessage, setWinnerMessage] = useState("");
+  const [curUser] = useState(new FireBaseAuth());
+
+  useEffect(() => {
+    const unsubscribe = curUser.getUnsubscribe();
+    curUser.updateGameCounter();
+
+    const checkLoadingStatus = setInterval(() => {
+      if (!curUser.loading) {
+        clearInterval(checkLoadingStatus);
+      }
+    }, 100);
+
+    return () => {
+      unsubscribe();
+    };
+  }, [curUser]);
 
   useEffect(() => {
     if (curAction === 0) {
@@ -251,6 +268,7 @@ function Poker() {
       .play()
       .catch((error) => console.error("Audio play error:", error));
   };
+
   useEffect(() => {
     audioRef.current.addEventListener("ended", playNextTrack);
 

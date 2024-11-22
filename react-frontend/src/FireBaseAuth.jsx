@@ -1,7 +1,7 @@
 import { useState} from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, firestore_db } from "./firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, increment  } from "firebase/firestore";
 
 class FireBaseAuth {
   constructor() {
@@ -68,6 +68,52 @@ class FireBaseAuth {
 
     } catch (error) {
       console.error("Error updating currency:", error);
+    }
+  }
+
+  async completeAchievement(achievement) {
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("No user logged in");
+
+      const userDocRef = doc(firestore_db, 'users', user.email);
+
+      function sanitizeFieldName(name) {
+        return name.replace(/[.#$/\[\]]/g, '_'); 
+      }
+
+      const sanitizedAchievementName = sanitizeFieldName(achievement);
+
+      await updateDoc(userDocRef, {
+        [`achievements.${sanitizedAchievementName}`]: true,
+      });
+
+      console.log(`Achievement "${achievement}" marked as completed.`);
+
+      if (this.userData && this.userData.achievements) {
+        this.userData.achievements[sanitizedAchievementName] = true;
+      }
+
+    } catch (error) {
+      console.error("Error updating achievement:", error);
+    }
+  }
+
+  async updateGameCounter() {
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("No user logged in");
+
+      const userDocRef = doc(firestore_db, 'users', user.email);
+
+      await updateDoc(userDocRef, {
+        pokerGameCounter: increment(1),
+      });
+
+      console.log("Counter successfully incremented.");
+
+    } catch (error) {
+      console.error("Error incrementing counter:", error);
     }
   }
 };

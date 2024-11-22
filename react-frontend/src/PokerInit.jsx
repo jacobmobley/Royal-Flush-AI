@@ -11,6 +11,7 @@ function PokerInit() {
 
     const [buyIn, setLocBuyIn] =  useState(100);
     const [maxCurrency, setMaxCurrency] = useState(null);
+    const [gameCounter, setGameCounter] = useState(0);
 
     const handleSliderChange = (event) => {
         setLocBuyIn(event.target.value);
@@ -38,6 +39,7 @@ function PokerInit() {
 
       const handleStartGame = () => {
         setBuyIn(buyIn);
+
         navigate("/poker"); // Navigate to the poker game page
       };
     
