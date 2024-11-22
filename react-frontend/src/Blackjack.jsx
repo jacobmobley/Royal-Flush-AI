@@ -282,9 +282,26 @@ function Blackjack() {
     const newPlayerHand = [...playerHand, drawCard()];
     setPlayerHand(newPlayerHand);
 
-    if (calculateScore(newPlayerHand) > 21) {
+    const playerScore = calculateScore(newPlayerHand); // Calculate score based on updated hand
+
+    if (playerScore > 21) {
       setMessage("Bust! You lose.");
-      setIsGameOver(true);
+      const resultMessage = "Lose";
+
+      const dealerScore = calculateScore(dealerHand); // Dealer score remains unchanged
+      setRoundHistory((prevHistory) => {
+        const updatedHistory = [
+          ...prevHistory,
+          {
+            playerScore, // Use updated player's score
+            dealerScore,
+            result: resultMessage,
+          },
+        ];
+        return updatedHistory.slice(-10); // Keep only the last 10 rounds
+      });
+
+      setIsGameOver(true); // End the game
     }
   }
 
