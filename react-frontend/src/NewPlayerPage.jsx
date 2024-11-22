@@ -39,11 +39,12 @@ const isEmailTaken = async (email) => {
 const NewPlayerPage = () => {
   const [captchaState, setCaptchaState] = useState(false);
   const [achievements, setAchievements] = useState({
-    test1: true,
-    test2: true,
-    test3: false,
-    test4: false,
-    test5: false,
+    'Earn more than 10000 currency in one round of blackjack': false,
+    'Earn more than 50000 currency total in both American and European Roulette': false,
+    'Get a Royal Flush in poker': false,
+    'Beat the AI in 5 consecutive rounds in poker': false,
+    'Play at least 10 games': false,
+    'Lose all your currency in a game of poker': false,
   });
   const navigate = useNavigate();
 
@@ -108,6 +109,7 @@ const NewPlayerPage = () => {
           bio: "",
           avatar: 0,
           achievements: { ...achievements },
+          pokerGameCounter: 0,
         });
         setMessage("Sign-up successful!");
         setMessageStyle({ color: "green" });
