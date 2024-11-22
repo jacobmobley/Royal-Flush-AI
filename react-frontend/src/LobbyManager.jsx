@@ -13,7 +13,7 @@ const LobbyManager = () => {
     setLoading(true);
     try {
       const response = await axios.get("http://localhost:5000/list-lobbies");
-      setLobbies(response.data);
+      setLobbies(response.data); // Response includes port, buyIn, and URL
     } catch (err) {
       setError("Failed to load lobbies.");
     } finally {
@@ -22,8 +22,8 @@ const LobbyManager = () => {
   };
 
   // Join a lobby
-  const handleJoinLobby = (lobbyUrl) => {
-    navigate(`/multipoker?url=${encodeURIComponent(lobbyUrl)}`);
+  const handleJoinLobby = (lobbyUrl, buyIn) => {
+    navigate(`/multipoker?url=${encodeURIComponent(lobbyUrl)}&buyIn=${buyIn}`);
   };
 
   // Fetch lobbies on component mount
@@ -46,8 +46,12 @@ const LobbyManager = () => {
         <ul>
           {lobbies.map((lobby, index) => (
             <li key={index}>
-              <p>Lobby at {lobby.url} (Port: {lobby.port})</p>
-              <button onClick={() => handleJoinLobby(lobby.url)}>Join</button>
+              <p>
+                Lobby at {lobby.url} (Port: {lobby.port}) - Buy-In: ${lobby.buyIn}
+              </p>
+              <button onClick={() => handleJoinLobby(lobby.url, lobby.buyIn)}>
+                Join
+              </button>
             </li>
           ))}
         </ul>
