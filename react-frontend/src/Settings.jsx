@@ -293,6 +293,7 @@ const Settings = ({ toggleSettings, audioRef, effectsRef }) => {
                 className={styles.bugReportText}
                 id="message"
                 name="message"
+                placeholder="Write your feedback or report bugs here"
                 value={message} // Link to state
                 onChange={(e) => setMessage(e.target.value)}
                 required
