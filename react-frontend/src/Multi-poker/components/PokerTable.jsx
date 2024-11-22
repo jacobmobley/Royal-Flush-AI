@@ -5,8 +5,9 @@ import styles from "./PokerTable.module.css";
 import back from "../../assets/cards/cardBack_red2.png";
 import { getCardImage } from "../utils/cardImages";
 import api from "../api";
+import FireBaseAuth from '../../FireBaseAuth';
 
-const PokerTable = ({ username, gameState }) => {
+const PokerTable = ({ username, gameState, curUser }) => {
   const {
     players,
     communityCards,
@@ -17,35 +18,26 @@ const PokerTable = ({ username, gameState }) => {
     currentPlayerIndex,
     dealerIndex,
     readyPlayers,
+    winner,
   } = gameState;
   const [raiseAmount, setRaiseAmount] = useState(bigBlind); // Initialize to the big blind amount
+  const [showResults, setShowResults] = useState(false);
 
   const playerIndex = players.findIndex((player) => player.username === username);
 
   useEffect(() => {
-    if (currentTurn === "pre-flop" && playerIndex === currentPlayerIndex) {
-      handleBlinds();
-    }
-  }, [currentTurn, dealerIndex, currentPlayerIndex]);
+    if (currentTurn === "collect winnings") {
+      setShowResults(true); // Show results popup
+      if (winner.includes(username)) {
+        const winnings = players.find((player) => player.username === username)?.chips || 0;
 
-  const handleBlinds = async () => {
-    // Small Blind: Dealer Index + 1
-    const smallBlindIndex = (dealerIndex + 1) % players.length;
-    // Big Blind: Dealer Index + 2
-    const bigBlindIndex = (dealerIndex + 2) % players.length;
-
-    try {
-      if (playerIndex === smallBlindIndex) {
-        const response = await api.sendAction("Raise", smallBlind, username);
-        console.log("Small blind posted:", smallBlind, response);
-      } else if (playerIndex === bigBlindIndex) {
-        await api.sendAction("Raise", bigBlind, username);
-        console.log("Big blind posted:", bigBlind);
+        if (curUser && winnings > 0) {
+          curUser.updateCurrency(curUser.userData.currency + (int(winnings/5)));
+          console.log(`Winnings of ${int(winnings/5)} added to ${username}'s account.`);
+        }
       }
-    } catch (error) {
-      console.error("Error handling blinds:", error);
     }
-  };
+  }, [currentTurn, winner, players, username, curUser]);
 
   // Function to signal readiness
   const handleReady = async () => {
@@ -86,6 +78,56 @@ const PokerTable = ({ username, gameState }) => {
 
   return (
     <div className={styles.pokerContainer}>
+      {showResults && (
+        <div className={styles.resultsModal}>
+          <div className={styles.resultsContent}>
+            <h2>Game Results</h2>
+                  {/* Community Cards Section */}
+      <div className={styles.communityCardsResult}>
+        <h3>Community Cards</h3>
+        <div className={styles.cards}>
+          {communityCards.map((card, index) => (
+            <img
+              key={index}
+              src={getCardImage(card.value, card.suit) || back}
+              alt={`${card.value} of ${card.suit}`}
+              className={styles.cardImage}
+            />
+          ))}
+        </div>
+      </div>
+            <div className={styles.resultsPlayers}>
+              {players.map((player, index) => (
+                <div
+                  key={index}
+                  className={`${styles.resultPlayer} ${
+                    winner.includes(player.username) ? styles.winner : ""
+                  }`}
+                >
+                  <p>
+                    <strong>{player.username}</strong> {winner.includes(player.username) && "(Winner)"}
+                  </p>
+                  <div className={styles.cards}>
+                    {player.hand.map((card, idx) => (
+                      <img
+                        key={idx}
+                        src={getCardImage(card.value, card.suit) || back}
+                        alt={`${card.value} of ${card.suit}`}
+                        className={styles.cardImage}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div>
+            <p className={styles.refreshMessage}>
+              Refresh the page when all the cards are cleared to join the next game. Otherwise, click the back arrow to leave.
+            </p>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Current Turn Display */}
       <div className={styles.currentTurn}>
         <h2>{currentTurn.replace("-", " ").toUpperCase()}</h2>
@@ -144,6 +186,8 @@ const PokerTable = ({ username, gameState }) => {
                 <strong>{player.username}</strong>
               </p>
               <p>Bankroll: ${player.chips}</p>
+              <p>Current Bet: ${player.bet || 0}</p> {/* Display player's current bet */}
+              <p>Status: ${player.status}</p> {/* Display player's current bet */}
               <div className={styles.cards}>
                 {isCurrentUser
                   ? player.hand.map((card, idx) => (
@@ -194,7 +238,7 @@ const PokerTable = ({ username, gameState }) => {
             <button
               className={styles.controlButton}
               onClick={() => handleAction("Check")}
-              disabled={gameState.currentPlayerIndex !== playerIndex}
+              disabled={gameState.currentPlayerIndex !== playerIndex || currentTurn === "pre-flop"}
             >
               Check
             </button>
@@ -215,7 +259,7 @@ const PokerTable = ({ username, gameState }) => {
             <div className={styles.sliderContainer}>
               <input
                 type="range"
-                min={bigBlind}
+                min={1}
                 max={players[playerIndex]?.chips || bigBlind}
                 step={5}
                 value={raiseAmount}

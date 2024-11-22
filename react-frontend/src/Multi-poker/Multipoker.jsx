@@ -39,14 +39,13 @@ const MultiPoker = () => {
 
   useEffect(() => {
     const unsubscribe = curUser.getUnsubscribe();
-    console.log(curUser.userData.username, joined);
-
+  
     // Set API base URL dynamically and join game once Firebase user is authenticated
     if (lobbyUrl) {
       api.setApiBaseUrl(lobbyUrl);
       console.log("Lobby URL:", lobbyUrl);
     }
-
+  
     const interval1 = setInterval(() => {
       console.log(joined);
       if (!joined && !curUser.loading) {
@@ -55,14 +54,14 @@ const MultiPoker = () => {
         clearInterval(interval1); // Stop trying once joined
       }
     }, 3000); // Retry every 3 seconds
-
+  
     // Fetch game state periodically
     const interval = setInterval(() => {
       if (joined) {
         fetchGameState();
       }
     }, 3000);
-
+  
     return () => {
       clearInterval(interval);
       clearInterval(interval1);
@@ -91,7 +90,7 @@ const MultiPoker = () => {
         Total Currency: ${curUser.userData.currency}
       </div>
       {joined && username ? (
-        <PokerTable username={username} gameState={gameState} />
+        <PokerTable username={username} gameState={gameState} curUser={curUser} />
       ) : (
         <p>Joining game, please wait...</p>
       )}

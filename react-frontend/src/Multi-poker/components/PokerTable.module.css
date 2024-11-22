@@ -226,3 +226,84 @@
     background-color: #2b6130;
   }
   
+  .resultsModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .resultsContent {
+    background-color: #222;
+    color: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    width: 80%;
+    max-width: 800px;
+    position: relative;
+  }
+  
+  .resultsPlayers {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    justify-items: center;
+    margin-top: 20px;
+  }
+  
+  .resultPlayer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #333;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 150px;
+  }
+  
+  .resultPlayer.winner {
+    border: 2px solid gold;
+    box-shadow: 0 0 10px 5px gold;
+  }
+  
+  .resultPlayer .cards {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+  }
+  
+  .closeButton {
+    margin-top: 100px;
+    background-color: crimson;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translate(-65%, 100%);    
+    transition: background-color 0.3s;
+  }
+  
+  .closeButton:hover {
+    background-color: darkred;
+  }
+
+  .refreshMessage {
+    margin: 20px 0;
+    font-size: 1.1em;
+    color: lightgray;
+    font-style: italic;
+  }

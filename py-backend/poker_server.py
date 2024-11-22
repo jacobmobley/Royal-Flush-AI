@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from cards import getPng
 from eval import evaluate_hand
+from time import sleep
 import eval7
 import json
 import random
@@ -78,10 +79,20 @@ def ai_make_decision(ai_player, community_cards, current_raise):
         print(hand_score)
 
         # Scale and predict action
-        scaled_score = scaler.transform(hand_score)  # Reshape as required by the model
+        scaled_score = scaler.transform([[hand_score]])  # Reshape as required by the model
         print("scaled_score")
         print(scaled_score)
-        prediction = model.predict([[scaled_score]])  # Assume single prediction for this AI
+        prediction = model.predict(scaled_score)  # Assume single prediction for this AI
+        print(prediction)
+        print(current_raise)
+
+        prediction[0] += 0.4
+
+        if (prediction[0] > 2):
+            prediction[0] = 2
+
+        prediction = round(prediction[0])
+
 
         # Determine action based on prediction
         if current_raise == 0:
@@ -118,7 +129,8 @@ game_state = {
     "currentTurn": "waiting-for-players",  # New stage for waiting
     "currentPlayerIndex": 0,
     "dealerIndex": 0,
-    "readyPlayers": 0  # Track how many players are ready
+    "readyPlayers": 0,  # Track how many players are ready
+    "winner": []
 }
 
 buy_in = 0
@@ -196,11 +208,10 @@ def transition_to_pre_flop():
     random.shuffle(deck)
 
     # Randomly pick a dealer index
-    # game_state["dealerIndex"] = random.randint(0, len(game_state["players"]) - 1)
-    game_state["dealerIndex"] = 5
+    game_state["dealerIndex"] = random.randint(0, len(game_state["players"]) - 1)
 
     # Set the starting player to be the next index (dealerIndex + 1)
-    game_state["currentPlayerIndex"] = (game_state["dealerIndex"] + 1) % len(game_state["players"])
+    game_state["currentPlayerIndex"] = (game_state["dealerIndex"] + 2) % len(game_state["players"])
 
     # Transition to the pre-flop stage
     game_state["currentTurn"] = "pre-flop"
@@ -211,6 +222,36 @@ def transition_to_pre_flop():
 
     print(f"Dealer is player at index {game_state['dealerIndex']}")
     print(f"Starting player is at index {game_state['currentPlayerIndex']}")
+
+    # Deduct small blind and big blind
+    handle_blinds()
+    advance_turn()
+
+
+def handle_blinds():
+    """
+    Deduct small blind and big blind from the appropriate players.
+    """
+    num_players = len(game_state["players"])
+    small_blind_index = (game_state["dealerIndex"] + 1) % num_players
+    big_blind_index = (game_state["dealerIndex"] + 2) % num_players
+
+    # Deduct small blind
+    small_blind_player = game_state["players"][small_blind_index]
+    small_blind_amount = min(small_blind_player["chips"], game_state["smallBlind"])
+    small_blind_player["chips"] -= small_blind_amount
+    small_blind_player["bet"] += small_blind_amount
+    game_state["pot"] += small_blind_amount
+    print(f"Small blind posted by {small_blind_player['username']}: ${small_blind_amount}")
+
+    # Deduct big blind
+    big_blind_player = game_state["players"][big_blind_index]
+    big_blind_amount = min(big_blind_player["chips"], game_state["bigBlind"])
+    big_blind_player["chips"] -= big_blind_amount
+    big_blind_player["bet"] += big_blind_amount
+    game_state["pot"] += big_blind_amount
+    print(f"Big blind posted by {big_blind_player['username']}: ${big_blind_amount}")
+
 
 # Retrieve the current game state
 @app.route('/game-state', methods=['GET'])
@@ -247,19 +288,40 @@ def handle_check(player):
 
 def handle_call(player):
     max_bet = max(p["bet"] for p in game_state["players"])
-    call_amount = max_bet - player["bet"]
+    print("max_bet")
+    print(max_bet)
+    call_amount = max_bet
+    call_amount = min(call_amount, player["chips"])
+    print(player, player["chips"], call_amount)
     if player["chips"] >= call_amount:
         player["chips"] -= call_amount
-        player["bet"] += call_amount
+        player["bet"] = call_amount
         game_state["pot"] += call_amount
 
 def handle_raise(player, amount):
+    """
+    Handle the raise action for a player.
+
+    Args:
+        player (dict): The player making the raise.
+        amount (int): The amount to raise.
+    """
     max_bet = max(p["bet"] for p in game_state["players"])
-    raise_amount = max_bet + amount
+    current_raise = max_bet
+
+    # Calculate the full raise amount
+    raise_amount = current_raise + amount
+
+    # Cap the raise to the player's remaining chips
+    raise_amount = min(raise_amount, player["chips"])
+
+    # Deduct chips and update bet
     if player["chips"] >= raise_amount:
         player["chips"] -= raise_amount
-        player["bet"] += raise_amount
+        player["bet"] = raise_amount
         game_state["pot"] += raise_amount
+
+    print(f"Player {player['username']} raised to {player['bet']} (pot is now {game_state['pot']}).")
 
 def handle_fold(player):
     player["status"] = "folded"
@@ -275,7 +337,7 @@ def ai_action(player):
 
     # Get the current raise amount
     max_bet = max(p["bet"] for p in game_state["players"])
-    current_raise = max_bet - player["bet"]
+    current_raise = max_bet
     print("current_raise:" + str(current_raise))
 
     # Make a decision
@@ -300,10 +362,19 @@ def advance_turn():
     """
     Advance to the next player's turn.
     If the player is an AI, trigger ai_action().
+    If no human players are left, reset the game.
+    If all active players have 0 chips, go to determine winner.
     """
     num_players = len(game_state["players"])
-    
+
     while True:
+        # Check if all active players are out of chips
+        active_players = [p for p in game_state["players"] if p["status"] == "active"]
+        if all(p["chips"] == 0 for p in active_players):
+            print("All active players are out of chips. Determining winner.")
+            determine_winner()
+            return
+
         # Move to the next active player
         game_state["currentPlayerIndex"] = (game_state["currentPlayerIndex"] + 1) % num_players
         current_player = game_state["players"][game_state["currentPlayerIndex"]]
@@ -314,6 +385,16 @@ def advance_turn():
 
     print(f"Current turn: Player at index {game_state['currentPlayerIndex']} ({current_player['username']})")
 
+    # Check if any human players remain
+    active_human_players = [
+        p for p in game_state["players"] 
+        if p["status"] == "active" and "AI_Player" not in p["username"]
+    ]
+    if not active_human_players:
+        print("No human players remain. Resetting the game.")
+        reset_game()
+        return  # Exit early to prevent further actions
+
     # Check if the current player is AI
     if "AI_Player" in current_player["username"]:
         ai_action(current_player)  # Call AI action
@@ -323,7 +404,6 @@ def advance_turn():
         max_bet = max(p["bet"] for p in game_state["players"])
         if all(p["bet"] == max_bet for p in active_players):
             advance_stage()
-
 
 def advance_stage():
     if game_state["currentTurn"] == "pre-flop":
@@ -336,6 +416,7 @@ def advance_stage():
         game_state["currentTurn"] = "river"
         deal_community_cards(1)
     elif game_state["currentTurn"] == "river":
+        game_state["currentTurn"] = "determine winner"
         determine_winner()
 
 deck = [{"value": str(rank), "suit": suit} for rank in range(2, 15) for suit in ["hearts", "diamonds", "clubs", "spades"]]
@@ -347,8 +428,93 @@ def deal_community_cards(count):
         game_state["communityCards"].append(card)
 
 def determine_winner():
-    # Placeholder: Implement hand evaluation logic
-    game_state["winner"] = game_state["players"][0]["username"]  # Example winner
+    """
+    Determine the winner of the current round using eval7.
+    Compares each active player's best hand (hole cards + community cards).
+    """
+    if not game_state["communityCards"]:
+        print("No community cards to evaluate.")
+        reset_game()
+        return
+
+    active_players = [p for p in game_state["players"] if p["status"] == "active"]
+    if len(active_players) <= 1:
+        winner = active_players[0] if active_players else None
+        if winner:
+            print(f"Only one active player remains: {winner['username']}. They win the pot.")
+            game_state["winner"] = [winner["username"]]
+            winner["chips"] += game_state["pot"]
+            game_state["pot"] = 0
+        return
+
+    community_cards = [eval7.Card(convert_to_eval7_format(card)) for card in game_state["communityCards"]]
+    print(f"Community Cards: {game_state['communityCards']}")
+    
+    best_score = -1
+    winners = []
+
+    for player in active_players:
+        hole_cards = [eval7.Card(convert_to_eval7_format(card)) for card in player["hand"]]
+        all_cards = community_cards + hole_cards
+
+        # Evaluate the hand
+        hand_score = eval7.evaluate(all_cards)
+
+        print(f"Player {player['username']} has score: {hand_score}")
+
+        # Determine if this player has the best hand
+        if hand_score > best_score:
+            best_score = hand_score
+            winners = [player]
+        elif hand_score == best_score:
+            winners.append(player)
+
+    # Distribute the pot among the winners
+    if len(winners) == 1:
+        winner = winners[0]
+        print(f"The winner is {winner['username']}.")
+        game_state["winner"] = [winner["username"]]
+        winner["chips"] += game_state["pot"]
+        print(eval7.handtype(best_score))
+    else:
+        print(f"Tie between players: {[player['username'] for player in winners]}")
+        game_state["winner"] = [player["username"] for player in winners]
+        split_pot = game_state["pot"] // len(winners)
+        for player in winners:
+            player["chips"] += split_pot
+
+    game_state["currentTurn"] = "collect winnings"
+
+    sleep(15)
+
+    reset_game()
+
+def reset_game():
+    """
+    Resets the game to its initial state.
+    Removes all players, resets the pot, and restores default values.
+    """
+    global game_state, deck
+    
+    # Reset game state
+    game_state = {
+        "players": [],
+        "communityCards": [],
+        "pot": 0,
+        "bigBlind": 50,
+        "smallBlind": 25,
+        "currentTurn": "waiting-for-players",
+        "currentPlayerIndex": 0,
+        "dealerIndex": 0,
+        "readyPlayers": 0,
+        "winner": []
+    }
+    
+    # Reinitialize the deck
+    deck = [{"value": str(rank), "suit": suit} for rank in range(2, 15) for suit in ["hearts", "diamonds", "clubs", "spades"]]
+    random.shuffle(deck)
+
+    print("Game has been reset to its initial state.")
 
 def convert_to_eval7_format(card):
     """
