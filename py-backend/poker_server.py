@@ -52,6 +52,7 @@ def make_pred():
     
     return jsonify({'action': round(action)})
 
+
 def ai_make_decision(ai_player, community_cards, current_raise):
     """
     Make a decision for the AI player based on the current hand and community cards.
@@ -130,11 +131,55 @@ game_state = {
     "currentPlayerIndex": 0,
     "dealerIndex": 0,
     "readyPlayers": 0,  # Track how many players are ready
-    "winner": []
+    "winner": [],
+    "emotes":[]
 }
 
 ai_difficulty = "medium"  # Default difficulty level
 buy_in = 0
+
+@app.route('/send-emote', methods=['POST'])
+def send_emote():
+    """
+    Handle emote actions sent by players.
+    Adds an emote to the game state with player and emote details.
+
+    Expected JSON payload:
+    {
+        "username": "player_name",
+        "emote": "thumbs_up"
+    }
+
+    Returns:
+        dict: The updated emote list.
+    """
+    try:
+        data = request.json
+        username = data.get("username")
+        emote = data.get("emote")
+
+        if not username or not emote:
+            return jsonify({"error": "Missing username or emote"}), 400
+        print(3)
+        # Check if the player exists
+        player_exists = any(player["username"] == username for player in game_state["players"])
+        if not player_exists:
+            return jsonify({"error": "Player not found"}), 404
+        # Add the emote to the game state
+        game_state["emotes"].append({
+            "username": username,
+            "emote": emote,
+        })
+
+        # Optionally limit the number of emotes stored
+        if len(game_state["emotes"]) > 5:
+            game_state["emotes"].pop(0)
+
+        print(f"Emote added: {username} sent {emote}")
+        return jsonify({"message": "Emote added", "emotes": game_state["emotes"]}), 200
+    except Exception as e:
+        print(f"Error in send-emote: {e}")
+        return jsonify({"error": "Internal server error"}), 500
 
 # Add a player to the game
 @app.route('/join', methods=['POST'])

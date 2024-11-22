@@ -7,6 +7,8 @@ import { getCardImage } from "../utils/cardImages";
 import api from "../api";
 import FireBaseAuth from '../../FireBaseAuth';
 
+const emotes1 = [":)", ":(", ">:)", ">:(", ":^)"];
+
 const PokerTable = ({ username, gameState, curUser }) => {
   const {
     players,
@@ -19,11 +21,13 @@ const PokerTable = ({ username, gameState, curUser }) => {
     dealerIndex,
     readyPlayers,
     winner,
+    emotes,
   } = gameState;
   const [raiseAmount, setRaiseAmount] = useState(bigBlind); // Initialize to the big blind amount
   const [showResults, setShowResults] = useState(false);
 
   const playerIndex = players.findIndex((player) => player.username === username);
+  
 
   useEffect(() => {
     if (currentTurn === "collect winnings") {
@@ -46,6 +50,15 @@ const PokerTable = ({ username, gameState, curUser }) => {
       console.log("Player is ready:", response);
     } catch (error) {
       console.error("Failed to signal readiness:", error);
+    }
+  };
+
+  const sendEmote = async (emote) => {
+    try {
+      await api.sendEmote(username, emote);
+      console.log(`Emote sent: ${emote}`);
+    } catch (error) {
+      console.error("Failed to send emote:", error);
     }
   };
 
@@ -174,8 +187,8 @@ const PokerTable = ({ username, gameState, curUser }) => {
           ))}
         </div>
 
-{/* Player Slots */}
-{players.map((player, index) => {
+      {/* Player Slots */}
+      {players.map((player, index) => {
           const isCurrentUser = player.username === username;
           const isCurrentTurn = index === currentPlayerIndex;
 
@@ -237,7 +250,32 @@ const PokerTable = ({ username, gameState, curUser }) => {
         })}
       </div>
 
+        {/* Emote Bar */}
+        <div className={styles.emoteBar}>
+          <h3>Emotes</h3>
+          {emotes1.map((emote, index) => (
+            <button
+              key={index}
+              className={styles.emoteButton}
+              onClick={() => sendEmote(emote)}
+            >
+              {emote.replace(/\\/g, "")} {/* Display without escape characters */}
+            </button>
+          ))}
+        </div>
 
+      {/* Animated Emotes Display Bar */}
+      <div className={styles.activeEmotesBar}>
+        {emotes.map((emoteObj, index) => (
+          <div
+            key={index}
+            className={`${styles.activeEmote} ${styles.emoteEffect}`}
+          >
+            <span className={styles.emoteUsername}>{emoteObj.username}: </span>
+            <span className={styles.emoteText}>{emoteObj.emote.replace(/\\/g, "")}</span>
+          </div>
+        ))}
+      </div>
 
       {/* Controls */}
       <div className={styles.controls}>

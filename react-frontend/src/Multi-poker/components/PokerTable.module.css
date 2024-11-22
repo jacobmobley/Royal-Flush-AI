@@ -307,3 +307,80 @@
     color: lightgray;
     font-style: italic;
   }
+
+  .emoteBar {
+    position: absolute;
+    right: 10px;
+    top: 100px;
+    width: 100px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .emoteButton {
+    display: block;
+    width: 80%;
+    margin: 5px auto;
+    padding: 5px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .emoteButton:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Emotes Bar Styling */
+.activeEmotesBar {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 250px;
+  max-height: 150px;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.activeEmote {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  opacity: 0; /* Initially hidden */
+  animation: fadeSlideIn 3s ease forwards, fadeOut 3s 5s ease forwards;
+  position: relative;
+}
+
+.activeEmote:last-child {
+  border-bottom: none;
+}
+
+.emoteUsername {
+  font-weight: bold;
+  color: #fff;
+  margin-right: 5px;
+}
+
+.emoteText {
+  color: #ffeb3b; /* Bright yellow for emotes */
+}
+
+/* Animation: Fade in and slide up */
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

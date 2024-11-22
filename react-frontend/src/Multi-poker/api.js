@@ -56,10 +56,23 @@ export const signalReady = async (username) => {
   }
 };
 
+export const sendEmote = async (username, emote) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/send-emote`, {
+      username,
+      emote,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   setApiBaseUrl,
   fetchGameState,
   sendAction,
   joinGame,
-  signalReady, // Added signal readiness function
+  signalReady,
+  sendEmote,
 };
