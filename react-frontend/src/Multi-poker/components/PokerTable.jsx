@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { GameContext } from "../context/GameContext";
 import styles from "./PokerTable.module.css";
 
@@ -18,8 +18,34 @@ const PokerTable = ({ username, gameState }) => {
     dealerIndex,
     readyPlayers,
   } = gameState;
+  const [raiseAmount, setRaiseAmount] = useState(bigBlind); // Initialize to the big blind amount
 
   const playerIndex = players.findIndex((player) => player.username === username);
+
+  useEffect(() => {
+    if (currentTurn === "pre-flop" && playerIndex === currentPlayerIndex) {
+      handleBlinds();
+    }
+  }, [currentTurn, dealerIndex, currentPlayerIndex]);
+
+  const handleBlinds = async () => {
+    // Small Blind: Dealer Index + 1
+    const smallBlindIndex = (dealerIndex + 1) % players.length;
+    // Big Blind: Dealer Index + 2
+    const bigBlindIndex = (dealerIndex + 2) % players.length;
+
+    try {
+      if (playerIndex === smallBlindIndex) {
+        const response = await api.sendAction("Raise", smallBlind, username);
+        console.log("Small blind posted:", smallBlind, response);
+      } else if (playerIndex === bigBlindIndex) {
+        await api.sendAction("Raise", bigBlind, username);
+        console.log("Big blind posted:", bigBlind);
+      }
+    } catch (error) {
+      console.error("Error handling blinds:", error);
+    }
+  };
 
   // Function to signal readiness
   const handleReady = async () => {
@@ -181,11 +207,23 @@ const PokerTable = ({ username, gameState }) => {
             </button>
             <button
               className={styles.controlButton}
-              onClick={() => handleAction("Raise", 50)}
+              onClick={() => handleAction("Raise", raiseAmount)}
               disabled={gameState.currentPlayerIndex !== playerIndex}
             >
               Raise
             </button>
+            <div className={styles.sliderContainer}>
+              <input
+                type="range"
+                min={bigBlind}
+                max={players[playerIndex]?.chips || bigBlind}
+                step={5}
+                value={raiseAmount}
+                onChange={(e) => setRaiseAmount(Number(e.target.value))}
+                className={styles.slider}
+              />
+              <p>Raise Amount: ${raiseAmount}</p>
+            </div>
             <button
               className={styles.controlButton}
               onClick={() => handleAction("Fold")}

@@ -24,7 +24,7 @@ export const sendAction = async (actionType, amount = 0, username) => {
     const response = await axios.post(`${API_BASE_URL}/player-action`, {
       action: actionType,
       amount,
-      username, // Replace "playerId" with "username"
+      username,
     });
     return response.data;
   } catch (error) {
