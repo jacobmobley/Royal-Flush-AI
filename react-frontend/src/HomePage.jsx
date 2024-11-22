@@ -24,6 +24,13 @@ import FriendsPopup from "./popups/FriendsPopup";
 import FriendRequestPopup from "./popups/FriendRequestPopup";
 import FireBaseAuth from "./FireBaseAuth";
 
+import blackjackAchievement from "./assets/achievements/blackjackachievement.png";
+import rouletteAchievement from "./assets/achievements/rouletteachievement.png";
+import royalFlushAchievement from "./assets/achievements/royalflushachievement.png";
+import aiAchievement from "./assets/achievements/aiachievement.png";
+import tenAchievement from "./assets/achievements/10achievement.png";
+import loseAchievement from "./assets/achievements/loseachievement.png";
+
 const HomePage = () => {
   const images = [
     "./src/assets/avatars/bear.png",
@@ -53,6 +60,17 @@ const HomePage = () => {
   const [showFriendRequestPopup, setShowFriendRequestPopup] = useState(false);
   const [friendRequestEmail, setFriendRequestEmail] = useState(null);
 
+  const achievementIcons = {
+    "Earn more than 10000 currency in one round of blackjack":
+      blackjackAchievement,
+    "Earn more than 50000 currency total in both American and European Roulette":
+      rouletteAchievement,
+    "Get a Royal Flush in poker": royalFlushAchievement,
+    "Beat the AI in 5 consecutive rounds in poker": aiAchievement,
+    "Play at least 10 games": tenAchievement,
+    "Lose all your currency in a game of poker": loseAchievement,
+  };
+
   const playlist = [funky, chill, relaxing];
   const [currentTrackIndex, setCurrentTrackIndex] = useState(
     Math.floor(Math.random() * playlist.length)
@@ -70,11 +88,11 @@ const HomePage = () => {
 
   const toggleFriendsPopup = () => {
     setShowFriendsPopup(!showFriendsPopup);
-  }
+  };
 
   const toggleFriendRequest = () => {
     setShowFriendRequestPopup(!showFriendRequestPopup);
-  }
+  };
 
   const fbauth = new FireBaseAuth();
 
@@ -131,7 +149,7 @@ const HomePage = () => {
 
     const fetchAchievements = async (user) => {
       try {
-        const achievementsRef = doc(firestore_db, 'users', user.email);
+        const achievementsRef = doc(firestore_db, "users", user.email);
         const docSnap = await getDoc(achievementsRef);
         const data = docSnap.data();
         const achievements = data.achievements;
@@ -146,15 +164,19 @@ const HomePage = () => {
       const user = auth.currentUser;
 
       if (!user) {
-          console.log("No user authenticated");
-          return;
+        console.log("No user authenticated");
+        return;
       }
       await fbauth.fetchUserData(user);
-      if (!fbauth.userData['requests'] || fbauth.userData['requests'].length === 0) return null;
+      if (
+        !fbauth.userData["requests"] ||
+        fbauth.userData["requests"].length === 0
+      )
+        return null;
 
       setFriendRequestEmail(fbauth.userData["requests"][0]);
       toggleFriendRequest();
-  }
+    };
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -225,11 +247,9 @@ const HomePage = () => {
       </div>
 
       {showFriendsPopup && (
-      <div className={`${styles.modalOverlay}`}>
-      <FriendsPopup
-        toggleFriendsPopup={toggleFriendsPopup}
-      />
-      </div>
+        <div className={`${styles.modalOverlay}`}>
+          <FriendsPopup toggleFriendsPopup={toggleFriendsPopup} />
+        </div>
       )}
 
       <div className={styles.leaderboard}>
@@ -256,9 +276,14 @@ const HomePage = () => {
           {Object.keys(achievements).length > 0 ? (
             Object.entries(achievements).map(([key, value]) => (
               <div key={key} className={styles.achievementsRow}>
+                <img
+                  src={achievementIcons[key]} // Get the icon for the achievement
+                  alt={`${key} icon`}
+                  className={styles.achievementIcon} // Add CSS class for styling
+                />
                 <p className={styles.rankingUser}>{key}</p>
                 <p className={styles.theirCurrency}>
-                  {value ? 'Completed' : 'Incomplete'}
+                  {value ? "Completed" : "Incomplete"}
                 </p>
               </div>
             ))

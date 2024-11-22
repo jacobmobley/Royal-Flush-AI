@@ -352,12 +352,12 @@ p {
   height: 50px;
   transition: all 0.3s ease;
   position: absolute;
-  top: 5px; left: 300px;
+  top: 5px;
+  left: 300px;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  
 }
 
 .closeButton:hover {
@@ -696,6 +696,13 @@ p {
   color: white;
 }
 
+.achievementIcon {
+  width: 35px; /* Adjust size as needed */
+  height: 35px;
+  margin-right: 10px; /* Space between icon and text */
+  vertical-align: middle;
+}
+
 .rankingUser {
   flex: 1;
   text-align: left;
@@ -728,7 +735,6 @@ p {
   color: lightgreen !important;
 }
 
-
 .friendsRow:nth-child(even) {
   background-color: #444; /* Darker background for every other row */
 }
@@ -736,7 +742,6 @@ p {
 .friendsRow:nth-child(odd) {
   background-color: #333;
 }
-
 
 .bugReportText {
   background-color: white;
@@ -813,4 +818,3 @@ p {
   transform: translateY(-2px);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Add subtle shadow */
 }
-
