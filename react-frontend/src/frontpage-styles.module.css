@@ -728,11 +728,21 @@ p {
   color: lightgreen !important;
 }
 
+
 .friendsRow:nth-child(even) {
   background-color: #444; /* Darker background for every other row */
 }
 
 .friendsRow:nth-child(odd) {
   background-color: #333;
+}
+
+
+.bugReportText {
+  background-color: white;
+  border: black, 4px, solid;
+  border-radius: 2px;
+  color: black;
+  height: 100px;
 }
 

@@ -8,6 +8,7 @@ import AddBioPopup from "./popups/AddBioPopup";
 import ChangeAvatarPopup from "./popups/ChangeAvatarPopup";
 import styles from "./frontpage-styles.module.css";
 import { Link } from "react-router-dom";
+import emailjs from "emailjs-com";
 import { useNavigate } from "react-router-dom";
 
 const Settings = ({ toggleSettings, audioRef, effectsRef }) => {
@@ -124,6 +125,31 @@ const Settings = ({ toggleSettings, audioRef, effectsRef }) => {
       getBio();
     }
   }, [selectedTab]);
+
+  const [message, setMessage] = useState("");
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .send(
+        "service_a0ssvdd",
+        "template_d0oprbc",
+        { message }, // The data to send
+        "WWuxtY9ZC0SH7Jsrm"
+      )
+      .then(
+        (response) => {
+          console.log("SUCCESS!", response.status, response.text);
+          alert("Email sent successfully!");
+          setMessage(""); // Clear the text field
+        },
+        (err) => {
+          console.error("FAILED...", err);
+          alert("Failed to send email. Please try again.");
+        }
+      );
+  };
 
   const renderContent = () => {
     switch (selectedTab) {
@@ -246,6 +272,29 @@ const Settings = ({ toggleSettings, audioRef, effectsRef }) => {
             />
           </div>
         );
+      case "Report a Bug":
+        return (
+          <div className={styles.bugReport}>
+            <p>Write to the devs.</p>
+
+            <form onSubmit={sendEmail}>
+              <label htmlFor="message">
+                <strong>Enter your message:</strong>
+              </label>
+              <textarea
+                className={styles.bugReportText}
+                id="message"
+                name="message"
+                value={message} // Link to state
+                onChange={(e) => setMessage(e.target.value)}
+                required
+              ></textarea>
+              <button type="submit" className={styles.submitButton}>
+                Send Email
+              </button>
+            </form>
+          </div>
+        );
       default:
         return <p>Select an option from the left.</p>;
     }
@@ -288,6 +337,12 @@ const Settings = ({ toggleSettings, audioRef, effectsRef }) => {
             onClick={() => setSelectedTab("Sound Settings")}
           >
             Sound
+          </button>
+          <button
+            className={styles.reportBug}
+            onClick={() => setSelectedTab("Report a Bug")}
+          >
+            Report a Bug
           </button>
         </div>
 
