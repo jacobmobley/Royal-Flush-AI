@@ -273,7 +273,7 @@ form {
   border-radius: 25px;
   margin-right: 10px;
 
-  width: 20px;
+  width: 150px;
   height: 100%;
   max-width: 100%;
   z-index: 1001;
@@ -450,7 +450,7 @@ p {
 .achievements {
   position: absolute;
   top: 120px;
-  left: 20px;
+  right: 20px;
   font-size: 18px;
   color: #fff;
   background-color: #333;
@@ -599,8 +599,6 @@ p {
   font-weight: normal;
   color: white;
 }
-
-
 
 .achievements {
   position: absolute;
