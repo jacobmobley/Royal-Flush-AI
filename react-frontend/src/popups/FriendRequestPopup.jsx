@@ -54,7 +54,7 @@ function FriendRequestPopup({ toggleFriendRequest, requestEmail }) {
             return;
         }
         try {
-            const docRef = doc(firestore_db, 'users', user.email);
+            let docRef = doc(firestore_db, 'users', user.email);
             await updateDoc(docRef, {
                 friends: arrayUnion(requestEmail),
             });
