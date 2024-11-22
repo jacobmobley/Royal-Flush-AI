@@ -782,6 +782,12 @@ p {
   border: 3px solid black;
   color: black;
 }
+.bugReport h3 {
+  color: black;
+}
+.bugReport a {
+  font-style: bold;
+}
 
 .bugReportText {
   background-color: white;
