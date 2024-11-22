@@ -71,6 +71,16 @@ const HomePage = () => {
     "Lose all your currency in a game of poker": loseAchievement,
   };
 
+  const achievementTitles = {
+    "Earn more than 10000 currency in one round of blackjack": "Blackjack Pro",
+    "Earn more than 50000 currency total in both American and European Roulette":
+      "Mr. Worldwide",
+    "Get a Royal Flush in poker": "Lucky Duck",
+    "Beat the AI in 5 consecutive rounds in poker": "AI Conqueror",
+    "Play at least 10 games": "Avid Player",
+    "Lose all your currency in a game of poker": "Take the L",
+  };
+
   const playlist = [funky, chill, relaxing];
   const [currentTrackIndex, setCurrentTrackIndex] = useState(
     Math.floor(Math.random() * playlist.length)
@@ -276,12 +286,15 @@ const HomePage = () => {
           {Object.keys(achievements).length > 0 ? (
             Object.entries(achievements).map(([key, value]) => (
               <div key={key} className={styles.achievementsRow}>
+                <p className={styles.achievementTitle}>
+                  {achievementTitles[key]}
+                </p>
                 <img
                   src={achievementIcons[key]} // Get the icon for the achievement
                   alt={`${key} icon`}
                   className={styles.achievementIcon} // Add CSS class for styling
                 />
-                <p className={styles.rankingUser}>{key}</p>
+                <p className={styles.achievementDescription}>{key}</p>
                 <p className={styles.theirCurrency}>
                   {value ? "Completed" : "Incomplete"}
                 </p>

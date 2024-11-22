@@ -671,7 +671,7 @@ p {
   display: flex;
   flex-direction: column;
 
-  width: 450px;
+  width: 600px;
   max-width: 100%;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Add subtle shadow */
 }
@@ -692,23 +692,39 @@ p {
   box-sizing: border-box;
 }
 .achievementsRow p {
-  font-weight: normal;
   color: white;
 }
 
-.achievementIcon {
-  width: 35px; /* Adjust size as needed */
-  height: 35px;
-  margin-right: 10px; /* Space between icon and text */
+.achievementTitle {
+  width: 130px;
   vertical-align: middle;
+  margin: auto;
+  margin-left: 10px;
+}
+.achievementTitle p {
+  font-weight: bold !important;
 }
 
-.rankingUser {
+.achievementIcon {
+  width: 50px; /* Adjust size as needed */
+  height: 50px;
+  margin-right: 10px; /* Space between icon and text */
+  vertical-align: middle;
+  margin: auto;
+}
+
+.achievementDescription {
   flex: 1;
   text-align: left;
-  color: #ffd700; /* Gold color */
-  font-weight: bold;
+  margin: auto;
+  font-weight: normal;
   padding: 0 10px;
+  width: 250px;
+  margin-left: 20px;
+}
+
+.achievementDescription p {
+  font-weight: normal !important;
 }
 
 .theirCurrency {
