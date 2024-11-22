@@ -158,3 +158,38 @@ p {
   background-color: white;
   color: black;
 }
+
+.historyTable {
+  width: 20%;
+  margin-right: 20px;
+  margin-top: 50px;
+  position: absolute;
+  color: black;
+}
+
+.historyTable table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.historyTable th,
+.historyTable td {
+  border: 1px solid #ddd;
+  padding: 2px;
+  text-align: center;
+  height: auto;
+}
+
+.historyTable th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  padding: 8px;
+}
+
+.historyTable tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.historyTable tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}

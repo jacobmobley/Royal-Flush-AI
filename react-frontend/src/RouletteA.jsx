@@ -3,26 +3,44 @@ import styles from "./Roulette.module.css"; // Use a module for styling
 import FireBaseAuth from "./FireBaseAuth";
 
 const numbers = [
-  { number: '0', color: 'green' },
-  { number: '28', color: 'black' }, { number: '9', color: 'red' },
-  { number: '26', color: 'black' }, { number: '30', color: 'red' },
-  { number: '11', color: 'black' }, { number: '7', color: 'red' },
-  { number: '20', color: 'black' }, { number: '32', color: 'red' },
-  { number: '17', color: 'black' }, { number: '5', color: 'red' },
-  { number: '22', color: 'black' }, { number: '34', color: 'red' },
-  { number: '15', color: 'black' }, { number: '3', color: 'red' },
-  { number: '24', color: 'black' }, { number: '36', color: 'red' },
-  { number: '13', color: 'black' }, { number: '1', color: 'red' },
-  { number: '00', color: 'green' }, { number: '27', color: 'red' },
-  { number: '10', color: 'black' }, { number: '25', color: 'red' },
-  { number: '29', color: 'black' }, { number: '12', color: 'red' },
-  { number: '8', color: 'black' }, { number: '19', color: 'red' },
-  { number: '31', color: 'black' }, { number: '18', color: 'red' },
-  { number: '6', color: 'black' }, { number: '21', color: 'red' },
-  { number: '33', color: 'black' }, { number: '16', color: 'red' },
-  { number: '4', color: 'black' }, { number: '23', color: 'red' },
-  { number: '35', color: 'black' }, { number: '14', color: 'red' },
-  { number: '2', color: 'black' }
+  { number: "0", color: "green" },
+  { number: "28", color: "black" },
+  { number: "9", color: "red" },
+  { number: "26", color: "black" },
+  { number: "30", color: "red" },
+  { number: "11", color: "black" },
+  { number: "7", color: "red" },
+  { number: "20", color: "black" },
+  { number: "32", color: "red" },
+  { number: "17", color: "black" },
+  { number: "5", color: "red" },
+  { number: "22", color: "black" },
+  { number: "34", color: "red" },
+  { number: "15", color: "black" },
+  { number: "3", color: "red" },
+  { number: "24", color: "black" },
+  { number: "36", color: "red" },
+  { number: "13", color: "black" },
+  { number: "1", color: "red" },
+  { number: "00", color: "green" },
+  { number: "27", color: "red" },
+  { number: "10", color: "black" },
+  { number: "25", color: "red" },
+  { number: "29", color: "black" },
+  { number: "12", color: "red" },
+  { number: "8", color: "black" },
+  { number: "19", color: "red" },
+  { number: "31", color: "black" },
+  { number: "18", color: "red" },
+  { number: "6", color: "black" },
+  { number: "21", color: "red" },
+  { number: "33", color: "black" },
+  { number: "16", color: "red" },
+  { number: "4", color: "black" },
+  { number: "23", color: "red" },
+  { number: "35", color: "black" },
+  { number: "14", color: "red" },
+  { number: "2", color: "black" },
 ];
 
 const RouletteA = () => {
@@ -37,6 +55,8 @@ const RouletteA = () => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [currentHighlightIndex, setCurrentHighlightIndex] = useState(null); // Track the current highlighted number during the spin
   const canvasRef = useRef(null);
+
+  const [betHistory, setBetHistory] = useState([]);
 
   const centerX = 200;
   const centerY = 200;
@@ -201,57 +221,82 @@ const RouletteA = () => {
 
     let win = false;
 
-    if (placedBet.type === 'number' && placedBet.value === winningNumber) {
+    if (placedBet.type === "number" && placedBet.value === winningNumber) {
       setMessage(`You win! The winning number is ${winningNumber}.`);
-      setTotalPoints(prev => {
-        const newTotal = prev + betAmount*36;
+      win = true;
+      setTotalPoints((prev) => {
+        const newTotal = prev + betAmount * 36;
         console.log("Updated totalPoints:", newTotal);
-    
+
         // After calculating, update both local state and Firebase
-        setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
-        return newTotal;  // Update local state with the new total
+        setTotalPointsWithUpdate(newTotal); // Call the custom setter with the new total points
+        return newTotal; // Update local state with the new total
       });
-    } else if (placedBet.type === 'color' && numbers[winIndex].color === placedBet.value) {
+    } else if (
+      placedBet.type === "color" &&
+      numbers[winIndex].color === placedBet.value
+    ) {
       setMessage(`You win! The winning color is ${numbers[winIndex].color}.`);
-      setTotalPoints(prev => {
-        const newTotal = prev + betAmount*2;
+      win = true;
+      setTotalPoints((prev) => {
+        const newTotal = prev + betAmount * 2;
         console.log("Updated totalPoints:", newTotal);
-    
+
         // After calculating, update both local state and Firebase
-        setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
-        return newTotal;  // Update local state with the new total
+        setTotalPointsWithUpdate(newTotal); // Call the custom setter with the new total points
+        return newTotal; // Update local state with the new total
       });
-    } else if (placedBet.type === 'parity' && (placedBet.value === 'even' ? winningNumber % 2 === 0 : winningNumber % 2 !== 0)) {
+    } else if (
+      placedBet.type === "parity" &&
+      (placedBet.value === "even"
+        ? winningNumber % 2 === 0
+        : winningNumber % 2 !== 0)
+    ) {
       setMessage(`You win! The winning number is ${winningNumber}.`);
-      setTotalPoints(prev => {
-        const newTotal = prev + betAmount*2;
+      win = true;
+      setTotalPoints((prev) => {
+        const newTotal = prev + betAmount * 2;
         console.log("Updated totalPoints:", newTotal);
-    
+
         // After calculating, update both local state and Firebase
-        setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
-        return newTotal;  // Update local state with the new total
+        setTotalPointsWithUpdate(newTotal); // Call the custom setter with the new total points
+        return newTotal; // Update local state with the new total
       });
-    } else if (placedBet.type === 'range' && (
-      (placedBet.value === '1-18' && winningNumber >= 1 && winningNumber <= 18) ||
-      (placedBet.value === '19-36' && winningNumber >= 19 && winningNumber <= 36)
-    )) {
+    } else if (
+      placedBet.type === "range" &&
+      ((placedBet.value === "1-18" &&
+        winningNumber >= 1 &&
+        winningNumber <= 18) ||
+        (placedBet.value === "19-36" &&
+          winningNumber >= 19 &&
+          winningNumber <= 36))
+    ) {
       setMessage(`You win! The winning number is ${winningNumber}.`);
-      setTotalPoints(prev => {
-        const newTotal = prev + betAmount*2;
+      win = true;
+      setTotalPoints((prev) => {
+        const newTotal = prev + betAmount * 2;
         console.log("Updated totalPoints:", newTotal);
-    
+
         // After calculating, update both local state and Firebase
-        setTotalPointsWithUpdate(newTotal);  // Call the custom setter with the new total points
-        return newTotal;  // Update local state with the new total
+        setTotalPointsWithUpdate(newTotal); // Call the custom setter with the new total points
+        return newTotal; // Update local state with the new total
       });
-    } else if (placedBet.type === 'dozen' && (
-      (placedBet.value === '1st12' && winningNumber >= 1 && winningNumber <= 12) ||
-      (placedBet.value === '2nd12' && winningNumber >= 13 && winningNumber <= 24) ||
-      (placedBet.value === '3rd12' && winningNumber >= 25 && winningNumber <= 36)
-    )) {
+    } else if (
+      placedBet.type === "dozen" &&
+      ((placedBet.value === "1st12" &&
+        winningNumber >= 1 &&
+        winningNumber <= 12) ||
+        (placedBet.value === "2nd12" &&
+          winningNumber >= 13 &&
+          winningNumber <= 24) ||
+        (placedBet.value === "3rd12" &&
+          winningNumber >= 25 &&
+          winningNumber <= 36))
+    ) {
       setMessage(`You win! The winning number is ${winningNumber}.`);
-      setTotalPoints(prev => {
-        const newTotal = prev + betAmount*3;
+      win = true;
+      setTotalPoints((prev) => {
+        const newTotal = prev + betAmount * 3;
         console.log("Updated totalPoints:", newTotal);
 
         // After calculating, update both local state and Firebase
@@ -261,11 +306,47 @@ const RouletteA = () => {
     } else {
       setMessage(`You lose! The winning number is ${winningNumber}.`);
     }
+
+    const result = win ? "Win" : "Lose";
+    setBetHistory((prevResults) => {
+      const updatedResults = [
+        ...prevResults,
+        {
+          betAmount, // What the user bet
+          betOn: `${placedBet.type} (${placedBet.value})`, // What they bet on
+          result, // Win or Lose
+        },
+      ];
+
+      // Slice to keep only the last 10 entries
+      return updatedResults.slice(-10);
+    });
   };
 
   return (
     <div>
       <div className={styles.pageBody}>
+        <div className={styles.historyTable}>
+          <h3>Bet History</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Bet</th>
+                <th>Value</th>
+                <th>Win/Lose</th>
+              </tr>
+            </thead>
+            <tbody>
+              {betHistory.map((entry, index) => (
+                <tr key={index}>
+                  <td>{entry.betAmount}</td> {/* Displays the bet amount */}
+                  <td>{entry.betOn}</td> {/* Displays the bet value */}
+                  <td>{entry.result}</td> {/* Displays Win or Lose */}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <canvas ref={canvasRef} width="400" height="400"></canvas>
         <div className={styles.controls}>
           <h3>Total Points: {totalPoints}</h3>
@@ -305,8 +386,18 @@ const RouletteTable = ({ onPlaceBet }) => {
     <div className={styles.bettingTable}>
       <h3>Betting Table</h3>
       <div className={styles.zeroRow}>
-        <button className={styles.greenButton} onClick={() => placeBet('number', '0')}>0</button>
-        <button className={styles.greenButton} onClick={() => placeBet('number', '00')}>00</button>
+        <button
+          className={styles.greenButton}
+          onClick={() => placeBet("number", "0")}
+        >
+          0
+        </button>
+        <button
+          className={styles.greenButton}
+          onClick={() => placeBet("number", "00")}
+        >
+          00
+        </button>
       </div>
 
       {/* Row 1: Numbers 1-12 */}
