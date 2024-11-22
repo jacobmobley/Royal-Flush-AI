@@ -133,6 +133,7 @@ game_state = {
     "winner": []
 }
 
+ai_difficulty = "medium"  # Default difficulty level
 buy_in = 0
 
 # Add a player to the game
@@ -187,9 +188,13 @@ def player_ready():
     return jsonify({"message": "Player marked ready!"}), 200
 
 def add_ai_players():
+    """
+    Add AI players to fill the remaining slots in the game.
+    Appends difficulty level (easy, medium, hard) to AI usernames.
+    """
     while len(game_state["players"]) < 6:
         ai_player = {
-            "username": f"AI_Player_{len(game_state['players']) + 1}",
+            "username": f"{ai_difficulty.capitalize()}_AI_Player_{len(game_state['players']) + 1}",
             "chips": buy_in,
             "hand": [],
             "bet": 0,
@@ -563,20 +568,24 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("port", type=int, help="Port number to bind the server")
     parser.add_argument("buy_in", type=int, help="Buy-in amount for this server")
+    parser.add_argument("ai_difficulty", type=str, choices=["easy", "medium", "hard"],
+                        help="AI difficulty level (easy, medium, hard)")
     args = parser.parse_args()
 
-    # Set the global buy-in value
+    # Set the global buy-in value and AI difficulty
     buy_in = args.buy_in
+    ai_difficulty = args.ai_difficulty.lower()
 
     # Create the log file
     if not os.path.exists(LOG_FOLDER):
         os.makedirs(LOG_FOLDER)
 
-    log_file = os.path.join(LOG_FOLDER, f"lobby_{args.port}_{args.buy_in}.log")
+    # Include difficulty in the log file name
+    log_file = os.path.join(LOG_FOLDER, f"lobby_{args.port}_{args.buy_in}_{ai_difficulty}.log")
     with open(log_file, "w") as f:
-        f.write(f"Lobby running on port {args.port} with buy-in ${buy_in}")
+        f.write(f"Lobby running on port {args.port} with buy-in ${buy_in} and AI difficulty {ai_difficulty}")
 
-    print(f"Starting server on port {args.port} with buy-in ${buy_in}, logged to {log_file}")
+    print(f"Starting server on port {args.port} with buy-in ${buy_in}, AI difficulty {ai_difficulty}, logged to {log_file}")
 
     try:
         app.run(host='0.0.0.0', port=args.port)

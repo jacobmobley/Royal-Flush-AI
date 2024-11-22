@@ -13,7 +13,7 @@ const LobbyManager = () => {
     setLoading(true);
     try {
       const response = await axios.get("http://localhost:5000/list-lobbies");
-      setLobbies(response.data); // Response includes port, buyIn, and URL
+      setLobbies(response.data); // Response includes port, buyIn, difficulty, and URL
     } catch (err) {
       setError("Failed to load lobbies.");
     } finally {
@@ -45,9 +45,23 @@ const LobbyManager = () => {
       ) : (
         <ul>
           {lobbies.map((lobby, index) => (
-            <li key={index}>
+            <li key={index} style={{ marginBottom: "1em" }}>
               <p>
-                Lobby at {lobby.url} (Port: {lobby.port}) - Buy-In: ${lobby.buyIn}
+                <strong>Port:</strong> {lobby.port} <br />
+                <strong>Buy-In:</strong> ${lobby.buyIn} <br />
+                <strong>Difficulty:</strong>{" "}
+                <span
+                  style={{
+                    color:
+                      lobby.difficulty === "Easy"
+                        ? "green"
+                        : lobby.difficulty === "Medium"
+                        ? "orange"
+                        : "red",
+                  }}
+                >
+                  {lobby.difficulty}
+                </span>
               </p>
               <button onClick={() => handleJoinLobby(lobby.url, lobby.buyIn)}>
                 Join

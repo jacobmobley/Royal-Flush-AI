@@ -30,14 +30,16 @@ def list_lobbies():
     for filename in os.listdir(LOG_FOLDER):
         if filename.startswith("lobby_") and filename.endswith(".log"):
             try:
-                # Extract port and buy-in from the filename
+                # Extract port, buy-in, and difficulty from the filename
                 parts = filename.split("_")
                 port = int(parts[1])
-                buy_in = int(parts[2].split(".")[0])  # Buy-in is stored after the port in the filename
+                buy_in = int(parts[2])
+                difficulty = parts[3].split(".")[0]  # Difficulty is stored after the buy-in in the filename
 
                 lobbies.append({
                     "port": port,
                     "buyIn": buy_in,
+                    "difficulty": difficulty.capitalize(),  # Capitalize for better readability
                     "url": f"http://localhost:{port}"
                 })
             except (IndexError, ValueError) as e:

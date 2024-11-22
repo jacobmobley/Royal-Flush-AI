@@ -76,6 +76,12 @@ const PokerTable = ({ username, gameState, curUser }) => {
     return result;
   };
 
+  const getDifficultyColor = (name) => {
+    if (name.toLowerCase().includes("easy")) return "green";
+    if (name.toLowerCase().includes("medium")) return "yellow";
+    if (name.toLowerCase().includes("hard")) return "red";
+  };
+
   return (
     <div className={styles.pokerContainer}>
       {showResults && (
@@ -182,7 +188,11 @@ const PokerTable = ({ username, gameState, curUser }) => {
                 isCurrentUser && isCurrentTurn ? styles.currentUserPlayerAction : ""
               }`}
             >
-              <p>
+              <p
+                style={{
+                  color: getDifficultyColor(player.username),
+                }}
+              >
                 <strong>{player.username}</strong>
               </p>
               <p>Bankroll: ${player.chips}</p>
@@ -226,6 +236,8 @@ const PokerTable = ({ username, gameState, curUser }) => {
           );
         })}
       </div>
+
+
 
       {/* Controls */}
       <div className={styles.controls}>
