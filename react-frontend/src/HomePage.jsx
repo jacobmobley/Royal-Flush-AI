@@ -182,6 +182,7 @@ const HomePage = () => {
         <span>{userData?.username}</span> <span>|</span>
         <span>Currency: {userData?.currency}</span>
       </div>
+
       <div className={styles.leaderboard}>
         <h2>Leaderboard</h2>
         <ul>

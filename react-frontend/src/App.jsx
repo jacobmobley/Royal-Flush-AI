@@ -6,12 +6,12 @@ import ReturningPlayerPage from "./ReturningPlayerPage";
 import TitleScreen from "./TitleScreen";
 import PlinkoGame from "./PlinkoGame";
 import Blackjack from "./Blackjack";
-import PokerInit from "./PokerInit"
-
+import PokerInit from "./PokerInit";
 import Poker from "./Poker";
 import RouletteE from "./RouletteE";
 import RouletteA from "./RouletteA";
-import Multipoker from "./Multi-poker/Multipoker.jsx"
+import Multipoker from "./Multi-poker/Multipoker.jsx";
+import LobbyManager from "./LobbyManager.jsx";
 import ForgotPassword from "./ForgotPassword.jsx";
 import Settings from "./Settings";
 
@@ -36,6 +36,9 @@ function App() {
           <Route path="/forgotpass" element={<ForgotPassword />} />
           <Route path="/pokerinit" element={<PokerInit />} />
           <Route path="/Multipoker" element={<Multipoker />} />
+
+          <Route path="/lobby" element={<LobbyManager />} />
+          
         </Routes>
       </div>
     </Router>

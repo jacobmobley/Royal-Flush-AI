@@ -267,6 +267,18 @@ form {
   z-index: 1001; /* Ensure the modal content is above the overlay */
 }
 
+.redButton {
+  background: red;
+  padding: 20px;
+  border-radius: 25px;
+  margin-right: 10px;
+
+  width: 150px;
+  height: 100%;
+  max-width: 100%;
+  z-index: 1001;
+}
+
 .modalGrid {
   position: relative;
   background: white;
@@ -339,6 +351,19 @@ p {
 .pokerInitItem label {
   margin-left: 30px;
   color: black;
+}
+
+.pokerInitItem button {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 25px;
+  margin-right: 10px;
+
+  width: 400px;
+  height: 100%;
+  max-width: 100%;
+  z-index: 1001;
 }
 
 .pokerInitError {
@@ -419,6 +444,22 @@ p {
   align-items: center;
 }
 .userInfo span {
+  margin-left: 5px;
+}
+
+.achievements {
+  position: absolute;
+  top: 120px;
+  right: 20px;
+  font-size: 18px;
+  color: #fff;
+  background-color: #333;
+  padding: 5px 10px;
+  border-radius: 5px;
+  align-items: center;
+}
+
+.achievements span {
   margin-left: 5px;
 }
 
@@ -558,8 +599,6 @@ p {
   font-weight: normal;
   color: white;
 }
-
-
 
 .achievements {
   position: absolute;

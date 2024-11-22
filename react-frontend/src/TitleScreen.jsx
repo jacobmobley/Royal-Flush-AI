@@ -30,9 +30,9 @@ const TitleScreen = () => {
           Returning Player? <br />
           Sign into Existing Account
         </Link>
-        <Link to="/homepage" className={`${styles.button} ${styles.preview}`}>
+        {/* <Link to="/homepage" className={`${styles.button} ${styles.preview}`}>
           Preview Title Screen
-        </Link>
+        </Link> */}
       </div>
     </div>
   );

@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, firestore_db } from "./firebase";
 import styles from "./frontpage-styles.module.css"; // Import CSS module
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import logo from "./assets/RoyalFlushAILogo.png";
+import ReCAPTCHA from 'react-google-recaptcha'
 import {
   query,
   doc,
@@ -36,6 +37,7 @@ const isEmailTaken = async (email) => {
 };
 
 const NewPlayerPage = () => {
+  const [captchaState, setCaptchaState] = useState(false);
   const [achievements, setAchievements] = useState({
     test1: true,
     test2: true,
@@ -44,6 +46,10 @@ const NewPlayerPage = () => {
     test5: false,
   });
   const navigate = useNavigate();
+
+  const handleCaptchaChange = (token) => {
+    setCaptchaState(true);
+  };
 
   // State for form data and messages
   const [formData, setFormData] = useState({
@@ -64,6 +70,12 @@ const NewPlayerPage = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!captchaState) {
+      setMessage("Please fill CAPTCHA");
+      setMessageStyle({ color: "red" });
+      return;
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setMessage("Passwords do not match.");
@@ -174,6 +186,10 @@ const NewPlayerPage = () => {
             value={formData.email}
             onChange={handleChange}
             className={styles.inputField}
+          />
+          <ReCAPTCHA
+            sitekey="6LcbOYQqAAAAAOXWZCe1gh8EWZ17a_Iuk_giEogz"
+            onChange={handleCaptchaChange}
           />
 
           <button type="submit" className={`${styles.submitButton}`}>
