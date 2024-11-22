@@ -275,8 +275,16 @@ const Settings = ({ toggleSettings, audioRef, effectsRef }) => {
       case "Report a Bug":
         return (
           <div className={styles.bugReport}>
-            <p>Write to the devs.</p>
-
+            <h3>Write to the devs.</h3>
+            <p>
+              For more sophisticated inquiries, please visit this{" "}
+              <a
+                className={styles.formLink}
+                href="https://forms.gle/vEbKDMos7TC52jDi9"
+              >
+                form
+              </a>
+            </p>
             <form onSubmit={sendEmail}>
               <label htmlFor="message">
                 <strong>Enter your message:</strong>
