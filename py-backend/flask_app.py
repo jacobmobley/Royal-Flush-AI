@@ -40,7 +40,7 @@ def list_lobbies():
                     "port": port,
                     "buyIn": buy_in,
                     "difficulty": difficulty.capitalize(),  # Capitalize for better readability
-                    "url": f"http://localhost:{port}"
+                    "url": f"http://10.186.123.80:{port}"
                 })
             except (IndexError, ValueError) as e:
                 print(f"Error parsing filename {filename}: {e}")
