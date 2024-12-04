@@ -40,6 +40,14 @@ const PokerTable = ({ username, gameState, curUser }) => {
           console.log(`Winnings of ${parseInt(winnings/5)} added to ${username}'s account.`);
         }
       }
+      else {
+        const winnings = players.find((player) => player.username === username)?.chips || 0;
+
+        if (curUser && winnings > 0) {
+          curUser.updateCurrency(curUser.userData.currency + (parseInt(winnings/5)));
+          console.log(`Winnings of ${parseInt(winnings/5)} added to ${username}'s account.`);
+        }
+      }
     }
   }, [currentTurn, winner, players, username, curUser]);
 
