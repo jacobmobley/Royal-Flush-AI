@@ -219,4 +219,4 @@ def detect_terminal():
 
 if __name__ == '__main__':
     os.environ['FLASK_RUN_PORT'] = '5000'
-    app.run(debug=True)
+    app.run(host='0.0.0.0')
