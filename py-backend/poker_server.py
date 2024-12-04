@@ -190,7 +190,7 @@ def join_game():
         return jsonify({"error": "Server is full!"}), 403
     
     if any(player['username'] == username for player in game_state["players"]):
-        return jsonify({"error": "Player already joined!"}), 400
+        return jsonify(game_state)
     
     print(game_state["players"])
 

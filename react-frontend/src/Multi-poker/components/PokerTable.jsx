@@ -266,7 +266,7 @@ const PokerTable = ({ username, gameState, curUser }) => {
 
       {/* Animated Emotes Display Bar */}
       <div className={styles.activeEmotesBar}>
-        {emotes.map((emoteObj, index) => (
+        {emotes1.map((emoteObj, index) => (
           <div
             key={index}
             className={`${styles.activeEmote} ${styles.emoteEffect}`}
