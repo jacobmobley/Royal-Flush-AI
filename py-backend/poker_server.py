@@ -557,7 +557,8 @@ def reset_game():
         "currentPlayerIndex": 0,
         "dealerIndex": 0,
         "readyPlayers": 0,
-        "winner": []
+        "winner": [],
+        "emotes":[]
     }
     
     # Reinitialize the deck
