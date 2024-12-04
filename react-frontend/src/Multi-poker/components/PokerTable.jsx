@@ -266,13 +266,13 @@ const PokerTable = ({ username, gameState, curUser }) => {
 
       {/* Animated Emotes Display Bar */}
       <div className={styles.activeEmotesBar}>
-        {emotes1.map((emoteObj, index) => (
+        {emotes.map((emoteObj, index) => (
           <div
             key={index}
             className={`${styles.activeEmote} ${styles.emoteEffect}`}
           >
             <span className={styles.emoteUsername}>{emoteObj.username}: </span>
-            <span className={styles.emoteText}>{emoteObj.emote.replace(/\\/g, "")}</span>
+            <span className={styles.emoteText}>{emoteObj.emote}</span>
           </div>
         ))}
       </div>
