@@ -232,7 +232,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container" onClick={play}>
       {showFriendRequestPopup && (
         <div className={`${styles.modalOverlay}`}>
           <FriendRequestPopup

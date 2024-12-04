@@ -12,7 +12,9 @@ const LobbyManager = () => {
   const fetchLobbies = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/list-lobbies");
+      const response = await axios.get(
+        "http://10.186.127.85:5000/list-lobbies"
+      );
       setLobbies(response.data); // Response includes port, buyIn, difficulty, and URL
     } catch (err) {
       setError("Failed to load lobbies.");

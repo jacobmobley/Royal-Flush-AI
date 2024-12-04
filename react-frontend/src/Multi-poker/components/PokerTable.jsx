@@ -5,7 +5,7 @@ import styles from "./PokerTable.module.css";
 import back from "../../assets/cards/cardBack_red2.png";
 import { getCardImage } from "../utils/cardImages";
 import api from "../api";
-import FireBaseAuth from '../../FireBaseAuth';
+import FireBaseAuth from "../../FireBaseAuth";
 
 const emotes1 = [":)", ":(", ">:)", ">:(", ":^)"];
 
@@ -26,18 +26,26 @@ const PokerTable = ({ username, gameState, curUser }) => {
   const [raiseAmount, setRaiseAmount] = useState(bigBlind); // Initialize to the big blind amount
   const [showResults, setShowResults] = useState(false);
 
-  const playerIndex = players.findIndex((player) => player.username === username);
-  
+  const playerIndex = players.findIndex(
+    (player) => player.username === username
+  );
 
   useEffect(() => {
     if (currentTurn === "collect winnings") {
       setShowResults(true); // Show results popup
       if (winner.includes(username)) {
-        const winnings = players.find((player) => player.username === username)?.chips || 0;
+        const winnings =
+          players.find((player) => player.username === username)?.chips || 0;
 
         if (curUser && winnings > 0) {
-          curUser.updateCurrency(curUser.userData.currency + (parseInt(winnings/5)));
-          console.log(`Winnings of ${parseInt(winnings/5)} added to ${username}'s account.`);
+          curUser.updateCurrency(
+            curUser.userData.currency + parseInt(winnings / 5)
+          );
+          console.log(
+            `Winnings of ${parseInt(
+              winnings / 5
+            )} added to ${username}'s account.`
+          );
         }
       }
     }
@@ -74,7 +82,14 @@ const PokerTable = ({ username, gameState, curUser }) => {
   // Function to calculate chip stacks for a given amount
   const getMinimumChips = (amount) => {
     const chipValues = [1000, 500, 100, 25, 5, 1];
-    const chipColors = ["#FFD700", "#800080", "#333333", "#008000", "#FF0000", "#FFFFFF"];
+    const chipColors = [
+      "#FFD700",
+      "#800080",
+      "#333333",
+      "#008000",
+      "#FF0000",
+      "#FFFFFF",
+    ];
     const chipLabels = ["$1000", "$500", "$100", "$25", "$5", "$1"];
     const result = [];
 
@@ -82,7 +97,11 @@ const PokerTable = ({ username, gameState, curUser }) => {
       const count = Math.floor(amount / chipValue);
       amount -= count * chipValue;
       if (count > 0) {
-        result.push({ count, color: chipColors[index], label: chipLabels[index] });
+        result.push({
+          count,
+          color: chipColors[index],
+          label: chipLabels[index],
+        });
       }
     });
 
@@ -101,20 +120,20 @@ const PokerTable = ({ username, gameState, curUser }) => {
         <div className={styles.resultsModal}>
           <div className={styles.resultsContent}>
             <h2>Game Results</h2>
-                  {/* Community Cards Section */}
-      <div className={styles.communityCardsResult}>
-        <h3>Community Cards</h3>
-        <div className={styles.cards}>
-          {communityCards.map((card, index) => (
-            <img
-              key={index}
-              src={getCardImage(card.value, card.suit) || back}
-              alt={`${card.value} of ${card.suit}`}
-              className={styles.cardImage}
-            />
-          ))}
-        </div>
-      </div>
+            {/* Community Cards Section */}
+            <div className={styles.communityCardsResult}>
+              <h3>Community Cards</h3>
+              <div className={styles.cards}>
+                {communityCards.map((card, index) => (
+                  <img
+                    key={index}
+                    src={getCardImage(card.value, card.suit) || back}
+                    alt={`${card.value} of ${card.suit}`}
+                    className={styles.cardImage}
+                  />
+                ))}
+              </div>
+            </div>
             <div className={styles.resultsPlayers}>
               {players.map((player, index) => (
                 <div
@@ -124,7 +143,8 @@ const PokerTable = ({ username, gameState, curUser }) => {
                   }`}
                 >
                   <p>
-                    <strong>{player.username}</strong> {winner.includes(player.username) && "(Winner)"}
+                    <strong>{player.username}</strong>{" "}
+                    {winner.includes(player.username) && "(Winner)"}
                   </p>
                   <div className={styles.cards}>
                     {player.hand.map((card, idx) => (
@@ -140,9 +160,10 @@ const PokerTable = ({ username, gameState, curUser }) => {
               ))}
             </div>
             <div>
-            <p className={styles.refreshMessage}>
-              Refresh the page when all the cards are cleared to join the next game. Otherwise, click the back arrow to leave.
-            </p>
+              <p className={styles.refreshMessage}>
+                Refresh the page when all the cards are cleared to join the next
+                game. Otherwise, click the back arrow to leave.
+              </p>
             </div>
           </div>
         </div>
@@ -187,18 +208,22 @@ const PokerTable = ({ username, gameState, curUser }) => {
           ))}
         </div>
 
-      {/* Player Slots */}
-      {players.map((player, index) => {
+        {/* Player Slots */}
+        {players.map((player, index) => {
           const isCurrentUser = player.username === username;
           const isCurrentTurn = index === currentPlayerIndex;
 
           return (
             <div
               key={index}
-              className={`${styles.playerSlot} ${styles[`player${index + 1}`]} ${
-                isCurrentUser ? styles.currentUser : ""
-              } ${isCurrentTurn ? styles.playerAction : ""} ${
-                isCurrentUser && isCurrentTurn ? styles.currentUserPlayerAction : ""
+              className={`${styles.playerSlot} ${
+                styles[`player${index + 1}`]
+              } ${isCurrentUser ? styles.currentUser : ""} ${
+                isCurrentTurn ? styles.playerAction : ""
+              } ${
+                isCurrentUser && isCurrentTurn
+                  ? styles.currentUserPlayerAction
+                  : ""
               }`}
             >
               <p
@@ -209,8 +234,10 @@ const PokerTable = ({ username, gameState, curUser }) => {
                 <strong>{player.username}</strong>
               </p>
               <p>Bankroll: ${player.chips}</p>
-              <p>Current Bet: ${player.bet || 0}</p> {/* Display player's current bet */}
-              <p>Status: ${player.status}</p> {/* Display player's current bet */}
+              <p>Current Bet: ${player.bet || 0}</p>{" "}
+              {/* Display player's current bet */}
+              <p>Status: ${player.status}</p>{" "}
+              {/* Display player's current bet */}
               <div className={styles.cards}>
                 {isCurrentUser
                   ? player.hand.map((card, idx) => (
@@ -250,29 +277,29 @@ const PokerTable = ({ username, gameState, curUser }) => {
         })}
       </div>
 
-        {/* Emote Bar */}
-        <div className={styles.emoteBar}>
-          <h3>Emotes</h3>
-          {emotes1.map((emote, index) => (
-            <button
-              key={index}
-              className={styles.emoteButton}
-              onClick={() => sendEmote(emote)}
-            >
-              {emote.replace(/\\/g, "")} {/* Display without escape characters */}
-            </button>
-          ))}
-        </div>
+      {/* Emote Bar */}
+      <div className={styles.emoteBar}>
+        <h3>Emotes</h3>
+        {emotes1.map((emote, index) => (
+          <button
+            key={index}
+            className={styles.emoteButton}
+            onClick={() => sendEmote(emote)}
+          >
+            {emote.replace(/\\/g, "")} {/* Display without escape characters */}
+          </button>
+        ))}
+      </div>
 
       {/* Animated Emotes Display Bar */}
       <div className={styles.activeEmotesBar}>
-        {emotes1.map((emoteObj, index) => (
+        {emotes.map((emoteObj, index) => (
           <div
             key={index}
             className={`${styles.activeEmote} ${styles.emoteEffect}`}
           >
             <span className={styles.emoteUsername}>{emoteObj.username}: </span>
-            <span className={styles.emoteText}>{emoteObj.emote.replace(/\\/g, "")}</span>
+            <span className={styles.emoteText}>{emoteObj.emote}</span>
           </div>
         ))}
       </div>
@@ -288,7 +315,10 @@ const PokerTable = ({ username, gameState, curUser }) => {
             <button
               className={styles.controlButton}
               onClick={() => handleAction("Check")}
-              disabled={gameState.currentPlayerIndex !== playerIndex || currentTurn === "pre-flop"}
+              disabled={
+                gameState.currentPlayerIndex !== playerIndex ||
+                currentTurn === "pre-flop"
+              }
             >
               Check
             </button>
