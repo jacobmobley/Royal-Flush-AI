@@ -205,11 +205,6 @@ const NewPlayerPage = () => {
           </button>
         </form>
       </div>
-      {message && (
-        <div id="message" style={{ display: "block", ...messageStyle }}>
-          {message}
-        </div>
-      )}
     </div>
   );
 };

@@ -247,7 +247,7 @@ const Settings = ({ toggleSettings, audioRef, effectsRef }) => {
         return (
           <div className={styles.volumeControl}>
             <p>Adjust sound settings for the game.</p>
-            <p>-</p>
+            <br></br>
             <p>Music Volume</p>
             {/* <label htmlFor="volume-slider">Volume: {volume}%</label> */}
             <input
@@ -335,12 +335,12 @@ const Settings = ({ toggleSettings, audioRef, effectsRef }) => {
           >
             Profile Appearance
           </button>
-          <button
+          {/* <button
             className={styles.gameAppearance}
             onClick={() => setSelectedTab("Game Appearance")}
           >
             Game Appearance
-          </button>
+          </button> */}
           <button
             className={styles.soundSettings}
             onClick={() => setSelectedTab("Sound Settings")}

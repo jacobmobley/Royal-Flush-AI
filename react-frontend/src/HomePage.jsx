@@ -314,11 +314,11 @@ const HomePage = () => {
       <div className={styles.menu}>
         <img src={logo} alt="Royal Flush AI Logo" className={styles.homeLogo} />
         <div className={styles.pokerButtons}>
-          <Link to="/pokerinit" className={`${styles.button} ${styles.poker}`}>
+          {/* <Link to="/pokerinit" className={`${styles.button} ${styles.poker}`}>
             Poker Singleplayer
-          </Link>
+          </Link> */}
           <Link to="/lobby" className={`${styles.button} ${styles.poker}`}>
-            Poker Multiplayer
+            Play Poker
           </Link>
         </div>
         <div className={styles.gameButtons}>

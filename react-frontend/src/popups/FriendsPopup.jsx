@@ -217,7 +217,7 @@ function FriendsPopup({ toggleFriendsPopup }) {
     setSelectedProfile(null);
   };
   return (
-    <div className={styles.modal}>
+    <div className={(styles.modal, styles.friendsModal)}>
       <button className={styles.closeButton} onClick={toggleFriendsPopup}>
         X
       </button>

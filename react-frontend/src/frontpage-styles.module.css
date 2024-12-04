@@ -10,8 +10,9 @@ body {
   background-color: #72b3e2;
   background: linear-gradient(
     -45deg,
+
+    rgb(168, 148, 241),
     rgb(49, 175, 249),
-    rgb(106, 66, 249),
     lightblue
   );
   background-size: 400% 400%;
@@ -96,7 +97,7 @@ h1 {
 }
 
 .container h1 {
-  margin-top: 50px;
+  margin-top: 50%;
 }
 
 .formContainer h1 {
@@ -263,6 +264,20 @@ form {
   z-index: 1001; /* Ensure the modal content is above the overlay */
 }
 
+.friendsModal {
+  height: 80%;
+  background: white;
+  border: solid black 4px;
+  position: relative;
+
+  padding: 20px;
+  border-radius: 25px;
+  margin-right: 10px;
+
+  width: 400px;
+  max-width: 100%;
+  z-index: 1001;
+}
 .modalReqPopup {
   position: relative;
   background: white;
@@ -550,24 +565,27 @@ p {
 }
 .blackjack,
 .roulette {
-  width: 200px;
+  width: 33%;
   text-align: center;
 }
 
 .homeLogo {
   display: block;
   margin: 0 auto; /* Center the logo horizontally */
-  width: 400px;
+  width: 80%;
   height: auto;
   margin-bottom: 20px;
+  margin-top: 10%;
 }
 
 .menu {
   background-color: white;
   border-radius: 25px;
   border: 4px black solid;
-  width: 500px;
-  height: 600px;
+  width: 750px;
+  height: 900px;
+  z-index: 1;
+  position: relative;
 }
 
 .customBio {
@@ -601,6 +619,16 @@ p {
   color: black;
   border-radius: 4px;
   text-align: center;
+}
+
+.changeField {
+  margin-left: 10px;
+  height: 25px;
+  background-color: white;
+  color: black;
+  border-radius: 4px;
+  text-align: center;
+  margin-top: 10px;
 }
 
 .highestHand {

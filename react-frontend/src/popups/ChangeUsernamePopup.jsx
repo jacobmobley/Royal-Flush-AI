@@ -1,11 +1,24 @@
 import React, { useState } from "react";
 import styles from "../frontpage-styles.module.css";
-import { EmailAuthProvider, reauthenticateWithCredential, updateEmail, sendEmailVerification } from "firebase/auth";
-import { doc, getDoc, setDoc, deleteDoc, query, collection, where, getDocs } from "firebase/firestore";
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updateEmail,
+  sendEmailVerification,
+} from "firebase/auth";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  query,
+  collection,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { firestore_db, auth } from "../firebase";
 
 const ChangeUsernamePopup = ({ toggleUsernamePopup, onSubmit }) => {
-
   const [message, setMessage] = useState("");
   const [messageStyle, setMessageStyle] = useState({});
 
@@ -17,22 +30,20 @@ const ChangeUsernamePopup = ({ toggleUsernamePopup, onSubmit }) => {
       }
       const email = user.email;
       await changeDocUsername(email, newUsername);
-      
     } catch (error) {
       setMessage("Error updating username: ", error);
       setMessageStyle({ color: "red" });
     }
-      
-  } 
-  
+  };
+
   const isUsernameTaken = async (username) => {
     const q = query(
       collection(firestore_db, "users"),
       where("username", "==", username)
     );
-  
+
     const querySnapshot = await getDocs(q);
-  
+
     return !querySnapshot.empty;
   };
 
@@ -40,12 +51,14 @@ const ChangeUsernamePopup = ({ toggleUsernamePopup, onSubmit }) => {
     try {
       const q = doc(firestore_db, "users", email);
 
-      setDoc(q, {
-        username: newUsername,
-      }, { merge: true });
-      
-    }
-    catch (error) {
+      setDoc(
+        q,
+        {
+          username: newUsername,
+        },
+        { merge: true }
+      );
+    } catch (error) {
       console.log("Error: username not changed", error);
     }
   };
@@ -55,7 +68,7 @@ const ChangeUsernamePopup = ({ toggleUsernamePopup, onSubmit }) => {
     confirmPassword: "",
     email: "",
   });
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -66,55 +79,57 @@ const ChangeUsernamePopup = ({ toggleUsernamePopup, onSubmit }) => {
 
     if (await isUsernameTaken(formData.username)) {
       setMessage("Username is already taken");
-      setMessageStyle({ color: 'red' });
+      setMessageStyle({ color: "red" });
       return;
     }
 
     await changeUsername(formData.username, formData.password);
 
     onSubmit();
-  }
-
-
-    return (
-      <div>
-          <div>
-            <div>
-              <div className={styles.modal}>
-                <button className={styles.closeButton} onClick={toggleUsernamePopup}>
-                    X
-                </button>
-                <br></br>
-                <form id="signup-form" onSubmit={handleSubmit}>
-                <input
-                    type="username"
-                    name="username"
-                    placeholder="Enter new username:"
-                    value={formData.username}
-                    required
-                    onChange={handleChange}
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Enter password:"
-                    value={formData.password}
-                    required
-                    onChange={handleChange}
-                />
-                <br></br>
-                <button type="submit">
-                  Submit
-                </button>
-                <div id="message" style={{ display: "block", ...messageStyle }}>
-                  {message}
-                </div>
-                </form>
-                </div>
-            </div>
-          </div>
-      </div>
-    );
   };
+
+  return (
+    <div>
+      <div>
+        <div>
+          <div className={styles.modal}>
+            <button
+              className={styles.closeButton}
+              onClick={toggleUsernamePopup}
+            >
+              X
+            </button>
+            <br></br>
+            <form id="signup-form" onSubmit={handleSubmit}>
+              <input
+                type="username"
+                name="username"
+                placeholder="Enter new username:"
+                className={styles.changeField}
+                value={formData.username}
+                required
+                onChange={handleChange}
+              />
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter password:"
+                className={styles.changeField}
+                value={formData.password}
+                required
+                onChange={handleChange}
+              />
+              <br></br>
+              <button type="submit">Submit</button>
+              <div id="message" style={{ display: "block", ...messageStyle }}>
+                {message}
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default ChangeUsernamePopup;

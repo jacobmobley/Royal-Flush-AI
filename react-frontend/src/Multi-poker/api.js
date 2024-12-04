@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Set the API base URL dynamically
-let API_BASE_URL = "http://10.186.127.85:5000";
+let API_BASE_URL = "http://10.186.123.80:5000";
 
 // Function to update the base URL
 export const setApiBaseUrl = (url) => {

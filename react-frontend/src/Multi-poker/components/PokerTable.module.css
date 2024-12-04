@@ -1,341 +1,343 @@
 .pokerContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background-color: #222222;
-    width: 100%;
-    height: 100vh;
-  }
-  
-  .pokerTable {
-    position: relative;
-    width: 900px;
-    height: 900px;
-    background-color: #357a38;
-    border-radius: 50%;
-    border: 5px solid #333;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  
-  /* Community Cards */
-  .communityCards {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    justify-content: center;
-  }
-  
-  .cardImage {
-    width: 60px; /* Adjust as needed */
-    height: auto;
-    border-radius: 5px; /* Optional for rounded corners */
-    margin: 2px; /* Space between cards */
-  }
-  
-  .cards {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-    margin-top: 10px;
-  }
-  
-  /* Player Slots */
-  .playerSlot {
-    position: absolute;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    background-color: rgba(0, 0, 0, 0.5); /* Slightly transparent background */
-    border-radius: 10px;
-    min-width: 150px;
-  }
-  
-  .player1 {
-    top: 85%; /* Bottom center */
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
-  .player2 {
-    top: 65%; /* Bottom left */
-    left: 15%;
-    transform: translate(-50%, -50%);
-  }
-  
-  .player3 {
-    top: 35%; /* Top left */
-    left: 15%;
-    transform: translate(-50%, -50%);
-  }
-  
-  .player4 {
-    top: 15%; /* Top center */
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
-  .player5 {
-    top: 35%; /* Top right */
-    left: 85%;
-    transform: translate(-50%, -50%);
-  }
-  
-  .player6 {
-    top: 65%; /* Bottom right */
-    left: 85%;
-    transform: translate(-50%, -50%);
-  }
-  
-  .playerAction {
-    border: 2px solid yellow; /* Highlight active player */
-    box-shadow: 0 0 10px yellow;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #222222;
+  width: 100%;
+  height: 100vh;
+}
 
-  .currentUser {
-    border: 3px solid hotpink; /* Hot pink border */
-    box-shadow: 0 0 20px hotpink; /* Glow effect */
-    color: hotpink; /* Hot pink text */
-    z-index: 10; /* Ensure overlap visibility */
-  }
-  
-  .currentUser.playerAction {
-    border: 5px solid hotpink; /* Thicker border for current turn */
-    box-shadow: 0 0 30px hotpink; /* More intense glow */
-    color: hotpink; /* Text remains hot pink */
-  }
-  
-  .playerCards {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-    margin-top: 5px;
-  }
-  
-  .pot {
-    margin-top: 20px;
-    text-align: center;
-    color: white;
-    font-size: 23px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .potChips {
-    display: flex;
-    gap: 1px;
-    margin-bottom: 30px;
-  }
-  
-  .chips {
-    display: flex;
-    gap: 1px;
-    margin-top: 5px;
-  }
-  
-  .chipStack {
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
-  }
-  
-  .chip {
-    width: 35px;
-    height: 35px;
-    margin-bottom: -30px;
-    border-radius: 50%;
-    border: 1px solid #000;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    color: black;
-    transform: translateY(-1px);
-  }
-  
-  .chip::before {
-    content: "";
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    position: absolute;
-    box-sizing: border-box;
-    border: 3px solid currentColor;
-    opacity: 0.3;
-  }
-  
-  .chip::after {
-    content: "";
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    position: absolute;
-    background: radial-gradient(
-      circle at center,
-      transparent 50%,
-      currentColor 51%
-    );
-    box-sizing: border-box;
-    background-image: radial-gradient(
-        circle at 25% 25%,
-        transparent 48%,
-        currentColor 49%
-      ),
-      radial-gradient(circle at 75% 75%, transparent 48%, currentColor 49%),
-      radial-gradient(circle at 75% 25%, transparent 48%, currentColor 49%),
-      radial-gradient(circle at 25% 75%, transparent 48%, currentColor 49%);
-  }
-  
-  .chipLabel {
-    position: relative;
-    font-size: 10px;
-    color: #fff;
-    font-weight: bold;
-    z-index: 1;
-    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
-      1px 1px 0 #000;
-  }
-  
-  /* Controls */
-  .controls {
-    margin-top: 20px;
-    display: flex;
-    gap: 10px;
-  }
-  
-  .controlButton {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    background-color: #357a38;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .controlButton:hover {
-    background-color: #2b6130;
-  }
-  
-  .resultsModal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .resultsContent {
-    background-color: #222;
-    color: white;
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    width: 80%;
-    max-width: 800px;
-    position: relative;
-  }
-  
-  .resultsPlayers {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    justify-items: center;
-    margin-top: 20px;
-  }
-  
-  .resultPlayer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #333;
-    padding: 10px;
-    border-radius: 10px;
-    text-align: center;
-    max-width: 150px;
-  }
-  
-  .resultPlayer.winner {
-    border: 2px solid gold;
-    box-shadow: 0 0 10px 5px gold;
-  }
-  
-  .resultPlayer .cards {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-  }
-  
-  .closeButton {
-    margin-top: 100px;
-    background-color: crimson;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 5px;
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translate(-65%, 100%);    
-    transition: background-color 0.3s;
-  }
-  
-  .closeButton:hover {
-    background-color: darkred;
-  }
+.pokerTable {
+  position: relative;
+  width: 900px;
+  height: 900px;
+  background-color: #357a38;
+  border-radius: 50%;
+  border: 5px solid #333;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 
-  .refreshMessage {
-    margin: 20px 0;
-    font-size: 1.1em;
-    color: lightgray;
-    font-style: italic;
-  }
+/* Community Cards */
+.communityCards {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: center;
+}
 
-  .emoteBar {
-    position: absolute;
-    right: 10px;
-    top: 100px;
-    width: 100px;
-    background-color: #f0f0f0;
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .emoteButton {
-    display: block;
-    width: 80%;
-    margin: 5px auto;
-    padding: 5px;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-  }
-  
-  .emoteButton:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Emotes Bar Styling */
+.cardImage {
+  width: 60px; /* Adjust as needed */
+  height: auto;
+  border-radius: 5px; /* Optional for rounded corners */
+  margin: 2px; /* Space between cards */
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+/* Player Slots */
+.playerSlot {
+  position: absolute;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5); /* Slightly transparent background */
+  border-radius: 10px;
+  min-width: 150px;
+}
+
+.player1 {
+  top: 85%; /* Bottom center */
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.player2 {
+  top: 65%; /* Bottom left */
+  left: 15%;
+  transform: translate(-50%, -50%);
+}
+
+.player3 {
+  top: 35%; /* Top left */
+  left: 15%;
+  transform: translate(-50%, -50%);
+}
+
+.player4 {
+  top: 15%; /* Top center */
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.player5 {
+  top: 35%; /* Top right */
+  left: 85%;
+  transform: translate(-50%, -50%);
+}
+
+.player6 {
+  top: 65%; /* Bottom right */
+  left: 85%;
+  transform: translate(-50%, -50%);
+}
+
+.playerAction {
+  border: 2px solid yellow; /* Highlight active player */
+  box-shadow: 0 0 10px yellow;
+}
+
+.currentUser {
+  border: 3px solid hotpink; /* Hot pink border */
+  box-shadow: 0 0 20px hotpink; /* Glow effect */
+  color: hotpink; /* Hot pink text */
+  z-index: 10; /* Ensure overlap visibility */
+}
+
+.currentUser.playerAction {
+  border: 5px solid hotpink; /* Thicker border for current turn */
+  box-shadow: 0 0 30px hotpink; /* More intense glow */
+  color: hotpink; /* Text remains hot pink */
+}
+
+.playerCards {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.pot {
+  margin-top: 20px;
+  text-align: center;
+  color: white;
+  font-size: 23px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.potChips {
+  display: flex;
+  gap: 1px;
+  margin-bottom: 30px;
+}
+
+.chips {
+  display: flex;
+  gap: 1px;
+  margin-top: 5px;
+}
+
+.chipStack {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+}
+
+.chip {
+  width: 35px;
+  height: 35px;
+  margin-bottom: -30px;
+  border-radius: 50%;
+  border: 1px solid #000;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: black;
+  transform: translateY(-1px);
+}
+
+.chip::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: absolute;
+  box-sizing: border-box;
+  border: 3px solid currentColor;
+  opacity: 0.3;
+}
+
+.chip::after {
+  content: "";
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  position: absolute;
+  background: radial-gradient(
+    circle at center,
+    transparent 50%,
+    currentColor 51%
+  );
+  box-sizing: border-box;
+  background-image: radial-gradient(
+      circle at 25% 25%,
+      transparent 48%,
+      currentColor 49%
+    ),
+    radial-gradient(circle at 75% 75%, transparent 48%, currentColor 49%),
+    radial-gradient(circle at 75% 25%, transparent 48%, currentColor 49%),
+    radial-gradient(circle at 25% 75%, transparent 48%, currentColor 49%);
+}
+
+.chipLabel {
+  position: relative;
+  font-size: 10px;
+  color: #fff;
+  font-weight: bold;
+  z-index: 1;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+/* Controls */
+.controls {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.controlButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  background-color: #357a38;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.controlButton:hover {
+  background-color: #2b6130;
+}
+
+.resultsModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.resultsContent {
+  background-color: #222;
+  color: white;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  width: 80%;
+  max-width: 800px;
+  position: relative;
+}
+
+.resultsPlayers {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  justify-items: center;
+  margin-top: 20px;
+}
+
+.resultPlayer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #333;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 150px;
+}
+
+.resultPlayer.winner {
+  border: 2px solid gold;
+  box-shadow: 0 0 10px 5px gold;
+}
+
+.resultPlayer .cards {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.closeButton {
+  margin-top: 100px;
+  background-color: crimson;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translate(-65%, 100%);
+  transition: background-color 0.3s;
+}
+
+.closeButton:hover {
+  background-color: darkred;
+}
+
+.refreshMessage {
+  margin: 20px 0;
+  font-size: 1.1em;
+  color: lightgray;
+  font-style: italic;
+}
+
+.emoteBar {
+  position: absolute;
+  right: 10px;
+  top: 100px;
+  width: 100px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.emoteBar h3 {
+  color: black;
+}
+
+.emoteButton {
+  display: block;
+  width: 80%;
+  margin: 5px auto;
+  padding: 5px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.emoteButton:hover {
+  background-color: #0056b3;
+}
+
+/* Emotes Bar Styling */
 .activeEmotesBar {
   position: absolute;
   bottom: 10px;
