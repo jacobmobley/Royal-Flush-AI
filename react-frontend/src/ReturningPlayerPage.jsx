@@ -9,7 +9,7 @@ import styles from "./frontpage-styles.module.css";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import logo from "./assets/RoyalFlushAILogo.png";
-import ReCAPTCHA from 'react-google-recaptcha'
+import ReCAPTCHA from "react-google-recaptcha";
 
 const ReturningPlayerPage = () => {
   const navigate = useNavigate();
@@ -23,8 +23,7 @@ const ReturningPlayerPage = () => {
   const [showResetPassPopup, setshowResetPassPopup] = useState(false);
   const [captchaState, setCaptchaState] = useState(false);
 
-
-  const toggleResetPassPopup= () => {
+  const toggleResetPassPopup = () => {
     setshowResetPassPopup(!showResetPassPopup);
   };
 
@@ -124,17 +123,21 @@ const ReturningPlayerPage = () => {
             onChange={handleCaptchaChange}
           />
 
+          {message && (
+            <div id="message" className={styles.message}>
+              {message}
+            </div>
+          )}
+
           <button className={styles.submitButton}>Sign In</button>
         </form>
-        <Link to="/forgotpass" className={`${styles.button} ${styles.forgotpassButton}`}>
+        <Link
+          to="/forgotpass"
+          className={`${styles.button} ${styles.forgotpassButton}`}
+        >
           Forgot Password
         </Link>
       </div>
-      {message && (
-        <div id="message" style={{ display: "block", ...messageStyle }}>
-          {message}
-        </div>
-      )}
     </div>
   );
 };
