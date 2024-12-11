@@ -1,4 +1,4 @@
-# Poker-Vision
+# Royal Flush AI
 ## Running the Project
 ### Dependencies
 ```
